@@ -14,11 +14,17 @@
 		<style>
 			/* Small footer tweaks to center content and add breathing room */
 			#footer {
+				/* Force the footer to span the viewport without the template's negative offsets */
 				text-align: center;
 				padding: 3.5rem 1rem 2.5rem;
 				background: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.04));
+				width: 100% !important;
+				margin: 0 !important;
+				box-sizing: border-box;
 			}
-			#footer .footer-inner { width: 64em; max-width: calc(100% - 4em); box-sizing: border-box; margin: 0 auto; display: flex; flex-direction: column; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1.25rem; }
+			/* Keep the inner footer aligned to the main wrapper so the border lines up */
+			#footer { padding-left: 0 !important; padding-right: 0 !important; }
+			#footer .footer-inner { width: 100%; max-width: 64em; box-sizing: border-box; margin: 0 auto !important; padding: 0 2em; display: flex; flex-direction: column; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 1.25rem; }
 			#footer .icons { display: flex; justify-content: center; gap: 0.75rem; margin: 1rem 0; padding: 0; }
 			#footer .icons li { list-style: none; margin: 0; }
 			#footer .icons a { display: inline-flex !important; align-items: center !important; justify-content: center !important; width: 48px !important; height: 48px !important; border-radius: 50% !important; background: #ffffff !important; color: #333 !important; font-size: 18px !important; box-shadow: 0 1px 3px rgba(0,0,0,0.06); text-decoration: none !important; }
@@ -32,8 +38,11 @@
 			#footer .icons li { float: none !important; display: inline-block !important; }
 			#footer .icons { text-align: center !important; }
 			#footer .icons a { float: none !important; padding: 0 !important; }
-			/* Ensure footer-inner centered and not floated */
+			/* Ensure footer-inner centered and not floated; cancel template child offsets */
 			#footer .footer-inner { float: none !important; margin-left: auto !important; margin-right: auto !important; text-align: center !important; }
+			#footer > * { margin-left: 0 !important; }
+			/* Cancel template's child offsets which add left spacing */
+			#footer > * { margin-left: 0 !important; margin-right: 0 !important; }
 		</style>
 		<noscript>
 			<link rel="stylesheet" href="assets/css/noscript.css" />
@@ -89,19 +98,19 @@
 								</header>
 								<ul class="features">
 									<li>
-										<span class="icon solid major style1 fa-code" aria-hidden="true"></span>
+										<span class="icon solid major fas fa-code" aria-hidden="true"></span>
 										<h3>Full Stack Development</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+										<p>Experience building applications from front end to back end using React, Next.js, Node.js, and Python.</p>
 									</li>
 									<li>
-										<span class="icon major style3 fa-copy" aria-hidden="true"></span>
+										<span class="icon major style3 solid fa-cogs" aria-hidden="true"></span>
 										<h3>AI Integration</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+										<p>Exploring ways to apply artificial intelligence to enhance software products, improve functionality, and scale solutions.</p>
 									</li>
 									<li>
-										<span class="icon major style5 fa-gem" aria-hidden="true"></span>
+										<span class="icon major style5 solid fa-cloud" aria-hidden="true"></span>
 										<h3>Deployed Projects</h3>
-										<p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+										<p>Hands-on practice taking projects from idea to deployment, focusing on clean architecture and real-world usability.</p>
 									</li>
 								</ul>
 								<footer class="major">
@@ -154,7 +163,7 @@
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 
-			<!-- Make links open in a new tab (except mailto:, tel:, and in-page anchors) -->
+			
 			<script>
 			(function(){
 			  try {
