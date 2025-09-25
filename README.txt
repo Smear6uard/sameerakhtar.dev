@@ -1,31 +1,20 @@
-Stellar by HTML5 UP
-html5up.net | @ajlkn
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+# sameerakhtar.dev 🌐
 
+This is my personal website, built using the **Stellar** HTML5UP template and customized to showcase my projects, skills, and experiences.
 
-Say hello to Stellar, a slick little one-pager with a super vibrant color palette (which
-I guess you can always tone down if it's a little too vibrant for you), a "sticky" in-page
-nav bar (powered by my Scrollex plugin), a separate generic page template (just in case
-you need one), and an assortment of pre-styled elements.
+## 🚀 Features
+- Responsive design (mobile, tablet, and desktop friendly)
+- Smooth scrolling sections
+- Pre-styled components from HTML5UP Stellar
+- Easy to customize with HTML, CSS, and JavaScript
 
-Demo images* courtesy of Unsplash, a radtastic collection of CC0 (public domain) images
-you can use for pretty much whatever.
+## 📂 Project Structure
+- `index.html` → Main landing page
+- `generic.html` & `elements.html` → Extra pages and components
+- `assets/` → CSS, JS, and SASS files
+- `images/` → All images used on the site
 
-(* = not included)
-
-AJ
-aj@lkn.io | @ajlkn
-
-
-Credits:
-
-	Demo Images:
-		Unsplash (unsplash.com)
-
-	Icons:
-		Font Awesome (fontawesome.io)
-
-	Other:
-		jQuery (jquery.com)
-		Scrollex (github.com/ajlkn/jquery.scrollex)
-		Responsive Tools (github.com/ajlkn/responsive-tools)
+## 🛠️ Setup
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/Smear6uard/sameerakhtar.dev.git
