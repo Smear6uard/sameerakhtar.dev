@@ -15,13 +15,20 @@
 		<style>
 			/* ===== MODERN VISUAL ENHANCEMENTS ===== */
 
-			/* Static gradient background - reduced animation for performance */
+			/* Enhanced gradient background with subtle animation */
 			body {
 				background: linear-gradient(-45deg, #0a0e27, #1a1d3f, #2e1065, #1e3a8a, #0f172a, #581c87);
 				background-size: 400% 400%;
 				background-position: 0% 50%;
 				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 				position: relative;
+				animation: gradientShift 20s ease infinite;
+			}
+
+			@keyframes gradientShift {
+				0% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+				100% { background-position: 0% 50%; }
 			}
 
 			body::before {
@@ -36,6 +43,38 @@
 							radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.3), transparent 50%);
 				pointer-events: none;
 				opacity: 0.6;
+				animation: floatingOrbs 15s ease-in-out infinite;
+			}
+
+			@keyframes floatingOrbs {
+				0%, 100% { transform: translateY(0px) rotate(0deg); }
+				50% { transform: translateY(-20px) rotate(180deg); }
+			}
+
+			/* Floating particles */
+			body::after {
+				content: '';
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-image: 
+					radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+					radial-gradient(2px 2px at 40px 70px, rgba(168, 85, 247, 0.4), transparent),
+					radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+					radial-gradient(1px 1px at 130px 80px, rgba(59, 130, 246, 0.3), transparent),
+					radial-gradient(2px 2px at 160px 30px, rgba(168, 85, 247, 0.2), transparent);
+				background-repeat: repeat;
+				background-size: 200px 100px;
+				animation: particleFloat 20s linear infinite;
+				pointer-events: none;
+				opacity: 0.4;
+			}
+
+			@keyframes particleFloat {
+				0% { transform: translateY(0px); }
+				100% { transform: translateY(-100px); }
 			}
 
 			/* Removed heavy background animations for better performance */
@@ -61,6 +100,12 @@
 				transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 				overflow: hidden !important;
 				position: relative;
+				animation: headerGlow 3s ease-in-out infinite alternate;
+			}
+
+			@keyframes headerGlow {
+				0% { box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 80px rgba(139, 92, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+				100% { box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 120px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
 			}
 
 			/* Removed shine effect for better performance */
@@ -99,11 +144,16 @@
 				-webkit-text-fill-color: transparent;
 				background-clip: text;
 				text-shadow: none;
-				animation: slideInDown 1s ease-out;
+				animation: slideInDown 1s ease-out, textShimmer 3s ease-in-out infinite;
 				background-size: 200% 200%;
 				background-position: 0% 50%;
 				position: relative;
 				z-index: 1;
+			}
+
+			@keyframes textShimmer {
+				0%, 100% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
 			}
 
 			@keyframes slideInDown {
@@ -170,7 +220,7 @@
 				border-color: rgba(168, 85, 247, 0.4);
 			}
 
-			/* Enhanced skills cards */
+			/* Enhanced skills cards with scroll animations */
 			.features li {
 				background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06));
 				backdrop-filter: blur(15px) saturate(180%);
@@ -182,6 +232,20 @@
 				overflow: hidden !important;
 				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
 							inset 0 1px 0 rgba(255, 255, 255, 0.2);
+				opacity: 0;
+				transform: translateY(50px);
+				animation: slideInCard 0.8s ease-out forwards;
+			}
+
+			.features li:nth-child(1) { animation-delay: 0.1s; }
+			.features li:nth-child(2) { animation-delay: 0.3s; }
+			.features li:nth-child(3) { animation-delay: 0.5s; }
+
+			@keyframes slideInCard {
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
 			}
 
 			.features li h3 {
@@ -287,7 +351,7 @@
 				color: #1a1a2e !important;
 			}
 
-			/* Modern button styling */
+			/* Modern button styling with enhanced effects */
 			.button {
 				background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%) !important;
 				border: none !important;
@@ -307,6 +371,19 @@
 				text-align: center !important;
 				vertical-align: middle !important;
 				line-height: 1 !important;
+				transform: perspective(1px) translateZ(0);
+			}
+
+			.button::before {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -100%;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+				transition: left 0.6s;
+				z-index: 1;
 			}
 
 			.button::after {
@@ -322,69 +399,20 @@
 				transition: width 0.6s ease, height 0.6s ease;
 			}
 
+			.button:hover::before {
+				left: 100%;
+			}
+
 			.button:hover::after {
 				width: 300px;
 				height: 300px;
 			}
 
-			.button, .button:link, .button:visited, .button:active {
-				color: #f0f0ff !important;
-				text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
-			}
-
 			.button:hover {
-				color: #ffffff !important;
-			}
-
-			a.button {
-				color: #f0f0ff !important;
-			}
-
-			#main .button,
-			#main a.button,
-			#main .button:link,
-			#main .button:visited,
-			#main .button:active {
-				color: #f0f0ff !important;
-				display: inline-flex !important;
-				align-items: center !important;
-				justify-content: center !important;
-				line-height: 1 !important;
-			}
-
-			#main .button:hover {
-				color: #ffffff !important;
-			}
-
-			.actions {
-				text-align: center;
-			}
-
-			.actions.special {
-				display: flex;
-				justify-content: center;
-			}
-
-			.button::before {
-				content: '';
-				position: absolute;
-				top: 0;
-				left: -100%;
-				width: 100%;
-				height: 100%;
-				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-				transition: left 0.6s;
-				z-index: 1;
-			}
-
-			.button:hover::before {
-				left: 100%;
-			}
-
-			.button:hover {
-				transform: translateY(-5px) scale(1.08);
+				transform: translateY(-5px) scale(1.08) perspective(1px) translateZ(0);
 				box-shadow: 0 20px 50px rgba(139, 92, 246, 0.7),
-							0 0 60px rgba(168, 85, 247, 0.5);
+							0 0 60px rgba(168, 85, 247, 0.5),
+							0 0 0 1px rgba(255, 255, 255, 0.1);
 				background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%) !important;
 			}
 
@@ -432,7 +460,7 @@
 				border-color: rgba(168, 85, 247, 0.6);
 			}
 
-			/* Navigation enhancement */
+			/* Enhanced navigation with smooth animations */
 			#nav {
 				background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.06)) !important;
 				backdrop-filter: blur(25px) saturate(180%);
@@ -441,6 +469,13 @@
 							inset 0 1px 0 rgba(255, 255, 255, 0.2);
 				left: 50% !important;
 				transform: translateX(-50%) !important;
+				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+			}
+
+			#nav:hover {
+				transform: translateX(-50%) translateY(-2px) !important;
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3),
+							inset 0 1px 0 rgba(255, 255, 255, 0.3);
 			}
 
 			#nav ul {
@@ -605,7 +640,43 @@
 				overflow: visible !important;
 			}
 
-			/* Mobile responsiveness */
+			/* Skill bars */
+			.skill-bar {
+				width: 100%;
+				height: 6px;
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 3px;
+				margin-top: 1rem;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.skill-progress {
+				height: 100%;
+				background: linear-gradient(90deg, #8b5cf6, #a855f7);
+				border-radius: 3px;
+				width: 0%;
+				transition: width 2s ease-in-out;
+				position: relative;
+			}
+
+			.skill-progress::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+				animation: shimmer 2s infinite;
+			}
+
+			@keyframes shimmer {
+				0% { transform: translateX(-100%); }
+				100% { transform: translateX(100%); }
+			}
+
+			/* Enhanced mobile responsiveness */
 			@media screen and (max-width: 736px) {
 				#header h1 {
 					font-size: 2.5em !important;
@@ -617,6 +688,36 @@
 
 				.features li {
 					padding: 2rem 1.5rem !important;
+				}
+
+				/* Reduce animations on mobile for better performance */
+				body {
+					animation: none;
+				}
+
+				body::before,
+				body::after {
+					animation: none;
+				}
+
+				/* Touch-friendly button sizes */
+				.button {
+					min-height: 48px;
+					padding: 1.2rem 2rem !important;
+				}
+
+				/* Optimize particle effects for mobile */
+				body::after {
+					opacity: 0.2;
+				}
+			}
+
+			/* Reduced motion preferences */
+			@media (prefers-reduced-motion: reduce) {
+				* {
+					animation-duration: 0.01ms !important;
+					animation-iteration-count: 1 !important;
+					transition-duration: 0.01ms !important;
 				}
 			}
 		</style>
@@ -676,16 +777,25 @@
 										<span class="icon solid major fas fa-code" aria-hidden="true"></span>
 										<h3>Full Stack Development</h3>
 										<p>Experience building applications from front end to back end using React, Next.js, Node.js, and Python.</p>
+										<div class="skill-bar">
+											<div class="skill-progress" data-width="90%"></div>
+										</div>
 									</li>
 									<li>
 										<span class="icon major style3 solid fa-cogs" aria-hidden="true"></span>
 										<h3>AI Integration</h3>
 										<p>Exploring ways to apply artificial intelligence to enhance software products, improve functionality, and scale solutions.</p>
+										<div class="skill-bar">
+											<div class="skill-progress" data-width="75%"></div>
+										</div>
 									</li>
 									<li>
 										<span class="icon major style5 solid fa-cloud" aria-hidden="true"></span>
 										<h3>Deployed Projects</h3>
 										<p>Hands-on practice taking projects from idea to deployment, focusing on clean architecture and real-world usability.</p>
+										<div class="skill-bar">
+											<div class="skill-progress" data-width="85%"></div>
+										</div>
 									</li>
 								</ul>
 								<footer class="major">
@@ -751,6 +861,148 @@
 			    });
 			  } catch(e) { /* no-op */ }
 			})();
+
+			// Enhanced scroll animations and interactions
+			document.addEventListener('DOMContentLoaded', function() {
+				// Smooth scrolling for navigation links
+				document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+					anchor.addEventListener('click', function (e) {
+						e.preventDefault();
+						const target = document.querySelector(this.getAttribute('href'));
+						if (target) {
+							target.scrollIntoView({
+								behavior: 'smooth',
+								block: 'start'
+							});
+						}
+					});
+				});
+
+				// Intersection Observer for scroll animations
+				const observerOptions = {
+					threshold: 0.1,
+					rootMargin: '0px 0px -50px 0px'
+				};
+
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							entry.target.style.opacity = '1';
+							entry.target.style.transform = 'translateY(0)';
+						}
+					});
+				}, observerOptions);
+
+				// Observe sections for scroll animations
+				document.querySelectorAll('section.main').forEach(section => {
+					section.style.opacity = '0';
+					section.style.transform = 'translateY(30px)';
+					section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+					observer.observe(section);
+				});
+
+				// Enhanced button click effects
+				document.querySelectorAll('.button').forEach(button => {
+					button.addEventListener('click', function(e) {
+						// Create ripple effect
+						const ripple = document.createElement('span');
+						const rect = this.getBoundingClientRect();
+						const size = Math.max(rect.width, rect.height);
+						const x = e.clientX - rect.left - size / 2;
+						const y = e.clientY - rect.top - size / 2;
+						
+						ripple.style.width = ripple.style.height = size + 'px';
+						ripple.style.left = x + 'px';
+						ripple.style.top = y + 'px';
+						ripple.classList.add('ripple');
+						
+						this.appendChild(ripple);
+						
+						setTimeout(() => {
+							ripple.remove();
+						}, 600);
+					});
+				});
+
+				// Add ripple effect styles
+				const style = document.createElement('style');
+				style.textContent = `
+					.button {
+						position: relative;
+						overflow: hidden;
+					}
+					.ripple {
+						position: absolute;
+						border-radius: 50%;
+						background: rgba(255, 255, 255, 0.6);
+						transform: scale(0);
+						animation: ripple-animation 0.6s linear;
+						pointer-events: none;
+					}
+					@keyframes ripple-animation {
+						to {
+							transform: scale(4);
+							opacity: 0;
+						}
+					}
+				`;
+				document.head.appendChild(style);
+
+				// Parallax effect for background elements
+				window.addEventListener('scroll', () => {
+					const scrolled = window.pageYOffset;
+					const parallax = document.querySelector('body::before');
+					if (parallax) {
+						parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+					}
+				});
+
+				// Mouse movement parallax effect
+				document.addEventListener('mousemove', (e) => {
+					const mouseX = e.clientX / window.innerWidth;
+					const mouseY = e.clientY / window.innerHeight;
+					
+					document.querySelectorAll('.features li').forEach((card, index) => {
+						const speed = (index + 1) * 0.02;
+						const x = (mouseX - 0.5) * speed * 100;
+						const y = (mouseY - 0.5) * speed * 100;
+						card.style.transform = `translate(${x}px, ${y}px)`;
+					});
+				});
+
+				// Animate skill bars when they come into view
+				const skillObserver = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							const progressBar = entry.target.querySelector('.skill-progress');
+							const width = progressBar.getAttribute('data-width');
+							setTimeout(() => {
+								progressBar.style.width = width;
+							}, 500);
+						}
+					});
+				}, { threshold: 0.5 });
+
+				document.querySelectorAll('.features li').forEach(card => {
+					skillObserver.observe(card);
+				});
+
+				// Add typing effect to header
+				const headerText = document.querySelector('#header h1');
+				if (headerText) {
+					const text = headerText.textContent;
+					headerText.textContent = '';
+					let i = 0;
+					const typeWriter = () => {
+						if (i < text.length) {
+							headerText.textContent += text.charAt(i);
+							i++;
+							setTimeout(typeWriter, 100);
+						}
+					};
+					setTimeout(typeWriter, 1000);
+				}
+			});
 			</script>
 
 	</body>
