@@ -51,17 +51,17 @@ export function Navigation() {
       }`}
     >
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-              <span className="text-primary-foreground font-bold text-lg group-hover:scale-110 transition-transform duration-300">SA</span>
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-h-[48px]">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+              <span className="text-primary-foreground font-bold text-sm sm:text-lg group-hover:scale-110 transition-transform duration-300">SA</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-lg gradient-text tracking-tight group-hover:scale-105 transition-transform duration-300">
+              <span className="font-bold text-base sm:text-lg gradient-text tracking-tight group-hover:scale-105 transition-transform duration-300">
                 Sameer Akhtar
               </span>
-              <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors duration-300">
+              <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors duration-300 hidden sm:block">
                 Software Engineer
               </span>
             </div>
@@ -85,13 +85,13 @@ export function Navigation() {
           <div className="flex items-center gap-2">
                  <button
                    onClick={() => setIsOpen(!isOpen)}
-                   className="md:hidden p-2.5 rounded-xl bg-muted hover:bg-primary/10 border border-border dark:border-white/10 hover:scale-110 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 cursor-pointer"
+                   className="md:hidden p-3 rounded-xl bg-muted hover:bg-primary/10 border border-border dark:border-white/10 hover:scale-110 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 cursor-pointer min-h-[48px] min-w-[48px] flex items-center justify-center"
                    aria-label="Toggle menu"
                  >
               {isOpen ? (
-                <XMarkIcon className="w-5 h-5" />
+                <XMarkIcon className="w-6 h-6" />
               ) : (
-                <Bars3Icon className="w-5 h-5" />
+                <Bars3Icon className="w-6 h-6" />
               )}
             </button>
           </div>
@@ -112,7 +112,7 @@ export function Navigation() {
                             key={item.name}
                             href={item.href}
                             onClick={() => handleNavClick(item.href)}
-                            className="block px-3 py-2 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200"
+                            className="block px-4 py-3 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 min-h-[48px] flex items-center"
                           >
                             {item.name}
                           </Link>
