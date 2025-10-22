@@ -63,7 +63,7 @@ export function HeroSection() {
   return (
     <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden">
       {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gray-950" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950/90" />
 
       {/* Animated gradient orbs with more movement */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

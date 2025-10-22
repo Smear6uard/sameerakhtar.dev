@@ -137,7 +137,7 @@ export function ResumeSection() {
               <h3 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Professional Experience</h3>
             </div>
             
-            <div className="h-[24rem] sm:h-[32rem] overflow-y-auto pr-2 space-y-4 sm:space-y-6 scrollbar-thin scrollbar-thumb-primary/30 scrollbar-track-transparent hover:scrollbar-thumb-primary/50">
+            <div className="h-[24rem] sm:h-[32rem] overflow-y-auto pr-2 space-y-4 sm:space-y-6 scrollbar-thin scrollbar-track-transparent [&::-webkit-scrollbar-thumb]:bg-amber-500/30 hover:[&::-webkit-scrollbar-thumb]:bg-amber-500/50 [&::-webkit-scrollbar-thumb]:rounded-full">
               {experience.map((job, index) => (
        <motion.div
          key={index}

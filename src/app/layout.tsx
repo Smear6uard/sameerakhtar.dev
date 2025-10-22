@@ -30,19 +30,19 @@ export const metadata: Metadata = {
     siteName: "Sameer Akhtar",
     images: [
       {
-        url: "/LinkedIn pic.jpg",
-        width: 800,
-        height: 800,
+        url: "/favicon.ico",
+        width: 512,
+        height: 512,
         alt: "Sameer Akhtar - Full Stack Developer",
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Sameer Akhtar | Full Stack Developer",
+    card: "summary",
+    title: "Sameer Akhtar",
     description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
     creator: "@sameerakhtar",
-    images: ["/LinkedIn pic.jpg"],
+    images: ["/favicon.ico"],
   },
   robots: {
     index: true,
