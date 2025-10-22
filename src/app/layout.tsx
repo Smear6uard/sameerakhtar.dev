@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sameer Akhtar - Full Stack Developer & Software Engineer",
+  title: "Sameer Akhtar | Full Stack Developer",
   description: "Portfolio showcasing my web development projects and skills",
   keywords: ["Sameer Akhtar", "Full Stack Developer", "Software Engineer", "React", "Next.js", "TypeScript", "Web Development"],
   authors: [{ name: "Sameer Akhtar" }],
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://sameerakhtar.com",
-    title: "Sameer Akhtar - Full Stack Developer & Software Engineer",
+    title: "Sameer Akhtar | Full Stack Developer",
     description: "Portfolio showcasing my web development projects and skills",
     siteName: "Sameer Akhtar Portfolio",
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sameer Akhtar - Full Stack Developer & Software Engineer",
+    title: "Sameer Akhtar | Full Stack Developer",
     description: "Portfolio showcasing my web development projects and skills",
     creator: "@sameerakhtar",
     images: ["/preview-image.jpg"],
