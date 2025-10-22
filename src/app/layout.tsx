@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sameer Akhtar | Full Stack Developer",
-  description: "Portfolio showcasing my web development projects and skills",
+  description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
   keywords: ["Sameer Akhtar", "Full Stack Developer", "Software Engineer", "React", "Next.js", "TypeScript", "Web Development"],
   authors: [{ name: "Sameer Akhtar" }],
   creator: "Sameer Akhtar",
@@ -26,23 +26,23 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://sameerakhtar.com",
     title: "Sameer Akhtar | Full Stack Developer",
-    description: "Portfolio showcasing my web development projects and skills",
-    siteName: "Sameer Akhtar Portfolio",
+    description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
+    siteName: "Sameer Akhtar",
     images: [
       {
-        url: "/preview-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Sameer Akhtar - Full Stack Developer Portfolio",
+        url: "/LinkedIn pic.jpg",
+        width: 800,
+        height: 800,
+        alt: "Sameer Akhtar - Full Stack Developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sameer Akhtar | Full Stack Developer",
-    description: "Portfolio showcasing my web development projects and skills",
+    description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
     creator: "@sameerakhtar",
-    images: ["/preview-image.jpg"],
+    images: ["/LinkedIn pic.jpg"],
   },
   robots: {
     index: true,
