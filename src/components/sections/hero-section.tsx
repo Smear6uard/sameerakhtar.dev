@@ -63,13 +63,13 @@ export function HeroSection() {
   return (
     <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden">
       {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/20 dark:from-slate-950/95 dark:via-blue-950/90 dark:to-purple-950/95" />
+      <div className="absolute inset-0 bg-gray-950" />
 
       {/* Animated gradient orbs with more movement */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-400/15 to-cyan-400/15 dark:from-violet-500/40 dark:to-cyan-500/40 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-400/15 to-amber-400/15 dark:from-emerald-500/40 dark:to-amber-500/40 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-400/10 to-violet-400/10 dark:from-rose-500/30 dark:to-violet-500/30 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-400/15 to-cyan-400/15 dark:from-violet-500/5 dark:to-cyan-500/5 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-400/15 to-amber-400/15 dark:from-emerald-500/5 dark:to-amber-500/5 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-400/10 to-violet-400/10 dark:from-rose-500/3 dark:to-violet-500/3 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
       </div>
 
       {/* Floating particles */}
@@ -93,13 +93,13 @@ export function HeroSection() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center"
         >
           {/* Left Column - Text Content */}
-          <div className="space-y-8 sm:space-y-12 text-center lg:text-left">
+          <div className="space-y-6 sm:space-y-8 lg:space-y-12 text-center lg:text-left">
             <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8">
               <motion.h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-foreground"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-200 dark:text-gray-100"
                 variants={itemVariants}
               >
                 Hi, I&apos;m{" "}
@@ -109,7 +109,7 @@ export function HeroSection() {
                 </span>
               </motion.h1>
                 <motion.h2
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-300 dark:text-gray-200 font-medium"
                   variants={itemVariants}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
@@ -119,9 +119,9 @@ export function HeroSection() {
                 </motion.h2>
             </motion.div>
 
-            <motion.p 
+            <motion.p
               variants={itemVariants}
-              className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              className="text-base sm:text-lg text-gray-300 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
               transition={{ delay: 1 }}
@@ -138,18 +138,18 @@ export function HeroSection() {
                  <motion.a
                    href="/Sameer-Akhtar-Resume.pdf"
                    download
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-violet-700 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-violet-500/30"
+                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-500/30 dark:border-blue-400/40"
                    whileHover={{ 
                      scale: 1.08, 
                      y: -4,
-                     boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4)"
+                     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.4)"
                    }}
                    whileTap={{ scale: 0.95 }}
                    animate={{
                      boxShadow: [
-                       "0 10px 30px rgba(139, 92, 246, 0.3)",
-                       "0 15px 35px rgba(139, 92, 246, 0.4)",
-                       "0 10px 30px rgba(139, 92, 246, 0.3)"
+                       "0 10px 30px rgba(59, 130, 246, 0.3)",
+                       "0 15px 35px rgba(59, 130, 246, 0.4)",
+                       "0 10px 30px rgba(59, 130, 246, 0.3)"
                      ]
                    }}
                    transition={{
@@ -161,7 +161,7 @@ export function HeroSection() {
                    }}
                  >
                    {/* Animated background gradient */}
-                   <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-500 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                    
                    {/* Shimmer effect */}
                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -176,26 +176,26 @@ export function HeroSection() {
 
                  <motion.a
                    href="#contact"
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-white/10 dark:bg-white/5 backdrop-blur-sm text-foreground font-semibold border-2 border-violet-500/30 hover:border-violet-500/60 transition-all duration-300"
+                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gray-800/50 dark:bg-gray-900/50 backdrop-blur-sm text-gray-300 dark:text-gray-200 font-semibold border-2 border-gray-600 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300"
                    whileHover={{ 
                      scale: 1.08, 
                      y: -4,
-                     boxShadow: "0 20px 40px rgba(139, 92, 246, 0.2)"
+                     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)"
                    }}
                    whileTap={{ scale: 0.95 }}
                  >
                    {/* Animated background */}
-                   <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                    
                    {/* Shimmer effect */}
-                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
+                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
                    
                    <EnvelopeIcon className="relative w-5 h-5 mr-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
                    <span className="relative">Get In Touch</span>
                    
                    {/* Floating particles */}
-                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-violet-500/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
-                   <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-purple-500/40 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" style={{ animationDelay: '0.3s' }} />
+                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
+                   <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-indigo-500/40 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" style={{ animationDelay: '0.3s' }} />
                  </motion.a>
             </motion.div>
 
@@ -255,14 +255,14 @@ export function HeroSection() {
           {/* Right Column - Profile Image */}
           <motion.div
             variants={itemVariants}
-            className="flex justify-center lg:justify-end order-first lg:order-last"
+            className="flex justify-center lg:justify-end order-first lg:order-last mb-8 lg:mb-0"
           >
             <div className="relative">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
                 animate={{ scale: 1, opacity: 1, rotateY: 0 }}
                 transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 100 }}
-                className="relative w-[16rem] h-[16rem] sm:w-[20rem] sm:h-[20rem] md:w-[24rem] md:h-[24rem] lg:w-[28rem] lg:h-[28rem]"
+                className="relative w-[12rem] h-[12rem] sm:w-[16rem] sm:h-[16rem] md:w-[20rem] md:h-[20rem] lg:w-[28rem] lg:h-[28rem]"
               >
                 {/* Enhanced glow effect with animation */}
                 <motion.div
@@ -313,7 +313,7 @@ export function HeroSection() {
 
                 {/* Floating elements around the image */}
                 <motion.div
-                  className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-violet-500 via-cyan-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg"
+                  className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-violet-500 via-cyan-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg"
                   animate={{
                     y: [-5, 5, -5],
                     rotate: [0, 10, -10, 0]
@@ -328,7 +328,7 @@ export function HeroSection() {
                 </motion.div>
 
                 <motion.div
-                  className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg"
+                  className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg"
                   animate={{
                     y: [5, -5, 5],
                     rotate: [0, -10, 10, 0]

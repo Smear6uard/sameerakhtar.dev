@@ -8,11 +8,13 @@ export function ThemeProvider({ children, ...props }: React.ComponentProps<typeo
 
   React.useEffect(() => {
     setMounted(true);
+    // Force dark mode
+    document.documentElement.classList.add('dark');
   }, []);
 
   if (!mounted) {
     return <>{children}</>;
   }
 
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return <NextThemesProvider {...props} forcedTheme="dark">{children}</NextThemesProvider>;
 }

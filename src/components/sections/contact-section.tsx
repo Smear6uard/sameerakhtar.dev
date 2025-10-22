@@ -34,7 +34,7 @@ const contactInfo = [
 const socialLinks = [
   { name: "GitHub", href: "https://github.com/Smear6uard", icon: GithubIcon },
   { name: "LinkedIn", href: "https://linkedin.com/in/sameerakhtar", icon: LinkedinIcon },
-  { name: "X (Twitter)", href: "https://twitter.com/sameerakhtar", icon: X },
+  { name: "X (Twitter)", href: "https://x.com/s_ameer_akhtar", icon: X },
 ];
 
 export function ContactSection() {

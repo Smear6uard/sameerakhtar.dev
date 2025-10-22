@@ -159,16 +159,16 @@ export function ResumeSection() {
                   {/* Card Content */}
                   <div className="relative modern-card p-4 sm:p-6">
                     <div className="mb-3 sm:mb-4">
-                      <h4 className="text-base sm:text-lg font-bold mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">{job.title}</h4>
-                      <p className="text-blue-600 dark:text-blue-400 font-medium mb-2 text-sm sm:text-base group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors duration-300">{job.company}</p>
-                      <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground">
-                        <div className="flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                          <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400" />
-                          <span>{job.location}</span>
+                      <h4 className="text-base sm:text-lg font-bold mb-1 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300">{job.title}</h4>
+                      <p className="text-blue-500 dark:text-blue-400 font-medium mb-2 text-sm sm:text-base group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300">{job.company}</p>
+                      <div className="flex flex-wrap gap-2 sm:gap-3 text-xs sm:text-sm">
+                        <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 dark:from-blue-800/50 dark:to-indigo-800/50 rounded-lg border border-blue-700/40 dark:border-blue-600/50">
+                          <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400 dark:text-blue-300" />
+                          <span className="text-blue-200 dark:text-blue-100">{job.location}</span>
                         </div>
-                        <div className="flex items-center gap-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                          <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-600 dark:text-indigo-400" />
-                          <span>{job.period}</span>
+                        <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-indigo-900/40 to-blue-900/40 dark:from-indigo-800/50 dark:to-blue-800/50 rounded-lg border border-indigo-700/40 dark:border-indigo-600/50">
+                          <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-400 dark:text-indigo-300" />
+                          <span className="text-indigo-200 dark:text-indigo-100">{job.period}</span>
                         </div>
                       </div>
                     </div>
@@ -176,12 +176,12 @@ export function ResumeSection() {
                     <p className="text-foreground/80 dark:text-muted-foreground mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">{job.description}</p>
 
                     <div>
-                      <h5 className="font-semibold mb-2 text-xs sm:text-sm text-blue-600 dark:text-blue-400">Key Achievements:</h5>
+                      <h5 className="font-semibold mb-2 text-xs sm:text-sm text-blue-500 dark:text-blue-400">Key Achievements:</h5>
                       <ul className="space-y-1 sm:space-y-1.5">
                         {job.achievements.map((achievement, achievementIndex) => (
                           <li key={achievementIndex} className="flex items-start gap-2 hover:translate-x-3 hover:scale-105 transition-all duration-300 ease-out group/achievement">
-                            <span className="text-blue-500 dark:text-blue-400 mt-1 text-xs group-hover/achievement:scale-125 transition-transform duration-300">•</span>
-                            <span className="text-xs text-foreground/80 dark:text-muted-foreground leading-relaxed group-hover/achievement:text-blue-600 dark:group-hover/achievement:text-blue-400 transition-colors duration-300">{achievement}</span>
+                            <span className="text-blue-400 dark:text-blue-300 mt-1 text-xs group-hover/achievement:scale-125 transition-transform duration-300">•</span>
+                            <span className="text-xs text-foreground/80 dark:text-muted-foreground leading-relaxed group-hover/achievement:text-blue-300 dark:group-hover/achievement:text-blue-200 transition-colors duration-300">{achievement}</span>
                           </li>
                         ))}
                       </ul>
@@ -220,18 +220,18 @@ export function ResumeSection() {
                     
                     {/* Card Content */}
                     <div className="relative modern-card p-4 sm:p-6">
-                      <h4 className="text-base sm:text-lg font-bold mb-1 group-hover:text-teal-600 transition-colors duration-300">{edu.degree}</h4>
-                      <p className="text-teal-600 font-medium mb-2 sm:mb-3 text-sm sm:text-base group-hover:text-teal-700 transition-colors duration-300">{edu.school}</p>
-                      <div className="flex flex-col gap-1 sm:gap-1.5 text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground">
-                        <div className="flex items-center gap-1 px-2 py-1 bg-teal-100 dark:bg-teal-900/30 rounded-lg">
-                          <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4 text-teal-600 group-hover:scale-110 transition-transform duration-300" />
-                          <span>{edu.location}</span>
+                      <h4 className="text-base sm:text-lg font-bold mb-1 group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors duration-300">{edu.degree}</h4>
+                      <p className="text-teal-500 dark:text-teal-400 font-medium mb-2 sm:mb-3 text-sm sm:text-base group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors duration-300">{edu.school}</p>
+                      <div className="flex flex-col gap-1 sm:gap-1.5 text-xs sm:text-sm">
+                        <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-teal-900/40 to-cyan-900/40 dark:from-teal-800/50 dark:to-cyan-800/50 rounded-lg border border-teal-700/40 dark:border-teal-600/50">
+                          <MapPinIcon className="w-3 h-3 sm:w-4 sm:h-4 text-teal-400 dark:text-teal-300 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="text-teal-200 dark:text-teal-100">{edu.location}</span>
                         </div>
-                        <div className="flex items-center gap-1 px-2 py-1 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg">
-                          <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-600 group-hover:scale-110 transition-transform duration-300" />
-                          <span>{edu.period}</span>
+                        <div className="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-cyan-900/40 to-teal-900/40 dark:from-cyan-800/50 dark:to-teal-800/50 rounded-lg border border-cyan-700/40 dark:border-cyan-600/50">
+                          <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 dark:text-cyan-300 group-hover:scale-110 transition-transform duration-300" />
+                          <span className="text-cyan-200 dark:text-cyan-100">{edu.period}</span>
                         </div>
-                        <span className="text-teal-600 font-medium text-xs sm:text-sm group-hover:scale-105 transition-transform duration-300">GPA: {edu.gpa}</span>
+                        <span className="text-teal-400 dark:text-teal-300 font-medium text-xs sm:text-sm group-hover:scale-105 transition-transform duration-300">GPA: {edu.gpa}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -265,9 +265,9 @@ export function ResumeSection() {
                     
                     {/* Card Content */}
                     <div className="relative modern-card p-4 sm:p-6 text-center">
-                      <h4 className="font-bold mb-1 text-sm sm:text-base group-hover:text-indigo-600 transition-colors duration-300">{cert.name}</h4>
-                      <p className="text-indigo-600 font-medium mb-1 text-xs sm:text-sm group-hover:text-indigo-700 transition-colors duration-300">{cert.issuer}</p>
-                      <p className="text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground group-hover:text-indigo-600 transition-colors duration-300">{cert.date}</p>
+                      <h4 className="font-bold mb-1 text-sm sm:text-base group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors duration-300">{cert.name}</h4>
+                      <p className="text-indigo-500 dark:text-indigo-400 font-medium mb-1 text-xs sm:text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors duration-300">{cert.issuer}</p>
+                      <p className="text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground group-hover:text-indigo-300 dark:group-hover:text-indigo-200 transition-colors duration-300">{cert.date}</p>
                     </div>
                   </motion.div>
                 ))}
