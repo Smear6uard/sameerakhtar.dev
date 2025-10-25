@@ -5,7 +5,6 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { 
   EnvelopeIcon, 
-  PhoneIcon, 
   MapPinIcon
 } from "@heroicons/react/24/outline";
 import { GithubIcon, LinkedinIcon, X } from "lucide-react";
@@ -14,26 +13,20 @@ const contactInfo = [
   {
     icon: EnvelopeIcon,
     title: "Email",
-    value: "sameer_akhtar@icloud.com",
-    href: "mailto:sameer_akhtar@icloud.com"
-  },
-  {
-    icon: PhoneIcon,
-    title: "Phone",
-    value: "630-998-6261",
-    href: "tel:6309986261"
+    value: "Sameer_Akhtar@icloud.com",
+    href: "mailto:Sameer_Akhtar@icloud.com"
   },
   {
     icon: MapPinIcon,
     title: "Location",
-    value: "Chicago",
+    value: "Greater Chicago Area",
     href: "#"
   }
 ];
 
 const socialLinks = [
   { name: "GitHub", href: "https://github.com/Smear6uard", icon: GithubIcon },
-  { name: "LinkedIn", href: "https://linkedin.com/in/sameerakhtar", icon: LinkedinIcon },
+  { name: "LinkedIn", href: "https://linkedin.com/in/sameer-a-akhtar", icon: LinkedinIcon },
   { name: "X (Twitter)", href: "https://x.com/s_ameer_akhtar", icon: X },
 ];
 
@@ -85,7 +78,7 @@ export function ContactSection() {
         {/* Contact Information */}
         <motion.div variants={itemVariants} className="space-y-8 sm:space-y-12">
           {/* Contact Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {contactInfo.map((info, index) => (
        <motion.div
          key={index}

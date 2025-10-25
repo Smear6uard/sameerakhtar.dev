@@ -18,11 +18,11 @@ const skillCategories = [
     bgColor: "bg-blue-900/20 dark:bg-blue-900/40",
     skills: [
       { name: "JavaScript", level: "Proficient", project: "3+ years experience" },
-      { name: "Python", level: "Proficient", project: "3+ years experience" },
-      { name: "Swift", level: "Intermediate", project: "2+ years experience" },
-      { name: "Java", level: "Intermediate", project: "1+ years experience" },
+      { name: "Python", level: "Proficient", project: "2+ years experience" },
+      { name: "Java", level: "Proficient", project: "2+ years experience" },
+      { name: "Swift", level: "Intermediate", project: "1+ years experience" },
       { name: "SQL", level: "Beginner", project: "1+ years experience" },
-      { name: "PHP", level: "Beginner", project: "1+ years experience" },
+      { name: "PHP", level: "Beginner", project: "6 months experience" },
     ]
   },
   {
@@ -31,12 +31,17 @@ const skillCategories = [
     color: "from-teal-500 to-cyan-600",
     bgColor: "bg-teal-900/20 dark:bg-teal-900/40",
     skills: [
+      { name: "React", level: "Proficient", project: "Web Applications" },
+      { name: "Next.js", level: "Proficient", project: "AI Answer Engine" },
+      { name: "Node.js", level: "Proficient", project: "Backend Development" },
       { name: "AWS", level: "Proficient", project: "Cloud Development" },
       { name: "Langchain", level: "Proficient", project: "AI Integration" },
       { name: "Docker", level: "Proficient", project: "Containerization" },
-      { name: "iOS Development", level: "Intermediate", project: "Mobile Apps" },
+      { name: "Kubernetes", level: "Proficient", project: "Orchestration" },
+      { name: "iOS", level: "Intermediate", project: "Mobile Development" },
       { name: "Bootstrap", level: "Proficient", project: "UI Framework" },
       { name: "Git", level: "Expert", project: "Version Control" },
+      { name: "Bash", level: "Proficient", project: "Scripting" },
     ]
   },
   {
@@ -45,12 +50,13 @@ const skillCategories = [
     color: "from-indigo-500 to-purple-600",
     bgColor: "bg-indigo-900/20 dark:bg-indigo-900/40",
     skills: [
-      { name: "Next.js", level: "Proficient", project: "AI Answer Engine" },
-      { name: "React", level: "Proficient", project: "Web Applications" },
-      { name: "Node.js", level: "Proficient", project: "Backend Development" },
       { name: "Groq SDK", level: "Proficient", project: "AI Integration" },
-      { name: "Cheerio/Axios", level: "Proficient", project: "Web Scraping" },
+      { name: "Cheerio", level: "Proficient", project: "Web Scraping" },
+      { name: "Axios", level: "Proficient", project: "HTTP Client" },
       { name: "Puppeteer", level: "Proficient", project: "Dynamic Scraping" },
+      { name: "Chrome Extension", level: "Proficient", project: "Browser Extension" },
+      { name: "Chrome Storage API", level: "Proficient", project: "Data Management" },
+      { name: "Vercel", level: "Proficient", project: "Deployment" },
     ]
   }
 ];

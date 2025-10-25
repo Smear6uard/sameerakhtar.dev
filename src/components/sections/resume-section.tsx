@@ -14,27 +14,28 @@ import {
 
 const experience = [
   {
+    title: "Software Engineering Intern",
+    company: "BRUNOSOFT",
+    location: "Remote",
+    period: "Oct 2025 - Present",
+    description: "Leading migration of legacy AngularJS codebase to modern Angular, modernizing architecture for 100+ components.",
+    achievements: [
+      "Leading migration of legacy AngularJS codebase to modern Angular, modernizing architecture for 100+ components",
+      "Implementing containerized workflows using Docker and docker-compose to streamline deployment processes",
+      "Orchestrating deployments using Kubernetes pods, services, and deployments for scalable infrastructure",
+      "Developing custom plugins and themes for client CMS platforms using hooks, actions, and templates"
+    ]
+  },
+  {
     title: "Specialist",
     company: "Apple",
     location: "Naperville, IL",
     period: "Jul 2025 - Present",
-    description: "Delivering tailored hardware/software solutions to optimize workflows for individual and business clients.",
+    description: "Supported 50+ individual and business clients monthly with device setup, troubleshooting, and technical guidance.",
     achievements: [
-      "Configured devices, migrated data, and resolved technical issues for seamless client adoption",
-      "Translated complex technical concepts into clear language, boosting customer engagement and retention",
-      "Optimized workflows for individual and business clients through tailored solutions"
-    ]
-  },
-  {
-    title: "Co-Founder & Vice President",
-    company: "Computer Science Club",
-    location: "Lisle, IL",
-    period: "Sep 2023 - Aug 2024",
-    description: "Led organizational efforts and strategic initiatives for the Computer Science Club at DePaul University.",
-    achievements: [
-      "Organized 10+ events and workshops, increasing student participation by 60%",
-      "Spearheaded outreach campaigns that doubled membership and raised the club's profile across campus",
-      "Built partnerships with faculty and peers to expand technical and networking opportunities"
+      "Supported 50+ individual and business clients monthly with device setup, troubleshooting, and technical guidance",
+      "Configured iOS and macOS devices for enterprise environments, including MDM enrollment and system integration",
+      "Maintained 95%+ satisfaction rating through clear communication of technical solutions and product recommendations"
     ]
   },
   {
@@ -42,7 +43,7 @@ const experience = [
     company: "American Coach Limousine",
     location: "Downers Grove, IL",
     period: "Jul 2022 - Feb 2024",
-    description: "Streamlined coordination across teams and implemented software tools to improve operational efficiency.",
+    description: "Streamlined coordination across teams, improving delivery alignment for 15+ corporate clients.",
     achievements: [
       "Streamlined coordination across teams, improving delivery alignment for 15+ corporate clients",
       "Implemented software tools that reduced nationwide partner response times by 30%",
@@ -53,10 +54,10 @@ const experience = [
 
 const education = [
   {
-    degree: "Bachelors of Science in Computer Science",
+    degree: "Bachelor of Science in Computer Science",
     school: "DePaul University",
     location: "Chicago, IL", 
-    period: "Expected Graduation: July 2027",
+    period: "Expected Graduation: Jul 2027",
     gpa: "3.8 GPA"
   }
 ];
@@ -65,7 +66,8 @@ const certifications = [
   {
     name: "Scrimba Fullstack/AI Developer Course Certificate",
     issuer: "Scrimba",
-    date: "May 2025 - July 2025"
+    date: "May 2025 - Jul 2025",
+    description: "200+ hours in React, Next.js, Node.js, and AI Integration"
   }
 ];
 
@@ -267,7 +269,8 @@ export function ResumeSection() {
                     <div className="relative modern-card p-4 sm:p-6 text-center">
                       <h4 className="font-bold mb-1 text-sm sm:text-base group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors duration-300">{cert.name}</h4>
                       <p className="text-indigo-500 dark:text-indigo-400 font-medium mb-1 text-xs sm:text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors duration-300">{cert.issuer}</p>
-                      <p className="text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground group-hover:text-indigo-300 dark:group-hover:text-indigo-200 transition-colors duration-300">{cert.date}</p>
+                      <p className="text-xs sm:text-sm text-foreground/80 dark:text-muted-foreground mb-2 group-hover:text-indigo-300 dark:group-hover:text-indigo-200 transition-colors duration-300">{cert.date}</p>
+                      <p className="text-xs text-muted-foreground group-hover:text-indigo-300 dark:group-hover:text-indigo-200 transition-colors duration-300">{cert.description}</p>
                     </div>
                   </motion.div>
                 ))}

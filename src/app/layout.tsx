@@ -16,31 +16,31 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sameer Akhtar | Full Stack Developer",
-  description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
-  keywords: ["Sameer Akhtar", "Full Stack Developer", "Software Engineer", "React", "Next.js", "TypeScript", "Web Development"],
+  title: "Sameer Akhtar | Computer Science Student & AI Developer",
+  description: "Computer Science student at DePaul University with expertise in AI development, React, Next.js, and modern web technologies. Software Engineering Intern at BRUNOSOFT and Apple Specialist.",
+  keywords: ["Sameer Akhtar", "Computer Science Student", "AI Developer", "Software Engineer", "React", "Next.js", "JavaScript", "Python", "DePaul University", "BRUNOSOFT", "Apple"],
   authors: [{ name: "Sameer Akhtar" }],
   creator: "Sameer Akhtar",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://sameerakhtar.com",
-    title: "Sameer Akhtar | Full Stack Developer",
-    description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
+    url: "https://sameerakhtar.dev",
+    title: "Sameer Akhtar | Computer Science Student & AI Developer",
+    description: "Computer Science student at DePaul University with expertise in AI development, React, Next.js, and modern web technologies. Software Engineering Intern at BRUNOSOFT and Apple Specialist.",
     siteName: "Sameer Akhtar",
     images: [
       {
         url: "/favicon.ico",
         width: 512,
         height: 512,
-        alt: "Sameer Akhtar - Full Stack Developer",
+        alt: "Sameer Akhtar - Computer Science Student & AI Developer",
       },
     ],
   },
   twitter: {
     card: "summary",
     title: "Sameer Akhtar",
-    description: "Full Stack Developer specializing in React, Next.js, and TypeScript. Explore my portfolio of web development projects and technical expertise.",
+    description: "Computer Science student at DePaul University with expertise in AI development, React, Next.js, and modern web technologies.",
     creator: "@sameerakhtar",
     images: ["/favicon.ico"],
   },

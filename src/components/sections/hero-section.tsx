@@ -115,7 +115,7 @@ export function HeroSection() {
                   animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  Computer Science Student & AI Developer
+                  Computer Science Student & Software Engineering Intern
                 </motion.h2>
             </motion.div>
 
@@ -127,8 +127,8 @@ export function HeroSection() {
               transition={{ delay: 1 }}
             >
               I create innovative AI-powered solutions and web applications.
-              Passionate about computer science, machine learning, and building
-              technologies that solve real-world problems.
+              Currently pursuing Computer Science at DePaul University while working
+              as a Software Engineering Intern at BRUNOSOFT and Apple Specialist.
             </motion.p>
 
             <motion.div

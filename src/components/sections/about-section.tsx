@@ -74,8 +74,8 @@ export function AboutSection() {
             About <span className="gradient-text">Me</span>
           </h2>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
-            Full-stack developer passionate about building scalable web applications
-            that deliver exceptional user experiences and drive business growth.
+            Computer Science student at DePaul University passionate about AI development,
+            building scalable web applications, and creating innovative solutions that solve real-world problems.
           </p>
         </motion.div>
 
@@ -85,13 +85,12 @@ export function AboutSection() {
           <motion.div variants={itemVariants} className="space-y-6 sm:space-y-7 text-center lg:text-left">
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">My Story</h3>
             <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
-              I&apos;m a results-driven developer who transforms complex requirements into elegant solutions. 
-              With expertise in React, Next.js, and modern web technologies, I build applications 
-              that are both performant and user-friendly.
+              I&apos;m a Computer Science student at DePaul University with a 3.8 GPA, currently working as a Software Engineering Intern at BRUNOSOFT and serving as an Apple Specialist. 
+              I specialize in AI development, modernizing legacy codebases, and building scalable web applications.
             </p>
             <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
-              I believe in clean code, agile development, and continuous learning. When I&apos;m not coding, 
-              I&apos;m exploring new technologies or contributing to open-source projects.
+              With expertise in JavaScript, Python, React, Next.js, and AI technologies, I&apos;ve built production applications processing 100+ URLs/hour with 98% accuracy. 
+              I&apos;m passionate about creating innovative solutions that solve real-world problems.
             </p>
           </motion.div>
 
@@ -105,8 +104,8 @@ export function AboutSection() {
                 transition: { duration: 0.3, ease: "easeOut" }
               }}
             >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">3+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Years Experience</div>
+              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">3.8</div>
+              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">GPA</div>
             </motion.div>
             <motion.div 
               className="text-center p-4 sm:p-6 modern-card group interactive-hover"
@@ -116,8 +115,8 @@ export function AboutSection() {
                 transition: { duration: 0.3, ease: "easeOut" }
               }}
             >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">50+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Projects Completed</div>
+              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">4+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">AI Projects</div>
             </motion.div>
             <motion.div 
               className="text-center p-4 sm:p-6 modern-card group interactive-hover"
@@ -138,8 +137,8 @@ export function AboutSection() {
                 transition: { duration: 0.3, ease: "easeOut" }
               }}
             >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">100%</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Client Satisfaction</div>
+              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">98%</div>
+              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Accuracy Rate</div>
             </motion.div>
           </motion.div>
         </div>
