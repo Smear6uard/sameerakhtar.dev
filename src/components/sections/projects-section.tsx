@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import {
   CodeBracketIcon
 } from "@heroicons/react/24/outline";
@@ -15,7 +16,8 @@ const projects = [
     gradient: "from-violet-500/15 to-cyan-500/20",
     technologies: ["Next.js", "Groq SDK", "Cheerio", "Axios", "Puppeteer", "Vercel"],
     githubUrl: "https://github.com/Smear6uard/AI-Answer-Engine",
-    liveUrl: "https://ai-answer-engine.vercel.app"
+    liveUrl: "https://ai-answer-engine.vercel.app",
+    image: undefined // Add screenshot path here when available
   },
   {
     id: 2,
@@ -23,7 +25,8 @@ const projects = [
     description: "Built Chrome extension with real-time AI autocomplete achieving under 200ms latency, tested across 20+ websites. Implemented local caching and context detection, reducing API calls by 50% while maintaining 90%+ accuracy. Designed secure API key management system using Chrome Storage API, eliminating exposure risks in public repository.",
     gradient: "from-emerald-500/15 to-amber-500/20",
     technologies: ["Chrome Extension", "JavaScript", "Chrome Storage API", "AI Integration"],
-    githubUrl: "https://github.com/Smear6uard/AI-Chrome-Extension"
+    githubUrl: "https://github.com/Smear6uard/AI-Chrome-Extension",
+    image: undefined // Add screenshot path here when available
   },
   {
     id: 3,
@@ -31,7 +34,8 @@ const projects = [
     description: "Engineered modular price, order, and quote classes simulating trades for 100+ users and 1,000+ trade events per session. Built a real-time matching engine executing 500+ trades per session, with millisecond-level order-book updates. Implemented user management, portfolio tracking, and transaction history with live balance validation.",
     gradient: "from-blue-500/15 to-indigo-500/20",
     technologies: ["Java", "Object-Oriented Design", "Real-time Systems", "Unit Testing"],
-    githubUrl: "https://github.com/Smear6uard/Mock-Stock-Exchange"
+    githubUrl: "https://github.com/Smear6uard/Mock-Stock-Exchange",
+    image: undefined // Add screenshot path here when available
   },
   {
     id: 4,
@@ -39,7 +43,8 @@ const projects = [
     description: "Designed an LLM router processing 1K+ prompts/hr, optimizing model selection to cut API costs by up to 40%. Integrated analytics for A/B testing across 3+ LLMs, displaying evaluation reports instantly for comparison. Engineered modular configuration supporting rapid integration of additional model APIs in < 10 minutes each.",
     gradient: "from-purple-500/15 to-pink-500/20",
     technologies: ["Python", "LLM Integration", "A/B Testing", "Analytics", "API Optimization"],
-    githubUrl: "https://github.com/Smear6uard/Intelligent-LLM-Router"
+    githubUrl: "https://github.com/Smear6uard/Intelligent-LLM-Router",
+    image: undefined // Add screenshot path here when available
   }
 ];
 
@@ -83,7 +88,7 @@ export function ProjectsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             Featured <span className="gradient-text">Projects</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
             Here are my AI and software development projects that showcase my skills and passion for
             creating innovative digital solutions.
           </p>
@@ -111,8 +116,22 @@ export function ProjectsSection() {
               {/* Subtle Border */}
               <div className="absolute inset-0 border border-white/10 rounded-2xl group-hover:border-white/20 transition-colors duration-300" />
 
+              {/* Project Image (if available) */}
+              {project.image && (
+                <div className="relative h-48 sm:h-56 overflow-hidden rounded-t-2xl">
+                  <Image
+                    src={project.image}
+                    alt={`${project.title} screenshot`}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                </div>
+              )}
+
               {/* Content Container */}
-              <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8 min-h-[280px] sm:min-h-[320px]">
+              <div className={`relative h-full flex flex-col p-4 sm:p-6 lg:p-8 ${project.image ? 'min-h-[240px]' : 'min-h-[280px] sm:min-h-[320px]'}`}>
 
                 {/* Header */}
                 <div className="mb-4 sm:mb-6">
@@ -122,7 +141,7 @@ export function ProjectsSection() {
                 </div>
 
                 {/* Description */}
-                <p className="text-muted-foreground mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base lg:text-lg">
+                <p className="text-gray-700 dark:text-muted-foreground mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base lg:text-lg">
                   {project.description}
                 </p>
 
@@ -132,7 +151,7 @@ export function ProjectsSection() {
                     {project.technologies.map((tech, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1.5 sm:px-4 sm:py-2 bg-white/10 backdrop-blur-sm text-foreground text-xs sm:text-sm font-medium rounded-lg border border-white/20 hover:bg-white/20 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+                        className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 dark:bg-white/10 backdrop-blur-sm text-gray-800 dark:text-foreground text-xs sm:text-sm font-medium rounded-lg border border-gray-300 dark:border-white/20 hover:bg-gray-200 dark:hover:bg-white/20 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
                       >
                         {tech}
                       </span>

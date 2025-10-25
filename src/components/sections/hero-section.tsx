@@ -63,13 +63,13 @@ export function HeroSection() {
   return (
     <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden">
       {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950/90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/90 dark:from-slate-950 dark:via-gray-950 dark:to-blue-950/90" />
 
       {/* Animated gradient orbs with more movement */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-400/15 to-cyan-400/15 dark:from-violet-500/5 dark:to-cyan-500/5 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-400/15 to-amber-400/15 dark:from-emerald-500/5 dark:to-amber-500/5 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-400/10 to-violet-400/10 dark:from-rose-500/3 dark:to-violet-500/3 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-200/30 to-cyan-200/30 dark:from-violet-500/5 dark:to-cyan-500/5 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-200/30 to-amber-200/30 dark:from-emerald-500/5 dark:to-amber-500/5 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-200/20 to-violet-200/20 dark:from-rose-500/3 dark:to-violet-500/3 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
       </div>
 
       {/* Floating particles */}
@@ -99,7 +99,7 @@ export function HeroSection() {
           <div className="space-y-6 sm:space-y-8 lg:space-y-12 text-center lg:text-left">
             <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8">
               <motion.h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-200 dark:text-gray-100"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900 dark:text-gray-100"
                 variants={itemVariants}
               >
                 Hi, I&apos;m{" "}
@@ -109,7 +109,7 @@ export function HeroSection() {
                 </span>
               </motion.h1>
                 <motion.h2
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-300 dark:text-gray-200 font-medium"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 dark:text-gray-200 font-medium"
                   variants={itemVariants}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
@@ -121,7 +121,7 @@ export function HeroSection() {
 
             <motion.p
               variants={itemVariants}
-              className="text-base sm:text-lg text-gray-300 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              className="text-base sm:text-lg text-gray-600 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
               transition={{ delay: 1 }}
@@ -176,7 +176,7 @@ export function HeroSection() {
 
                  <motion.a
                    href="#contact"
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gray-800/50 dark:bg-gray-900/50 backdrop-blur-sm text-gray-300 dark:text-gray-200 font-semibold border-2 border-gray-600 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300"
+                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-white dark:bg-gray-900/50 backdrop-blur-sm text-gray-700 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg"
                    whileHover={{ 
                      scale: 1.08, 
                      y: -4,
@@ -300,11 +300,12 @@ export function HeroSection() {
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <Image
-                    src="/LinkedIn pic.jpg"
-                    alt="Sameer Akhtar"
+                    src="/profile.jpg"
+                    alt="Sameer Akhtar - Computer Science Student & AI Developer"
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-500"
                     priority
+                    sizes="(max-width: 640px) 12rem, (max-width: 768px) 16rem, (max-width: 1024px) 20rem, 28rem"
                   />
 
                   {/* Overlay gradient */}

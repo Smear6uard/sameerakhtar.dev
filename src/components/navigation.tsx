@@ -20,6 +20,7 @@ const navItems = [
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,6 +28,35 @@ export function Navigation() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -35% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute("id");
+          if (id) {
+            setActiveSection(id);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Observe all sections
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((section) => observer.observe(section));
+
+    return () => {
+      sections.forEach((section) => observer.unobserve(section));
+    };
   }, []);
 
   const handleNavClick = (href: string) => {
@@ -69,16 +99,32 @@ export function Navigation() {
 
                   {/* Desktop Navigation */}
                   <div className="hidden md:flex items-center gap-1">
-                    {navItems.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        onClick={() => handleNavClick(item.href)}
-                        className="text-sm font-medium text-foreground/80 hover:text-primary px-4 py-2 rounded-lg hover:bg-primary/5 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 relative group"
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                    {navItems.map((item) => {
+                      const sectionId = item.href.replace("/#", "") || "home";
+                      const isActive = activeSection === sectionId || (activeSection === "" && sectionId === "home");
+
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => handleNavClick(item.href)}
+                          className={`text-sm font-medium px-4 py-2 rounded-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 relative group ${
+                            isActive
+                              ? "gradient-text bg-primary/10 dark:bg-primary/20 shadow-md"
+                              : "text-foreground/80 hover:text-primary hover:bg-primary/5"
+                          }`}
+                        >
+                          {item.name}
+                          {isActive && (
+                            <motion.div
+                              layoutId="activeNav"
+                              className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-full"
+                              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                            />
+                          )}
+                        </Link>
+                      );
+                    })}
                   </div>
 
           {/* Mobile Menu Button */}
@@ -107,16 +153,25 @@ export function Navigation() {
               className="md:hidden border-t border-border bg-background/95 backdrop-blur-md"
             >
               <div className="px-2 pt-2 pb-3 space-y-1">
-                        {navItems.map((item) => (
-                          <Link
-                            key={item.name}
-                            href={item.href}
-                            onClick={() => handleNavClick(item.href)}
-                            className="block px-4 py-3 rounded-md text-base font-medium text-foreground hover:text-primary hover:bg-primary/5 hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 min-h-[48px] flex items-center"
-                          >
-                            {item.name}
-                          </Link>
-                        ))}
+                        {navItems.map((item) => {
+                          const sectionId = item.href.replace("/#", "") || "home";
+                          const isActive = activeSection === sectionId || (activeSection === "" && sectionId === "home");
+
+                          return (
+                            <Link
+                              key={item.name}
+                              href={item.href}
+                              onClick={() => handleNavClick(item.href)}
+                              className={`block px-4 py-3 rounded-md text-base font-medium hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 min-h-[48px] flex items-center ${
+                                isActive
+                                  ? "gradient-text bg-primary/10 dark:bg-primary/20"
+                                  : "text-foreground hover:text-primary hover:bg-primary/5"
+                              }`}
+                            >
+                              {item.name}
+                            </Link>
+                          );
+                        })}
               </div>
             </motion.div>
           )}

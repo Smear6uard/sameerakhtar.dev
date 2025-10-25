@@ -2,23 +2,23 @@
 
 :root {
   --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  --foreground: 222 47% 11%;
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 222 47% 11%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+  --popover-foreground: 222 47% 11%;
   --primary: 262 83% 58%;
   --primary-foreground: 210 40% 98%;
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
+  --muted: 240 5% 96%;
+  --muted-foreground: 240 3.8% 36%;
+  --accent: 240 5% 96%;
   --accent-foreground: 240 5.9% 10%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
   --ring: 262 83% 58%;
   --radius: 0.75rem;
 }
@@ -130,9 +130,9 @@ body {
   padding: 2rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
-    0 2px 4px -1px rgba(0, 0, 0, 0.06),
-    0 0 0 1px rgba(139, 92, 246, 0.1);
+    0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+    0 2px 4px -1px rgba(0, 0, 0, 0.03),
+    0 0 0 1px rgba(139, 92, 246, 0.08);
   position: relative;
   overflow: hidden;
 }
@@ -140,10 +140,10 @@ body {
 .modern-card:hover {
   transform: translateY(-12px) scale(1.03);
   box-shadow:
-    0 32px 64px -12px rgba(139, 92, 246, 0.25),
-    0 0 0 1px rgba(139, 92, 246, 0.4),
-    0 0 30px rgba(139, 92, 246, 0.15);
-  border-color: rgba(139, 92, 246, 0.5);
+    0 32px 64px -12px rgba(139, 92, 246, 0.15),
+    0 0 0 1px rgba(139, 92, 246, 0.3),
+    0 0 30px rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .dark .modern-card {

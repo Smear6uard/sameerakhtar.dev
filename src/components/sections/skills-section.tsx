@@ -15,7 +15,7 @@ const skillCategories = [
     title: "Programming Languages",
     icon: CodeBracketIcon,
     color: "from-blue-500 to-indigo-600",
-    bgColor: "bg-blue-900/20 dark:bg-blue-900/40",
+    bgColor: "bg-blue-50 dark:bg-blue-900/40",
     skills: [
       { name: "JavaScript", level: "Proficient", project: "3+ years experience" },
       { name: "Python", level: "Proficient", project: "2+ years experience" },
@@ -29,7 +29,7 @@ const skillCategories = [
     title: "Technologies & Tools",
     icon: ServerIcon,
     color: "from-teal-500 to-cyan-600",
-    bgColor: "bg-teal-900/20 dark:bg-teal-900/40",
+    bgColor: "bg-teal-50 dark:bg-teal-900/40",
     skills: [
       { name: "React", level: "Proficient", project: "Web Applications" },
       { name: "Next.js", level: "Proficient", project: "AI Answer Engine" },
@@ -48,7 +48,7 @@ const skillCategories = [
     title: "AI & Web Development",
     icon: WrenchScrewdriverIcon,
     color: "from-indigo-500 to-purple-600",
-    bgColor: "bg-indigo-900/20 dark:bg-indigo-900/40",
+    bgColor: "bg-indigo-50 dark:bg-indigo-900/40",
     skills: [
       { name: "Groq SDK", level: "Proficient", project: "AI Integration" },
       { name: "Cheerio", level: "Proficient", project: "Web Scraping" },
@@ -101,7 +101,7 @@ export function SkillsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             Skills & <span className="gradient-text">Technologies</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
             A comprehensive overview of my technical skills and the technologies
             I work with to build exceptional digital experiences.
           </p>
@@ -116,8 +116,7 @@ export function SkillsSection() {
          variants={itemVariants}
          className="modern-card p-4 sm:p-6 lg:p-8 interactive-hover"
          whileHover={{
-           scale: 1.05,
-           y: -10,
+           y: -8,
            transition: { duration: 0.3, ease: "easeOut" }
          }}
        >
@@ -135,13 +134,13 @@ export function SkillsSection() {
                   {category.skills.map((skill, skillIndex) => (
                     <div
                       key={skillIndex}
-                      className={`flex items-center justify-between p-2 sm:p-3 rounded-lg ${category.bgColor} hover:opacity-90 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 border border-border/50 transition-all duration-300 group`}
+                      className={`flex items-center justify-between p-2 sm:p-3 rounded-lg ${category.bgColor} hover:shadow-md border border-border/50 transition-all duration-300 group`}
                     >
                       <div className="flex flex-col min-w-0 flex-1">
                         <span className="text-xs sm:text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300 truncate">
                           {skill.name}
                         </span>
-                        <span className="text-xs text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300 truncate">
+                        <span className="text-xs text-gray-700 dark:text-muted-foreground group-hover:text-gray-900 dark:group-hover:text-foreground/80 transition-colors duration-300 truncate">
                           {skill.project}
                         </span>
                       </div>
@@ -156,16 +155,16 @@ export function SkillsSection() {
                         )}
                         <span className={`px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                           skill.level === 'Expert'
-                            ? categoryIndex === 0 
-                              ? 'bg-blue-900/40 dark:bg-blue-800/50 text-blue-200 dark:text-blue-100 border border-blue-700/40 dark:border-blue-600/50 group-hover:bg-blue-800/50 dark:group-hover:bg-blue-700/60 group-hover:scale-105'
+                            ? categoryIndex === 0
+                              ? 'bg-blue-600 dark:bg-blue-800/50 text-white border border-blue-700 dark:border-blue-600/50 group-hover:bg-blue-700 dark:group-hover:bg-blue-700/60'
                               : categoryIndex === 1
-                              ? 'bg-teal-900/40 dark:bg-teal-800/50 text-teal-200 dark:text-teal-100 border border-teal-700/40 dark:border-teal-600/50 group-hover:bg-teal-800/50 dark:group-hover:bg-teal-700/60 group-hover:scale-105'
-                              : 'bg-indigo-900/40 dark:bg-indigo-800/50 text-indigo-200 dark:text-indigo-100 border border-indigo-700/40 dark:border-indigo-600/50 group-hover:bg-indigo-800/50 dark:group-hover:bg-indigo-700/60 group-hover:scale-105'
+                              ? 'bg-teal-600 dark:bg-teal-800/50 text-white border border-teal-700 dark:border-teal-600/50 group-hover:bg-teal-700 dark:group-hover:bg-teal-700/60'
+                              : 'bg-indigo-600 dark:bg-indigo-800/50 text-white border border-indigo-700 dark:border-indigo-600/50 group-hover:bg-indigo-700 dark:group-hover:bg-indigo-700/60'
                             : categoryIndex === 0
-                              ? 'bg-blue-900/20 dark:bg-blue-800/30 text-blue-300 dark:text-blue-200 border border-blue-800/30 dark:border-blue-700/40 group-hover:bg-blue-800/30 dark:group-hover:bg-blue-700/40 group-hover:text-blue-200 dark:group-hover:text-blue-100 group-hover:scale-105'
+                              ? 'bg-blue-500 dark:bg-blue-800/30 text-white border border-blue-600 dark:border-blue-700/40 group-hover:bg-blue-600 dark:group-hover:bg-blue-700/40'
                               : categoryIndex === 1
-                              ? 'bg-teal-900/20 dark:bg-teal-800/30 text-teal-300 dark:text-teal-200 border border-teal-800/30 dark:border-teal-700/40 group-hover:bg-teal-800/30 dark:group-hover:bg-teal-700/40 group-hover:text-teal-200 dark:group-hover:text-teal-100 group-hover:scale-105'
-                              : 'bg-indigo-900/20 dark:bg-indigo-800/30 text-indigo-300 dark:text-indigo-200 border border-indigo-800/30 dark:border-indigo-700/40 group-hover:bg-indigo-800/30 dark:group-hover:bg-indigo-700/40 group-hover:text-indigo-200 dark:group-hover:text-indigo-100 group-hover:scale-105'
+                              ? 'bg-teal-500 dark:bg-teal-800/30 text-white border border-teal-600 dark:border-teal-700/40 group-hover:bg-teal-600 dark:group-hover:bg-teal-700/40'
+                              : 'bg-indigo-500 dark:bg-indigo-800/30 text-white border border-indigo-600 dark:border-indigo-700/40 group-hover:bg-indigo-600 dark:group-hover:bg-indigo-700/40'
                         }`}>
                           {skill.level}
                         </span>

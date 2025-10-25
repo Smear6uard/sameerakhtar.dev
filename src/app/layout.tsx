@@ -4,6 +4,8 @@ import "./globals.css";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Analytics } from "@vercel/analytics/react";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://sameerakhtar.dev'),
   title: "Sameer Akhtar | Computer Science Student & AI Developer",
   description: "Computer Science student at DePaul University with expertise in AI development, React, Next.js, and modern web technologies. Software Engineering Intern at BRUNOSOFT and Apple Specialist.",
   keywords: ["Sameer Akhtar", "Computer Science Student", "AI Developer", "Software Engineer", "React", "Next.js", "JavaScript", "Python", "DePaul University", "BRUNOSOFT", "Apple"],
@@ -30,19 +33,19 @@ export const metadata: Metadata = {
     siteName: "Sameer Akhtar",
     images: [
       {
-        url: "/favicon.ico",
-        width: 512,
-        height: 512,
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
         alt: "Sameer Akhtar - Computer Science Student & AI Developer",
       },
     ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Sameer Akhtar",
     description: "Computer Science student at DePaul University with expertise in AI development, React, Next.js, and modern web technologies.",
     creator: "@sameerakhtar",
-    images: ["/favicon.ico"],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -69,13 +72,15 @@ export default function RootLayout({
       >
                <ThemeProvider
                  attribute="class"
-                 defaultTheme="dark"
-                 enableSystem={false}
+                 defaultTheme="system"
+                 enableSystem={true}
                  disableTransitionOnChange
                >
           <Navigation />
           {children}
           <Footer />
+          <ScrollToTop />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

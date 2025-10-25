@@ -73,7 +73,7 @@ export function AboutSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             About <span className="gradient-text">Me</span>
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
             Computer Science student at DePaul University passionate about AI development,
             building scalable web applications, and creating innovative solutions that solve real-world problems.
           </p>
@@ -84,12 +84,12 @@ export function AboutSection() {
           {/* Left Column - Story */}
           <motion.div variants={itemVariants} className="space-y-6 sm:space-y-7 text-center lg:text-left">
             <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">My Story</h3>
-            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
-              I&apos;m a Computer Science student at DePaul University with a 3.8 GPA, currently working as a Software Engineering Intern at BRUNOSOFT and serving as an Apple Specialist. 
+            <p className="text-gray-700 dark:text-muted-foreground leading-relaxed text-sm sm:text-base">
+              I&apos;m a Computer Science student at DePaul University with a 3.8 GPA, currently working as a Software Engineering Intern at BRUNOSOFT and serving as an Apple Specialist.
               I specialize in AI development, modernizing legacy codebases, and building scalable web applications.
             </p>
-            <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
-              With expertise in JavaScript, Python, React, Next.js, and AI technologies, I&apos;ve built production applications processing 100+ URLs/hour with 98% accuracy. 
+            <p className="text-gray-700 dark:text-muted-foreground leading-relaxed text-sm sm:text-base">
+              With expertise in JavaScript, Python, React, Next.js, and AI technologies, I&apos;ve built production applications processing 100+ URLs/hour with 98% accuracy.
               I&apos;m passionate about creating innovative solutions that solve real-world problems.
             </p>
           </motion.div>
@@ -160,7 +160,7 @@ export function AboutSection() {
                 <feature.icon className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
               <h3 className="font-semibold mb-2 sm:mb-3 text-base sm:text-lg group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
-              <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">{feature.description}</p>
+              <p className="text-gray-600 dark:text-muted-foreground text-xs sm:text-sm leading-relaxed group-hover:text-gray-800 dark:group-hover:text-foreground/80 transition-colors duration-300">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
