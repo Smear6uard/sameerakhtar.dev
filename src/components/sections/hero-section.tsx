@@ -61,15 +61,15 @@ export function HeroSection() {
   };
 
   return (
-    <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden">
+    <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden bg-background">
       {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/90 dark:from-slate-950 dark:via-gray-950 dark:to-blue-950/90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 via-gray-50/50 to-blue-50/50" />
 
       {/* Animated gradient orbs with more movement */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-200/30 to-cyan-200/30 dark:from-violet-500/5 dark:to-cyan-500/5 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-200/30 to-amber-200/30 dark:from-emerald-500/5 dark:to-amber-500/5 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-200/20 to-violet-200/20 dark:from-rose-500/3 dark:to-violet-500/3 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-200/30 to-cyan-200/30 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-200/30 to-amber-200/30 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-200/20 to-violet-200/20 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
       </div>
 
       {/* Floating particles */}
@@ -77,7 +77,7 @@ export function HeroSection() {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-primary/20 dark:bg-primary/30 rounded-full animate-pulse"
+            className="absolute w-1 h-1 bg-primary/20 rounded-full animate-pulse"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -99,7 +99,7 @@ export function HeroSection() {
           <div className="space-y-6 sm:space-y-8 lg:space-y-12 text-center lg:text-left">
             <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8">
               <motion.h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900 dark:text-gray-100"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900"
                 variants={itemVariants}
               >
                 Hi, I&apos;m{" "}
@@ -109,7 +109,7 @@ export function HeroSection() {
                 </span>
               </motion.h1>
                 <motion.h2
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 dark:text-gray-200 font-medium"
+                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 font-medium"
                   variants={itemVariants}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
@@ -121,7 +121,7 @@ export function HeroSection() {
 
             <motion.p
               variants={itemVariants}
-              className="text-base sm:text-lg text-gray-600 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto lg:mx-0"
+              className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0"
               initial={{ opacity: 0 }}
               animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
               transition={{ delay: 1 }}
@@ -138,9 +138,9 @@ export function HeroSection() {
                  <motion.a
                    href="/Sameer-Akhtar-Resume.pdf"
                    download
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-500 dark:via-indigo-500 dark:to-purple-500 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-500/30 dark:border-blue-400/40"
-                   whileHover={{ 
-                     scale: 1.08, 
+                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-500/30"
+                   whileHover={{
+                     scale: 1.08,
                      y: -4,
                      boxShadow: "0 20px 40px rgba(59, 130, 246, 0.4)"
                    }}
@@ -176,9 +176,9 @@ export function HeroSection() {
 
                  <motion.a
                    href="#contact"
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-white dark:bg-gray-900/50 backdrop-blur-sm text-gray-700 dark:text-gray-200 font-semibold border-2 border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 shadow-md hover:shadow-lg"
-                   whileHover={{ 
-                     scale: 1.08, 
+                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-white backdrop-blur-sm text-gray-700 font-semibold border-2 border-gray-300 hover:border-blue-500 transition-all duration-300 shadow-md hover:shadow-lg"
+                   whileHover={{
+                     scale: 1.08,
                      y: -4,
                      boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)"
                    }}
@@ -266,7 +266,7 @@ export function HeroSection() {
               >
                 {/* Enhanced glow effect with animation */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-violet-400/40 via-cyan-400/30 to-emerald-400/40 dark:from-violet-500/40 dark:via-cyan-500/30 dark:to-emerald-500/40 rounded-full blur-2xl"
+                  className="absolute inset-0 bg-gradient-to-br from-violet-400/40 via-cyan-400/30 to-emerald-400/40 rounded-full blur-2xl"
                   animate={{
                     scale: [1, 1.1, 1],
                     opacity: [0.3, 0.5, 0.3]
@@ -280,7 +280,7 @@ export function HeroSection() {
 
                 {/* Rotating ring */}
                 <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-violet-400/40 dark:border-violet-500/40"
+                  className="absolute inset-0 rounded-full border-2 border-violet-400/40"
                   animate={{ rotate: 360 }}
                   transition={{
                     duration: 20,
@@ -290,26 +290,17 @@ export function HeroSection() {
                 />
 
                 {/* Profile Image Container */}
-                <motion.div 
-                  className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 dark:border-white/10 shadow-2xl dark:shadow-black/40 group"
-                  whileHover={{
-                    scale: 1.08,
-                    rotateY: 8,
-                    boxShadow: "0 25px 50px -12px rgba(6, 182, 212, 0.5)"
-                  }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                <motion.div
+                  className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 shadow-2xl"
                 >
                   <Image
                     src="/profile.jpg"
                     alt="Sameer Akhtar - Computer Science Student & AI Developer"
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="object-cover"
                     priority
                     sizes="(max-width: 640px) 12rem, (max-width: 768px) 16rem, (max-width: 1024px) 20rem, 28rem"
                   />
-
-                  {/* Overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.div>
 
                 {/* Floating elements around the image */}

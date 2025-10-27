@@ -113,7 +113,7 @@ export function ContactSection() {
   };
 
   return (
-    <div ref={ref} className="section-spacing">
+    <div ref={ref} className="section-spacing bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
@@ -126,7 +126,7 @@ export function ContactSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             Get In <span className="gradient-text">Touch</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed px-4">
             Ready to collaborate? Let&apos;s connect and discuss your next project.
           </p>
         </motion.div>
@@ -146,7 +146,7 @@ export function ContactSection() {
                   transition: { duration: 0.3, ease: "easeOut" }
                 }}
               >
-                <div className="p-2 sm:p-3 bg-primary/10 dark:bg-primary/20 text-primary rounded-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                <div className="p-2 sm:p-3 bg-primary/10 text-primary rounded-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                   <info.icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <div className="min-w-0 flex-1">

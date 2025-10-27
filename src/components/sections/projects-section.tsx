@@ -27,24 +27,6 @@ const projects = [
     technologies: ["Chrome Extension", "JavaScript", "Chrome Storage API", "AI Integration"],
     githubUrl: "https://github.com/Smear6uard/AI-Chrome-Extension",
     image: undefined // Add screenshot path here when available
-  },
-  {
-    id: 3,
-    title: "Mock Stock Exchange Platform",
-    description: "Engineered modular price, order, and quote classes simulating trades for 100+ users and 1,000+ trade events per session. Built a real-time matching engine executing 500+ trades per session, with millisecond-level order-book updates. Implemented user management, portfolio tracking, and transaction history with live balance validation.",
-    gradient: "from-blue-500/15 to-indigo-500/20",
-    technologies: ["Java", "Object-Oriented Design", "Real-time Systems", "Unit Testing"],
-    githubUrl: "https://github.com/Smear6uard/Mock-Stock-Exchange",
-    image: undefined // Add screenshot path here when available
-  },
-  {
-    id: 4,
-    title: "Intelligent LLM Router",
-    description: "Designed an LLM router processing 1K+ prompts/hr, optimizing model selection to cut API costs by up to 40%. Integrated analytics for A/B testing across 3+ LLMs, displaying evaluation reports instantly for comparison. Engineered modular configuration supporting rapid integration of additional model APIs in < 10 minutes each.",
-    gradient: "from-purple-500/15 to-pink-500/20",
-    technologies: ["Python", "LLM Integration", "A/B Testing", "Analytics", "API Optimization"],
-    githubUrl: "https://github.com/Smear6uard/Intelligent-LLM-Router",
-    image: undefined // Add screenshot path here when available
   }
 ];
 
@@ -75,7 +57,7 @@ export function ProjectsSection() {
   };
 
   return (
-    <div ref={ref} className="section-spacing">
+    <div ref={ref} className="section-spacing bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
@@ -88,7 +70,7 @@ export function ProjectsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             Featured <span className="gradient-text">Projects</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed px-4">
             Here are my AI and software development projects that showcase my skills and passion for
             creating innovative digital solutions.
           </p>
@@ -141,7 +123,7 @@ export function ProjectsSection() {
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-700 dark:text-muted-foreground mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base lg:text-lg">
+                <p className="text-gray-700 mb-6 sm:mb-8 leading-relaxed text-sm sm:text-base lg:text-lg">
                   {project.description}
                 </p>
 
@@ -151,7 +133,7 @@ export function ProjectsSection() {
                     {project.technologies.map((tech, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 dark:bg-white/10 backdrop-blur-sm text-gray-800 dark:text-foreground text-xs sm:text-sm font-medium rounded-lg border border-gray-300 dark:border-white/20 hover:bg-gray-200 dark:hover:bg-white/20 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
+                        className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-100 backdrop-blur-sm text-gray-800 text-xs sm:text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-200 hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300"
                       >
                         {tech}
                       </span>
@@ -159,7 +141,7 @@ export function ProjectsSection() {
                   </div>
 
                   {/* Bottom Links */}
-                  <div className="flex gap-3 pt-3 sm:pt-4 border-t border-white/10">
+                  <div className="flex gap-3 pt-3 sm:pt-4 border-t border-gray-200">
                     <a
                       href={project.githubUrl}
                       target="_blank"

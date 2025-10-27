@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { ScrollToTop } from "@/components/scroll-to-top";
 
@@ -66,22 +65,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-               <ThemeProvider
-                 attribute="class"
-                 defaultTheme="system"
-                 enableSystem={true}
-                 disableTransitionOnChange
-               >
-          <Navigation />
-          {children}
-          <Footer />
-          <ScrollToTop />
-          <Analytics />
-        </ThemeProvider>
+        <Navigation />
+        {children}
+        <Footer />
+        <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   );

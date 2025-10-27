@@ -15,7 +15,7 @@ const skillCategories = [
     title: "Programming Languages",
     icon: CodeBracketIcon,
     color: "from-blue-500 to-indigo-600",
-    bgColor: "bg-blue-50 dark:bg-blue-900/40",
+    bgColor: "bg-blue-50",
     skills: [
       { name: "JavaScript", level: "Proficient", project: "3+ years experience" },
       { name: "Python", level: "Proficient", project: "2+ years experience" },
@@ -29,7 +29,7 @@ const skillCategories = [
     title: "Technologies & Tools",
     icon: ServerIcon,
     color: "from-teal-500 to-cyan-600",
-    bgColor: "bg-teal-50 dark:bg-teal-900/40",
+    bgColor: "bg-teal-50",
     skills: [
       { name: "React", level: "Proficient", project: "Web Applications" },
       { name: "Next.js", level: "Proficient", project: "AI Answer Engine" },
@@ -48,7 +48,7 @@ const skillCategories = [
     title: "AI & Web Development",
     icon: WrenchScrewdriverIcon,
     color: "from-indigo-500 to-purple-600",
-    bgColor: "bg-indigo-50 dark:bg-indigo-900/40",
+    bgColor: "bg-indigo-50",
     skills: [
       { name: "Groq SDK", level: "Proficient", project: "AI Integration" },
       { name: "Cheerio", level: "Proficient", project: "Web Scraping" },
@@ -88,7 +88,7 @@ export function SkillsSection() {
   };
 
   return (
-    <div ref={ref} className="section-spacing">
+    <div ref={ref} className="section-spacing bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}
@@ -101,7 +101,7 @@ export function SkillsSection() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
             Skills & <span className="gradient-text">Technologies</span>
           </h2>
-          <p className="text-base sm:text-lg text-gray-700 dark:text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-base sm:text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed px-4">
             A comprehensive overview of my technical skills and the technologies
             I work with to build exceptional digital experiences.
           </p>
@@ -137,10 +137,10 @@ export function SkillsSection() {
                       className={`flex items-center justify-between p-2 sm:p-3 rounded-lg ${category.bgColor} hover:shadow-md border border-border/50 transition-all duration-300 group`}
                     >
                       <div className="flex flex-col min-w-0 flex-1">
-                        <span className="text-xs sm:text-sm font-medium text-foreground group-hover:text-primary transition-colors duration-300 truncate">
+                        <span className="text-xs sm:text-sm font-medium text-gray-900 group-hover:text-primary transition-colors duration-300 truncate">
                           {skill.name}
                         </span>
-                        <span className="text-xs text-gray-700 dark:text-muted-foreground group-hover:text-gray-900 dark:group-hover:text-foreground/80 transition-colors duration-300 truncate">
+                        <span className="text-xs text-gray-600 group-hover:text-gray-800 transition-colors duration-300 truncate">
                           {skill.project}
                         </span>
                       </div>
@@ -148,23 +148,23 @@ export function SkillsSection() {
                       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         {skill.level === 'Expert' && (
                           <StarIcon className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${
-                            categoryIndex === 0 ? 'text-blue-500 fill-blue-500 dark:text-blue-400 dark:fill-blue-400' :
-                            categoryIndex === 1 ? 'text-teal-500 fill-teal-500 dark:text-teal-400 dark:fill-teal-400' :
-                            'text-indigo-500 fill-indigo-500 dark:text-indigo-400 dark:fill-indigo-400'
+                            categoryIndex === 0 ? 'text-blue-500 fill-blue-500' :
+                            categoryIndex === 1 ? 'text-teal-500 fill-teal-500' :
+                            'text-indigo-500 fill-indigo-500'
                           } group-hover:scale-110 transition-transform duration-300`} />
                         )}
                         <span className={`px-2 sm:px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                           skill.level === 'Expert'
                             ? categoryIndex === 0
-                              ? 'bg-blue-600 dark:bg-blue-800/50 text-white border border-blue-700 dark:border-blue-600/50 group-hover:bg-blue-700 dark:group-hover:bg-blue-700/60'
+                              ? 'bg-blue-600 text-white border border-blue-700 group-hover:bg-blue-700'
                               : categoryIndex === 1
-                              ? 'bg-teal-600 dark:bg-teal-800/50 text-white border border-teal-700 dark:border-teal-600/50 group-hover:bg-teal-700 dark:group-hover:bg-teal-700/60'
-                              : 'bg-indigo-600 dark:bg-indigo-800/50 text-white border border-indigo-700 dark:border-indigo-600/50 group-hover:bg-indigo-700 dark:group-hover:bg-indigo-700/60'
+                              ? 'bg-teal-600 text-white border border-teal-700 group-hover:bg-teal-700'
+                              : 'bg-indigo-600 text-white border border-indigo-700 group-hover:bg-indigo-700'
                             : categoryIndex === 0
-                              ? 'bg-blue-500 dark:bg-blue-800/30 text-white border border-blue-600 dark:border-blue-700/40 group-hover:bg-blue-600 dark:group-hover:bg-blue-700/40'
+                              ? 'bg-blue-500 text-white border border-blue-600 group-hover:bg-blue-600'
                               : categoryIndex === 1
-                              ? 'bg-teal-500 dark:bg-teal-800/30 text-white border border-teal-600 dark:border-teal-700/40 group-hover:bg-teal-600 dark:group-hover:bg-teal-700/40'
-                              : 'bg-indigo-500 dark:bg-indigo-800/30 text-white border border-indigo-600 dark:border-indigo-700/40 group-hover:bg-indigo-600 dark:group-hover:bg-indigo-700/40'
+                              ? 'bg-teal-500 text-white border border-teal-600 group-hover:bg-teal-600'
+                              : 'bg-indigo-500 text-white border border-indigo-600 group-hover:bg-indigo-600'
                         }`}>
                           {skill.level}
                         </span>

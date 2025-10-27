@@ -110,7 +110,7 @@ export function Navigation() {
                           onClick={() => handleNavClick(item.href)}
                           className={`text-sm font-medium px-4 py-2 rounded-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 relative group ${
                             isActive
-                              ? "gradient-text bg-primary/10 dark:bg-primary/20 shadow-md"
+                              ? "gradient-text bg-primary/10 shadow-md"
                               : "text-foreground/80 hover:text-primary hover:bg-primary/5"
                           }`}
                         >
@@ -131,7 +131,7 @@ export function Navigation() {
           <div className="flex items-center gap-2">
                  <button
                    onClick={() => setIsOpen(!isOpen)}
-                   className="md:hidden p-3 rounded-xl bg-muted hover:bg-primary/10 border border-border dark:border-white/10 hover:scale-110 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 cursor-pointer min-h-[48px] min-w-[48px] flex items-center justify-center"
+                   className="md:hidden p-3 rounded-xl bg-muted hover:bg-primary/10 border border-border hover:scale-110 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 cursor-pointer min-h-[48px] min-w-[48px] flex items-center justify-center"
                    aria-label="Toggle menu"
                  >
               {isOpen ? (
@@ -164,7 +164,7 @@ export function Navigation() {
                               onClick={() => handleNavClick(item.href)}
                               className={`block px-4 py-3 rounded-md text-base font-medium hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 min-h-[48px] flex items-center ${
                                 isActive
-                                  ? "gradient-text bg-primary/10 dark:bg-primary/20"
+                                  ? "gradient-text bg-primary/10"
                                   : "text-foreground hover:text-primary hover:bg-primary/5"
                               }`}
                             >
