@@ -17,7 +17,7 @@ const experiences = [
     ],
   },
   {
-    year: "2024",
+    year: "2025",
     roles: [
       {
         company: "BRUNOSOFT",
