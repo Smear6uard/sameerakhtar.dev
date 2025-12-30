@@ -1,171 +1,92 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { 
-  CodeBracketIcon, 
-  RocketLaunchIcon, 
-  LightBulbIcon,
-  HeartIcon 
-} from "@heroicons/react/24/outline";
-
-const features = [
-  {
-    icon: CodeBracketIcon,
-    title: "Clean Code",
-    description: "Maintainable, scalable code following industry best practices."
-  },
-  {
-    icon: RocketLaunchIcon,
-    title: "Performance",
-    description: "Fast, responsive applications optimized for user experience."
-  },
-  {
-    icon: LightBulbIcon,
-    title: "Innovation",
-    description: "Creative solutions using cutting-edge technologies."
-  },
-  {
-    icon: HeartIcon,
-    title: "Collaboration",
-    description: "Team player focused on delivering exceptional results."
-  }
-];
+import Image from "next/image";
 
 export function AboutSection() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-      },
-    },
-  };
-
   return (
-    <div ref={ref} className="section-spacing bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" className="py-32 px-6">
+      <div className="max-w-6xl mx-auto">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="max-w-6xl mx-auto"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.3 }}
         >
-        {/* Section Header */}
-        <motion.div variants={itemVariants} className="text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            About <span className="gradient-text">Me</span>
-          </h2>
-          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto leading-relaxed px-4">
-            Computer Science student at DePaul University passionate about AI development,
-            building scalable web applications, and creating innovative solutions that solve real-world problems.
-          </p>
+          <span className="section-heading">about</span>
         </motion.div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-8 sm:mb-12">
-          {/* Left Column - Story */}
-          <motion.div variants={itemVariants} className="space-y-6 sm:space-y-7 text-center lg:text-left">
-            <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">My Story</h3>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-              I&apos;m a Computer Science student at DePaul University with a 3.8 GPA, currently working as a Software Engineering Intern at BRUNOSOFT and serving as an Apple Specialist.
-              I specialize in AI development, modernizing legacy codebases, and building scalable web applications.
-            </p>
-            <p className="text-gray-700 leading-relaxed text-sm sm:text-base">
-              With expertise in JavaScript, Python, React, Next.js, and AI technologies, I&apos;ve built production applications processing 100+ URLs/hour with 98% accuracy.
-              I&apos;m passionate about creating innovative solutions that solve real-world problems.
-            </p>
-          </motion.div>
+        <div className="mt-8 grid md:grid-cols-[280px_1fr] gap-12">
+          <div>
+            <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden border-4 border-accent">
+              <Image
+                src="/profile.jpg"
+                alt="Sameer Akhtar"
+                fill
+                className="object-cover"
+              />
+            </div>
+          </div>
 
-          {/* Right Column - Stats */}
-          <motion.div variants={itemVariants} className="grid grid-cols-2 gap-4 sm:gap-6">
-            <motion.div 
-              className="text-center p-4 sm:p-6 modern-card group interactive-hover"
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">3.8</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">GPA</div>
-            </motion.div>
-            <motion.div 
-              className="text-center p-4 sm:p-6 modern-card group interactive-hover"
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">4+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">AI Projects</div>
-            </motion.div>
-            <motion.div 
-              className="text-center p-4 sm:p-6 modern-card group interactive-hover"
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">15+</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Technologies</div>
-            </motion.div>
-            <motion.div 
-              className="text-center p-4 sm:p-6 modern-card group interactive-hover"
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-            >
-              <div className="text-2xl sm:text-3xl font-bold gradient-text mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">98%</div>
-              <div className="text-xs sm:text-sm text-muted-foreground group-hover:text-primary transition-colors duration-300">Accuracy Rate</div>
-            </motion.div>
-          </motion.div>
-        </div>
+          <div className="space-y-6">
+            <p className="text-lg text-text-secondary leading-relaxed">
+              I&apos;m a Computer Science student at DePaul University (3.8 GPA)
+              graduating July 2027. Member of Upsilon Pi Epsilon Honor Society.
+            </p>
 
-        {/* Features Grid */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="p-4 sm:p-6 modern-card group interactive-hover"
-              whileHover={{ 
-                scale: 1.08, 
-                y: -8,
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
-            >
-              <div className="p-2 sm:p-3 bg-primary/10 text-primary rounded-xl w-fit mb-3 sm:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                <feature.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+            <p className="text-lg text-text-secondary leading-relaxed">
+              Currently, I&apos;m building{" "}
+              <a href="https://styleum.co" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline underline-offset-4">Styleum</a>
+              —an AI-powered personal styling platform—while leading the modernization
+              of a legacy codebase at BRUNOSOFT. I believe in shipping fast and learning from real users.
+            </p>
+
+            <p className="text-lg text-text-secondary leading-relaxed">
+              I co-founded DePaul&apos;s Computer Science Club and curate a tech
+              newsletter reaching 300+ subscribers. Outside of code, I shoot with a
+              Fujifilm X-T30 II — I believe good engineers have an eye for
+              craft.
+            </p>
+
+            {/* Social Proof */}
+            <div className="flex gap-8 pt-4">
+              <a
+                href="https://github.com/Smear6uard"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
+                <span className="text-2xl font-bold text-accent">50+</span>
+                <span className="text-text-muted text-sm">repositories</span>
+              </a>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-accent">300+</span>
+                <span className="text-text-muted text-sm">newsletter subscribers</span>
               </div>
-              <h3 className="font-semibold mb-2 sm:mb-3 text-base sm:text-lg group-hover:text-primary transition-colors duration-300">{feature.title}</h3>
-              <p className="text-gray-600 text-xs sm:text-sm leading-relaxed group-hover:text-gray-800 transition-colors duration-300">{feature.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-        </motion.div>
+            </div>
+
+            {/* Tech Stack - One Line */}
+            <p className="text-sm text-white/30 font-mono pt-4">
+              JavaScript · Python · Java · React · Next.js · Node.js · Docker · AWS
+            </p>
+
+            <div className="pt-6 border-t border-white/10">
+              <div className="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-4">
+                <span className="font-mono text-xs text-text-muted uppercase tracking-wider w-20 shrink-0">
+                  education
+                </span>
+                <div>
+                  <span className="text-text-primary">DePaul University</span>
+                  <span className="text-text-muted">
+                    {" "}
+                    · BS Computer Science · 3.8 GPA · Jul 2027
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

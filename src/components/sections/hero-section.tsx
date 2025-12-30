@@ -1,342 +1,120 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import { ArrowDownTrayIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
-import { GithubIcon, LinkedinIcon, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { AsciiArt } from "@/components/AsciiArt";
 
 export function HeroSection() {
-  const [displayedName, setDisplayedName] = useState("");
-  const [isTyping, setIsTyping] = useState(true);
-  const [mounted, setMounted] = useState(false);
-  const fullName = "Sameer Akhtar";
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    setMounted(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 8,
+        y: (e.clientY / window.innerHeight - 0.5) * 8,
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-    
-    let currentIndex = 0;
-    const typingSpeed = 150; // milliseconds per character
-    
-    const typeWriter = () => {
-      if (currentIndex < fullName.length) {
-        setDisplayedName(fullName.slice(0, currentIndex + 1));
-        currentIndex++;
-        setTimeout(typeWriter, typingSpeed);
-      } else {
-        setIsTyping(false);
-      }
-    };
-
-    // Start typing after a short delay
-    const startTyping = setTimeout(typeWriter, 1000);
-    
-    return () => clearTimeout(startTyping);
-  }, [mounted]);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-      },
-    },
-  };
-
   return (
-    <section className="min-h-[100vh] flex items-center justify-center relative overflow-hidden bg-background">
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 via-gray-50/50 to-blue-50/50" />
-
-      {/* Animated gradient orbs with more movement */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-200/30 to-cyan-200/30 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-200/30 to-amber-200/30 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-rose-200/20 to-violet-200/20 rounded-full blur-2xl float" style={{ animationDelay: '4s', animationDuration: '12s' }} />
-      </div>
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-primary/20 rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
-            }}
-          />
-        ))}
-      </div>
-      
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section
+      id="hero"
+      className="min-h-screen flex flex-col justify-center px-6 pt-20"
+    >
+      <div className="max-w-6xl mx-auto w-full">
         <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-20 items-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          {/* Left Column - Text Content */}
-          <div className="space-y-6 sm:space-y-8 lg:space-y-12 text-center lg:text-left">
-            <motion.div variants={itemVariants} className="space-y-6 sm:space-y-8">
-              <motion.h1
-                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-gray-900"
-                variants={itemVariants}
-              >
-                Hi, I&apos;m{" "}
-                <span className="gradient-text-animated">
-                  {mounted ? displayedName : fullName}
-                  {mounted && isTyping && <span className="typewriter-cursor">|</span>}
-                </span>
-              </motion.h1>
-                <motion.h2
-                  className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-700 font-medium"
-                  variants={itemVariants}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  Computer Science Student & Software Engineering Intern
-                </motion.h2>
-            </motion.div>
-
-            <motion.p
-              variants={itemVariants}
-              className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: mounted && !isTyping ? 1 : 0 }}
-              transition={{ delay: 1 }}
-            >
-              I create innovative AI-powered solutions and web applications.
-              Currently pursuing Computer Science at DePaul University while working
-              as a Software Engineering Intern at BRUNOSOFT and Apple Specialist.
-            </motion.p>
-
-            <motion.div
-              variants={itemVariants}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-            >
-                 <motion.a
-                   href="/Sameer-Akhtar-Resume.pdf"
-                   download
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-2xl transition-all duration-300 border border-blue-500/30"
-                   whileHover={{
-                     scale: 1.08,
-                     y: -4,
-                     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.4)"
-                   }}
-                   whileTap={{ scale: 0.95 }}
-                   animate={{
-                     boxShadow: [
-                       "0 10px 30px rgba(59, 130, 246, 0.3)",
-                       "0 15px 35px rgba(59, 130, 246, 0.4)",
-                       "0 10px 30px rgba(59, 130, 246, 0.3)"
-                     ]
-                   }}
-                   transition={{
-                     boxShadow: {
-                       duration: 2,
-                       repeat: Infinity,
-                       ease: "easeInOut"
-                     }
-                   }}
-                 >
-                   {/* Animated background gradient */}
-                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                   
-                   {/* Shimmer effect */}
-                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                   
-                   <ArrowDownTrayIcon className="relative w-5 h-5 mr-3 group-hover:translate-y-1 group-hover:rotate-12 transition-all duration-300" />
-                   <span className="relative">Download Resume</span>
-                   
-                   {/* Floating particles */}
-                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-white/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
-                   <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-white/40 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" style={{ animationDelay: '0.5s' }} />
-                 </motion.a>
-
-                 <motion.a
-                   href="#contact"
-                   className="relative inline-flex items-center justify-center group overflow-hidden rounded-xl px-8 py-4 bg-white backdrop-blur-sm text-gray-700 font-semibold border-2 border-gray-300 hover:border-blue-500 transition-all duration-300 shadow-md hover:shadow-lg"
-                   whileHover={{
-                     scale: 1.08,
-                     y: -4,
-                     boxShadow: "0 20px 40px rgba(59, 130, 246, 0.2)"
-                   }}
-                   whileTap={{ scale: 0.95 }}
-                 >
-                   {/* Animated background */}
-                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                   
-                   {/* Shimmer effect */}
-                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-                   
-                   <EnvelopeIcon className="relative w-5 h-5 mr-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-                   <span className="relative">Get In Touch</span>
-                   
-                   {/* Floating particles */}
-                   <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-500/60 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" />
-                   <div className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-indigo-500/40 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping" style={{ animationDelay: '0.3s' }} />
-                 </motion.a>
-            </motion.div>
-
-            {/* Social Links */}
-            <motion.div
-              variants={itemVariants}
-              className="flex gap-4 justify-center lg:justify-start"
-            >
-                <motion.a
-                  href="https://github.com/Smear6uard"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-link hover:scale-125 hover:rotate-12 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
-                  whileHover={{ scale: 1.2, rotate: 12 }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="GitHub"
-                >
-                  <GithubIcon className="w-5 h-5" />
-                </motion.a>
-
-                <motion.a
-                  href="https://linkedin.com/in/sameer-a-akhtar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-link hover:scale-125 hover:rotate-12 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
-                  whileHover={{ scale: 1.2, rotate: 12 }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="LinkedIn"
-                >
-                  <LinkedinIcon className="w-5 h-5" />
-                </motion.a>
-
-                <motion.a
-                  href="mailto:Sameer_Akhtar@icloud.com"
-                  className="social-link hover:scale-125 hover:rotate-12 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
-                  whileHover={{ scale: 1.2, rotate: 12 }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="Email"
-                >
-                  <EnvelopeIcon className="w-5 h-5" />
-                </motion.a>
-
-                <motion.a
-                  href="https://x.com/s_ameer_akhtar"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-link hover:scale-125 hover:rotate-12 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
-                  whileHover={{ scale: 1.2, rotate: 12 }}
-                  whileTap={{ scale: 0.9 }}
-                  aria-label="X (Twitter)"
-                >
-                  <X className="w-5 h-5" />
-                </motion.a>
-            </motion.div>
-          </div>
-
-          {/* Right Column - Profile Image */}
           <motion.div
-            variants={itemVariants}
-            className="flex justify-center lg:justify-end order-first lg:order-last mb-8 lg:mb-0"
+            style={{ x: mousePosition.x, y: mousePosition.y }}
+            transition={{ type: "spring", stiffness: 100, damping: 30 }}
           >
-            <div className="relative">
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0, rotateY: -15 }}
-                animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 100 }}
-                className="relative w-[12rem] h-[12rem] sm:w-[16rem] sm:h-[16rem] md:w-[20rem] md:h-[20rem] lg:w-[28rem] lg:h-[28rem]"
-              >
-                {/* Enhanced glow effect with animation */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-violet-400/40 via-cyan-400/30 to-emerald-400/40 rounded-full blur-2xl"
-                  animate={{
-                    scale: [1, 1.1, 1],
-                    opacity: [0.3, 0.5, 0.3]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-
-                {/* Rotating ring */}
-                <motion.div
-                  className="absolute inset-0 rounded-full border-2 border-violet-400/40"
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                />
-
-                {/* Profile Image Container */}
-                <motion.div
-                  className="relative w-full h-full rounded-full overflow-hidden border-4 border-white/20 shadow-2xl"
-                >
-                  <Image
-                    src="/profile.jpg"
-                    alt="Sameer Akhtar - Computer Science Student & AI Developer"
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="(max-width: 640px) 12rem, (max-width: 768px) 16rem, (max-width: 1024px) 20rem, 28rem"
-                  />
-                </motion.div>
-
-                {/* Floating elements around the image */}
-                <motion.div
-                  className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-violet-500 via-cyan-500 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold shadow-lg"
-                  animate={{
-                    y: [-5, 5, -5],
-                    rotate: [0, 10, -10, 0]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  ✨
-                </motion.div>
-
-                <motion.div
-                  className="absolute -bottom-2 -left-2 sm:-bottom-4 sm:-left-4 w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-r from-amber-500 to-rose-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg"
-                  animate={{
-                    y: [5, -5, 5],
-                    rotate: [0, -10, 10, 0]
-                  }}
-                  transition={{
-                    duration: 2.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5
-                  }}
-                >
-                  💻
-                </motion.div>
-              </motion.div>
-            </div>
+            <AsciiArt />
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mt-8 md:mt-12"
+        >
+          <h1 className="text-5xl md:text-6xl font-bold text-text-primary tracking-tight">
+            sameer akhtar
+          </h1>
+          <p className="text-lg md:text-xl text-accent mt-2 font-mono">
+            software engineer & founder
+          </p>
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-6 text-text-secondary max-w-lg text-lg leading-relaxed"
+        >
+          Founder of Styleum — an AI stylist launching Q1 2025. CS @ DePaul,
+          engineering @ BRUNOSOFT. I build products, not just features.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="mt-8 flex items-center gap-6"
+        >
+          <a
+            href="https://github.com/Smear6uard"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-text-muted hover:text-accent transition-colors"
+            aria-label="GitHub"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+          </a>
+          <a
+            href="https://linkedin.com/in/sameer-a-akhtar"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-text-muted hover:text-accent transition-colors"
+            aria-label="LinkedIn"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+            </svg>
+          </a>
+          <a
+            href="mailto:Sameer_Akhtar@icloud.com"
+            className="text-text-muted hover:text-accent transition-colors"
+            aria-label="Email"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="M22 6L12 13L2 6" />
+            </svg>
+          </a>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className="absolute bottom-8 right-6 hidden md:flex items-center gap-4 text-text-muted text-xs font-mono"
+        >
+          <span>scroll</span>
+          <div className="w-24 h-px bg-text-muted/30" />
         </motion.div>
       </div>
     </section>

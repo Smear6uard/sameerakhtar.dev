@@ -2,181 +2,123 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Bars3Icon, 
-  XMarkIcon
-} from "@heroicons/react/24/outline";
 
-const navItems = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/#about" },
-  { name: "Projects", href: "/#projects" },
-  { name: "Skills", href: "/#skills" },
-  { name: "Resume", href: "/#resume" },
-  { name: "Contact", href: "/#contact" },
+const navLinks = [
+  { href: "#work", label: "work" },
+  { href: "#experience", label: "experience" },
+  { href: "#about", label: "about" },
+  { href: "/blog", label: "blog" },
 ];
 
 export function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -35% 0px",
-      threshold: 0,
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.getAttribute("id");
-          if (id) {
-            setActiveSection(id);
-          }
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    // Observe all sections
-    const sections = document.querySelectorAll("section[id]");
-    sections.forEach((section) => observer.observe(section));
-
-    return () => {
-      sections.forEach((section) => observer.unobserve(section));
-    };
-  }, []);
-
-  const handleNavClick = (href: string) => {
-    setIsOpen(false);
-    if (href.startsWith("#")) {
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
   return (
-    <motion.header
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "glass border-b border-primary/20"
-          : "bg-transparent"
+    <header
+      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        isScrolled
+          ? "bg-bg-primary/90 backdrop-blur-md border-b border-white/5"
+          : ""
       }`}
     >
-      <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-18">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 sm:gap-3 group min-h-[48px]">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-xl group-hover:shadow-primary/30 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
-              <span className="text-primary-foreground font-bold text-sm sm:text-lg group-hover:scale-110 transition-transform duration-300">SA</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-base sm:text-lg gradient-text tracking-tight group-hover:scale-105 transition-transform duration-300">
-                Sameer Akhtar
-              </span>
-              <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors duration-300 hidden sm:block">
-                Software Engineer
-              </span>
-            </div>
-          </Link>
+      <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-text-primary font-medium tracking-tight hover:text-accent transition-colors"
+        >
+          <Image
+            src="/logo.png"
+            alt=""
+            width={24}
+            height={24}
+            className="rounded-sm"
+          />
+          <span>sameer akhtar</span>
+        </Link>
 
-                  {/* Desktop Navigation */}
-                  <div className="hidden md:flex items-center gap-1">
-                    {navItems.map((item) => {
-                      const sectionId = item.href.replace("/#", "") || "home";
-                      const isActive = activeSection === sectionId || (activeSection === "" && sectionId === "home");
-
-                      return (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          onClick={() => handleNavClick(item.href)}
-                          className={`text-sm font-medium px-4 py-2 rounded-lg hover:scale-105 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 relative group ${
-                            isActive
-                              ? "gradient-text bg-primary/10 shadow-md"
-                              : "text-foreground/80 hover:text-primary hover:bg-primary/5"
-                          }`}
-                        >
-                          {item.name}
-                          {isActive && (
-                            <motion.div
-                              layoutId="activeNav"
-                              className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-full"
-                              transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                            />
-                          )}
-                        </Link>
-                      );
-                    })}
-                  </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2">
-                 <button
-                   onClick={() => setIsOpen(!isOpen)}
-                   className="md:hidden p-3 rounded-xl bg-muted hover:bg-primary/10 border border-border hover:scale-110 hover:shadow-lg hover:shadow-primary/10 transition-all duration-200 cursor-pointer min-h-[48px] min-w-[48px] flex items-center justify-center"
-                   aria-label="Toggle menu"
-                 >
-              {isOpen ? (
-                <XMarkIcon className="w-6 h-6" />
-              ) : (
-                <Bars3Icon className="w-6 h-6" />
-              )}
-            </button>
-          </div>
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm text-text-muted hover:text-accent transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <a
+            href="/Sameer-Akhtar-Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-accent border border-accent/50 px-4 py-2 rounded hover:bg-accent/10 transition-colors"
+          >
+            resume
+          </a>
         </div>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-border bg-background/95 backdrop-blur-md"
-            >
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                        {navItems.map((item) => {
-                          const sectionId = item.href.replace("/#", "") || "home";
-                          const isActive = activeSection === sectionId || (activeSection === "" && sectionId === "home");
-
-                          return (
-                            <Link
-                              key={item.name}
-                              href={item.href}
-                              onClick={() => handleNavClick(item.href)}
-                              className={`block px-4 py-3 rounded-md text-base font-medium hover:scale-105 hover:shadow-md hover:shadow-primary/5 transition-all duration-200 min-h-[48px] flex items-center ${
-                                isActive
-                                  ? "gradient-text bg-primary/10"
-                                  : "text-foreground hover:text-primary hover:bg-primary/5"
-                              }`}
-                            >
-                              {item.name}
-                            </Link>
-                          );
-                        })}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden flex flex-col gap-1.5 p-2"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span
+            className={`w-6 h-px bg-text-primary transition-transform ${
+              isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          />
+          <span
+            className={`w-6 h-px bg-text-primary transition-opacity ${
+              isMobileMenuOpen ? "opacity-0" : ""
+            }`}
+          />
+          <span
+            className={`w-6 h-px bg-text-primary transition-transform ${
+              isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
+          />
+        </button>
       </nav>
-    </motion.header>
+
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden fixed inset-0 top-16 bg-bg-primary z-30 flex flex-col items-center justify-center gap-8"
+          >
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-2xl text-text-primary hover:text-accent transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <a
+              href="/Sameer-Akhtar-Resume.pdf"
+              target="_blank"
+              className="text-xl text-accent"
+            >
+              resume
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
