@@ -165,45 +165,6 @@ The system handles 100+ concurrent users and 1,000+ trade events per session. Th
 The hardest part was handling partial fills correctly—when a large order matches against multiple smaller orders at different prices. Edge cases in financial systems compound quickly.
     `,
   },
-  "angular-migration": {
-    title: "Enterprise Angular Migration",
-    subtitle: "Modernizing 100+ components from AngularJS to Angular 17+",
-    timeline: "Oct 2024 – Present",
-    role: "Software Engineering Intern @ BRUNOSOFT",
-    stack: ["Angular", "TypeScript", "Docker", "Kubernetes"],
-    metrics: [
-      { label: "Components", value: "100+" },
-      { label: "Migration", value: "AngularJS → 17" },
-      { label: "Deployment", value: "K8s" },
-    ],
-    content: `
-## The Problem
-
-Legacy AngularJS codebase with 100+ components needed modernization. The old framework is end-of-life, making it harder to hire developers, fix security issues, and add new features.
-
-## Technical Approach
-
-### Strategy
-
-Incremental migration using ngUpgrade to run both frameworks simultaneously. This allows shipping updates continuously rather than a risky big-bang rewrite.
-
-### Key Decisions
-
-**Component-by-Component**: Started with leaf components (no dependencies), worked up to complex containers. Each migrated component gets its own PR for easier review.
-
-**Containerization First**: Set up Docker and Kubernetes deployment before heavy migration work. This gave us reliable staging environments to catch regressions early.
-
-**Strict TypeScript**: Enforcing strict mode from the start. Catches bugs at compile time that would have been runtime errors in the JS codebase.
-
-## Results
-
-Currently leading the migration with 100+ components in scope. Implemented Docker/Kubernetes workflows that reduced deployment friction and enabled parallel staging environments.
-
-## What I Learned
-
-Enterprise migrations are as much about people and process as technology. Getting buy-in, writing clear documentation, and maintaining backwards compatibility matter more than clever code.
-    `,
-  },
 };
 
 export async function generateStaticParams() {

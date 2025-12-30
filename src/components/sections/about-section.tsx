@@ -18,7 +18,7 @@ export function AboutSection() {
 
         <div className="mt-8 grid md:grid-cols-[280px_1fr] gap-12">
           <div>
-            <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden border-4 border-accent">
+            <div className="relative w-full aspect-[4/5] rounded-lg overflow-hidden">
               <Image
                 src="/profile.jpg"
                 alt="Sameer Akhtar"
@@ -36,7 +36,7 @@ export function AboutSection() {
 
             <p className="text-lg text-text-secondary leading-relaxed">
               Currently, I&apos;m building{" "}
-              <a href="https://styleum.co" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline underline-offset-4">Styleum</a>
+              <a href="https://styleum.co" target="_blank" rel="noopener noreferrer" className="text-accent link-underline">Styleum</a>
               —an AI-powered personal styling platform—while leading the modernization
               of a legacy codebase at BRUNOSOFT. I believe in shipping fast and learning from real users.
             </p>
@@ -49,7 +49,7 @@ export function AboutSection() {
             </p>
 
             {/* Social Proof */}
-            <div className="flex gap-8 pt-4">
+            <div className="flex flex-wrap gap-6 sm:gap-8 pt-4">
               <a
                 href="https://github.com/Smear6uard"
                 target="_blank"
@@ -65,8 +65,8 @@ export function AboutSection() {
               </div>
             </div>
 
-            {/* Tech Stack - One Line */}
-            <p className="text-sm text-white/30 font-mono pt-4">
+            {/* Tech Stack */}
+            <p className="text-xs sm:text-sm text-white/30 font-mono pt-4 break-words">
               JavaScript · Python · Java · React · Next.js · Node.js · Docker · AWS
             </p>
 

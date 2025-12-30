@@ -25,7 +25,7 @@ export function ContactSection() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <a
               href="mailto:Sameer_Akhtar@icloud.com"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-accent text-bg-primary font-medium rounded-md hover:bg-accent/90 transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium bg-accent text-bg-primary rounded-md hover:bg-[#ea580c] hover:-translate-y-0.5 transition-all duration-200"
             >
               Send me an email
               <span>→</span>
@@ -34,7 +34,7 @@ export function ContactSection() {
               href="/Sameer-Akhtar-Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/20 text-text-primary font-medium rounded-md hover:border-accent hover:text-accent transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium border border-white/15 text-text-primary rounded-md hover:border-accent hover:text-accent transition-all duration-200"
             >
               View my resume
               <span>↗</span>
@@ -46,7 +46,7 @@ export function ContactSection() {
               href="https://github.com/Smear6uard"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-muted hover:text-accent transition-colors"
+              className="text-text-muted hover:text-accent link-underline transition-colors"
             >
               github
             </a>
@@ -54,7 +54,7 @@ export function ContactSection() {
               href="https://linkedin.com/in/sameer-a-akhtar"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-text-muted hover:text-accent transition-colors"
+              className="text-text-muted hover:text-accent link-underline transition-colors"
             >
               linkedin
             </a>

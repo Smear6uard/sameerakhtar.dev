@@ -31,14 +31,6 @@ const projects = [
     metric: "500+ trades/session",
     slug: "stock-exchange",
   },
-  {
-    num: "04",
-    title: "Enterprise Angular Migration",
-    description:
-      "Legacy AngularJS codebase blocking new hires and security patches. Leading incremental migration to Angular 17 using ngUpgrade. Introduced Docker/K8s workflows enabling parallel staging for a 5-person team.",
-    metric: "100+ components",
-    slug: "angular-migration",
-  },
 ];
 
 export function ProjectsSection() {

@@ -32,7 +32,7 @@ const experiences = [
         title: "Specialist",
         period: "Jul 2024 – Present",
         description:
-          "Technical advisor for 50+ monthly clients achieving 95%+ satisfaction. Specialized in enterprise MDM deployments — became go-to resource for complex multi-device iOS/macOS configurations.",
+          "Technical advisor resolving complex iOS/macOS issues for 50+ monthly clients. Specialized in enterprise MDM enrollment and multi-device configurations. Consistently achieved 95%+ satisfaction rating.",
         tech: "iOS · macOS · MDM",
       },
     ],
