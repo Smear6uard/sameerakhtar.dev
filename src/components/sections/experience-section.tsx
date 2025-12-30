@@ -14,11 +14,6 @@ const experiences = [
           "Building the AI stylist that becomes your daily ritual. Designed hybrid Claude Haiku pipeline at $0.002/call — 10x cheaper than funded competitors. Targeting 1,000 users by Q2 2025 with $6.99/mo Pro tier.",
         tech: "Next.js · Supabase · Claude API · Stripe · Vercel",
       },
-    ],
-  },
-  {
-    year: "2025",
-    roles: [
       {
         company: "BRUNOSOFT",
         title: "Software Engineering Intern",
