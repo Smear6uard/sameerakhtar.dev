@@ -76,7 +76,7 @@ export function AsciiArt() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="font-mono text-[9px] sm:text-[12px] md:text-lg lg:text-xl leading-none select-none animate-breathe"
+      className="font-mono text-[6px] xs:text-[8px] sm:text-[12px] md:text-lg lg:text-xl leading-none select-none animate-breathe overflow-hidden"
     >
       {charGrid.map((line, lineIndex) => (
         <div key={lineIndex} className="whitespace-pre flex">

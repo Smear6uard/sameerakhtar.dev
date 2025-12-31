@@ -24,6 +24,7 @@ export function AboutSection() {
                 src="/profile.jpg"
                 alt="Sameer Akhtar"
                 fill
+                sizes="(max-width: 768px) 100vw, 280px"
                 className="object-cover border-2 border-orange-500 rounded-lg"
               />
             </div>

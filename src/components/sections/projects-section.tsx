@@ -41,6 +41,7 @@ export function ProjectsSection() {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const updateScrollState = () => {
     if (!scrollRef.current) return;
@@ -58,6 +59,10 @@ export function ProjectsSection() {
     const gap = 24; // gap-6 = 24px
     const index = Math.round(scrollLeft / (cardWidth + gap));
     setActiveIndex(Math.min(index, projects.length - 1));
+
+    // Calculate scroll progress for desktop progress bar
+    const maxScroll = scrollWidth - clientWidth;
+    setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
   };
 
   useEffect(() => {
@@ -72,9 +77,11 @@ export function ProjectsSection() {
     if (!scrollRef.current) return;
     const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
     const gap = 24;
-    const scrollAmount = cardWidth + gap;
-    scrollRef.current.scrollBy({
-      left: direction === "left" ? -scrollAmount : scrollAmount,
+    const targetIndex = direction === "left"
+      ? Math.max(0, activeIndex - 1)
+      : Math.min(projects.length - 1, activeIndex + 1);
+    scrollRef.current.scrollTo({
+      left: targetIndex * (cardWidth + gap),
       behavior: "smooth",
     });
   };
@@ -216,28 +223,41 @@ export function ProjectsSection() {
           ))}
         </div>
 
-        {/* Dot indicators */}
-        <div className="flex justify-center items-center gap-2 mt-6">
-          {projects.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                if (!scrollRef.current) return;
-                const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
-                const gap = 24;
-                scrollRef.current.scrollTo({
-                  left: i * (cardWidth + gap),
-                  behavior: "smooth",
-                });
-              }}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === activeIndex
-                  ? "w-6 bg-accent"
-                  : "w-2 bg-white/20 hover:bg-white/40"
-              }`}
-              aria-label={`Go to project ${i + 1}`}
-            />
-          ))}
+        {/* Scroll indicators */}
+        <div className="mt-6">
+          {/* Desktop: Progress bar */}
+          <div className="hidden md:flex justify-center">
+            <div className="w-40 h-1 bg-white/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-accent rounded-full transition-all duration-150"
+                style={{ width: `${scrollProgress}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Mobile: Dots */}
+          <div className="flex md:hidden justify-center items-center gap-2">
+            {projects.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  if (!scrollRef.current) return;
+                  const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
+                  const gap = 24;
+                  scrollRef.current.scrollTo({
+                    left: i * (cardWidth + gap),
+                    behavior: "smooth",
+                  });
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === activeIndex
+                    ? "w-6 bg-accent"
+                    : "w-2 bg-white/20 hover:bg-white/40"
+                }`}
+                aria-label={`Go to project ${i + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

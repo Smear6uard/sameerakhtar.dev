@@ -32,7 +32,7 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
   }, [hasAnimated, text]);
 
   const runScramble = () => {
-    const scrambleFrames = 12; // Pure scramble before decode starts
+    const scrambleFrames = 10; // Pure scramble before decode starts
     const decodeFrames = 20; // Frames to decode
     const intervalMs = 40;
     let frame = 0;
