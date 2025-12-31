@@ -21,8 +21,13 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col justify-center px-6 pt-20"
+      className="min-h-screen flex flex-col justify-center px-6 pt-20 relative"
     >
+      {/* Subtle gradient blob */}
+      <div
+        className="absolute top-1/3 left-1/4 w-[400px] h-[200px] bg-gradient-to-r from-accent/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
       <div className="max-w-6xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -58,11 +58,6 @@ export function ExperienceSection() {
           transition={{ duration: 0.3 }}
         >
           <span className="section-heading">experience</span>
-          <h2 className="heading-lg mt-2">
-            Where I&apos;ve
-            <br />
-            <span className="text-text-muted">made an impact</span>
-          </h2>
         </motion.div>
 
         <div className="mt-16 space-y-12">

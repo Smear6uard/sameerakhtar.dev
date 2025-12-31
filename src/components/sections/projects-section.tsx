@@ -44,11 +44,6 @@ export function ProjectsSection() {
           transition={{ duration: 0.3 }}
         >
           <span className="section-heading">selected work</span>
-          <h2 className="heading-lg mt-2">
-            Projects that demonstrate
-            <br />
-            <span className="text-text-muted">technical depth</span>
-          </h2>
         </motion.div>
 
         <div className="mt-16 space-y-8">

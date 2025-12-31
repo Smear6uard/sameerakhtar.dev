@@ -51,7 +51,7 @@ export function Navigation() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-text-muted hover:text-accent transition-colors"
+              className="text-sm text-text-muted hover:text-accent link-underline transition-colors"
             >
               {link.label}
             </Link>
@@ -97,7 +97,7 @@ export function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-0 top-16 bg-bg-primary z-30 flex flex-col items-center justify-center gap-8"
+            className="md:hidden fixed inset-0 bg-[#0a192f] z-50 flex flex-col items-center justify-center gap-8"
           >
             {navLinks.map((link) => (
               <Link
