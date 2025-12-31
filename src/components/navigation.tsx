@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 
 const navLinks = [
   { href: "#work", label: "work" },
@@ -48,22 +49,25 @@ export function Navigation() {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-text-muted hover:text-accent link-underline transition-colors"
-            >
-              {link.label}
-            </Link>
+            <MagneticWrapper key={link.href} radius={80} maxDistance={6}>
+              <Link
+                href={link.href}
+                className="text-sm text-text-muted hover:text-accent link-underline transition-colors"
+              >
+                {link.label}
+              </Link>
+            </MagneticWrapper>
           ))}
-          <a
-            href="/Sameer-Akhtar-Resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-accent border border-accent/50 px-4 py-2 rounded hover:bg-accent/10 transition-colors"
-          >
-            resume
-          </a>
+          <MagneticWrapper radius={100} maxDistance={8}>
+            <a
+              href="/Sameer-Akhtar-Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-accent border border-accent/50 px-4 py-2 rounded hover:bg-accent/10 transition-colors"
+            >
+              resume
+            </a>
+          </MagneticWrapper>
         </div>
 
         {/* Mobile hamburger */}

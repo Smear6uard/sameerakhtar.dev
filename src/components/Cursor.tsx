@@ -49,13 +49,13 @@ export function Cursor() {
 
   return (
     <>
-      {/* Gradient spotlight */}
+      {/* Gradient spotlight - larger, more prominent */}
       <motion.div
-        className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
+        className="pointer-events-none fixed inset-0 z-10 transition-opacity duration-300"
         animate={{ x: position.x - 300, y: position.y - 300 }}
-        transition={{ type: "spring", damping: 30, stiffness: 200 }}
+        transition={{ type: "spring", damping: 25, stiffness: 150, mass: 0.5 }}
       >
-        <div className="h-[600px] w-[600px] rounded-full bg-accent/5 blur-3xl" />
+        <div className="h-[600px] w-[600px] rounded-full bg-accent/[0.05] blur-[100px]" />
       </motion.div>
 
       {/* Cursor dot */}
