@@ -99,6 +99,17 @@ export function Navigation() {
             exit={{ opacity: 0, y: -20 }}
             className="md:hidden fixed inset-0 bg-[#0a192f] z-50 flex flex-col items-center justify-center gap-8"
           >
+            {/* Close button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute top-6 right-6 text-text-primary hover:text-accent transition-colors"
+              aria-label="Close menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
             {navLinks.map((link) => (
               <Link
                 key={link.href}
