@@ -23,7 +23,7 @@ export function AboutSection() {
                 src="/profile.jpg"
                 alt="Sameer Akhtar"
                 fill
-                className="object-cover"
+                className="object-cover border-2 border-orange-500 rounded-lg"
               />
             </div>
           </div>

@@ -97,7 +97,8 @@ export function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden fixed inset-0 bg-[#0a192f] z-50 flex flex-col items-center justify-center gap-8"
+            className="md:hidden fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 min-h-screen w-full"
+          style={{ backgroundColor: '#0a192f' }}
           >
             {/* Close button */}
             <button

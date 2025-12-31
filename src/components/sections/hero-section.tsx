@@ -25,7 +25,7 @@ export function HeroSection() {
     >
       {/* Subtle gradient blob */}
       <div
-        className="absolute top-1/3 left-1/4 w-[400px] h-[200px] bg-gradient-to-r from-accent/10 via-accent/5 to-transparent rounded-full blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-r from-accent/[0.18] via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
         aria-hidden="true"
       />
       <div className="max-w-6xl mx-auto w-full">

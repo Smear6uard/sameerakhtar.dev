@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "Sameer Akhtar",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/SameerAkhtar.dev-logo-navybg.jpg",
         width: 1200,
         height: 630,
         alt: "Sameer Akhtar - Software Engineer",
@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     description:
       "Building Styleum, an AI-powered personal styling platform. CS @ DePaul.",
     creator: "@sameerakhtar",
-    images: ["/og-image.jpg"],
+    images: ["/SameerAkhtar.dev-logo-navybg.jpg"],
   },
   robots: {
     index: true,
