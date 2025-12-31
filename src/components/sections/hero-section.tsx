@@ -74,7 +74,7 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="mt-8 flex items-center gap-6"
         >
-          <MagneticWrapper radius={60} maxDistance={10}>
+          <MagneticWrapper radius={60} maxDistance={8}>
             <a
               href="https://github.com/Smear6uard"
               target="_blank"
@@ -87,7 +87,7 @@ export function HeroSection() {
               </svg>
             </a>
           </MagneticWrapper>
-          <MagneticWrapper radius={60} maxDistance={10}>
+          <MagneticWrapper radius={60} maxDistance={8}>
             <a
               href="https://linkedin.com/in/sameer-a-akhtar"
               target="_blank"
@@ -100,7 +100,7 @@ export function HeroSection() {
               </svg>
             </a>
           </MagneticWrapper>
-          <MagneticWrapper radius={60} maxDistance={10}>
+          <MagneticWrapper radius={60} maxDistance={8}>
             <a
               href="mailto:Sameer_Akhtar@icloud.com"
               className="text-text-muted hover:text-accent transition-colors"

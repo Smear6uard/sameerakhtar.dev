@@ -24,7 +24,7 @@ export function ContactSection() {
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <MagneticWrapper radius={100} maxDistance={8}>
+            <MagneticWrapper radius={100} maxDistance={6}>
               <a
                 href="mailto:Sameer_Akhtar@icloud.com"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium bg-accent text-bg-primary rounded-md hover:bg-[#ea580c] transition-all duration-200"
@@ -33,7 +33,7 @@ export function ContactSection() {
                 <span>→</span>
               </a>
             </MagneticWrapper>
-            <MagneticWrapper radius={100} maxDistance={8}>
+            <MagneticWrapper radius={100} maxDistance={6}>
               <a
                 href="/Sameer-Akhtar-Resume.pdf"
                 target="_blank"
