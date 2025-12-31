@@ -5,8 +5,8 @@ import Image from "next/image";
 
 export function AboutSection() {
   return (
-    <section id="about" className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="about" className="py-32">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -49,16 +49,7 @@ export function AboutSection() {
             </p>
 
             {/* Social Proof */}
-            <div className="flex flex-wrap gap-6 sm:gap-8 pt-4">
-              <a
-                href="https://github.com/Smear6uard"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              >
-                <span className="text-2xl font-bold text-accent">50+</span>
-                <span className="text-text-muted text-sm">repositories</span>
-              </a>
+            <div className="pt-4">
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold text-accent">300+</span>
                 <span className="text-text-muted text-sm">newsletter subscribers</span>

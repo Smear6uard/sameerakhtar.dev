@@ -35,8 +35,8 @@ const projects = [
 
 export function ProjectsSection() {
   return (
-    <section id="work" className="py-32 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section id="work" className="py-32">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}

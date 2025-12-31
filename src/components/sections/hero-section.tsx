@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AsciiArt } from "@/components/AsciiArt";
+import { ScrambleText } from "@/components/ui/ScrambleText";
 
 export function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -21,14 +22,14 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col justify-center px-6 pt-20 relative"
+      className="min-h-screen flex flex-col justify-center pt-20 relative"
     >
       {/* Subtle gradient blob */}
       <div
         className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-r from-accent/[0.18] via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
         aria-hidden="true"
       />
-      <div className="max-w-6xl mx-auto w-full">
+      <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,7 +50,7 @@ export function HeroSection() {
           className="mt-8 md:mt-12"
         >
           <h1 className="text-5xl md:text-6xl font-bold text-text-primary tracking-tight">
-            sameer akhtar
+            <ScrambleText text="sameer akhtar" />
           </h1>
           <p className="text-lg md:text-xl text-accent mt-2 font-mono">
             software engineer & founder
