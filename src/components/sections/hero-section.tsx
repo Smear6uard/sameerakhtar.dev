@@ -23,7 +23,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col justify-center pt-20 relative overflow-x-hidden"
+      className="min-h-screen flex flex-col justify-center relative overflow-x-hidden"
     >
       {/* Subtle gradient blob */}
       <div

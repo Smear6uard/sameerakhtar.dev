@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/navigation";
+import { SideNav } from "@/components/SideNav";
+import { MobileNav } from "@/components/MobileNav";
 import { Footer } from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -91,8 +92,9 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <SmoothScroll>
           <Cursor />
-          <Navigation />
-          <main>{children}</main>
+          <SideNav />
+          <MobileNav />
+          <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
           <Footer />
           <Analytics />
         </SmoothScroll>
