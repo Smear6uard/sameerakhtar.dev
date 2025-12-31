@@ -48,7 +48,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-8 md:mt-12"
+          className="mt-12 md:mt-16 ml-2 md:ml-4"
         >
           <h1 className="text-5xl md:text-6xl font-bold text-text-primary tracking-tight">
             <ScrambleText text="sameer akhtar" />
@@ -118,16 +118,6 @@ export function HeroSection() {
               </svg>
             </a>
           </MagneticWrapper>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="absolute bottom-8 right-6 hidden md:flex items-center gap-4 text-text-muted text-xs font-mono"
-        >
-          <span>scroll</span>
-          <div className="w-24 h-px bg-text-muted/30" />
         </motion.div>
       </div>
     </section>

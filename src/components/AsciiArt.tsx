@@ -10,7 +10,7 @@ const ascii = `  ██████╗  █████╗ ███╗   ██
  ██████╔╝ ██║  ██║██║ ╚═╝ ██║███████╗███████╗██║  ██║
  ╚═════╝  ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝`;
 
-const PROXIMITY_RADIUS = 80;
+const PROXIMITY_RADIUS = 100;
 
 export function AsciiArt() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,8 +67,8 @@ export function AsciiArt() {
   }, [handleMouseMove, handleMouseLeave, isTouch]);
 
   // Calculate character dimensions (approximate based on font size)
-  const charWidth = 6.5; // Approximate width of monospace char at current size
-  const charHeight = 14; // Approximate line height
+  const charWidth = 8; // Approximate width of monospace char at current size
+  const charHeight = 18; // Approximate line height
 
   return (
     <motion.div
@@ -76,7 +76,7 @@ export function AsciiArt() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
-      className="font-mono text-[7px] sm:text-[10px] md:text-sm lg:text-base leading-none select-none animate-breathe"
+      className="font-mono text-[9px] sm:text-[12px] md:text-lg lg:text-xl leading-none select-none animate-breathe"
     >
       {charGrid.map((line, lineIndex) => (
         <div key={lineIndex} className="whitespace-pre flex">

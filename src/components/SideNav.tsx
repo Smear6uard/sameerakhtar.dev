@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
 const navLinks = [
   { href: "#work", label: "work", icon: "work" },
@@ -46,6 +47,7 @@ function NavIcon({ type }: { type: string }) {
 
 export function SideNav() {
   const [isExpanded, setIsExpanded] = useState(false);
+  const activeSection = useActiveSection();
 
   return (
     <motion.nav
@@ -80,31 +82,46 @@ export function SideNav() {
 
       {/* Nav Links */}
       <div className="flex-1 flex flex-col justify-center gap-2 px-3">
-        {navLinks.map((link) => (
-          <MagneticWrapper key={link.href} radius={60} maxDistance={4}>
-            <Link
-              href={link.href}
-              className="flex items-center gap-3 px-3 py-3 rounded-lg text-text-muted hover:text-accent hover:bg-white/5 transition-all duration-200 group"
-            >
-              <span className="flex-shrink-0">
-                <NavIcon type={link.icon} />
-              </span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: isExpanded ? 1 : 0 }}
-                transition={{ duration: 0.2 }}
-                className="text-sm whitespace-nowrap overflow-hidden"
+        {navLinks.map((link) => {
+          const sectionId = link.href.replace("#", "");
+          const isActive = activeSection === sectionId;
+
+          return (
+            <MagneticWrapper key={link.href} radius={70} maxDistance={6}>
+              <Link
+                href={link.href}
+                className={`relative flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-[180ms] ease-out group
+                  ${isActive
+                    ? "text-accent bg-accent/10"
+                    : "text-text-muted hover:text-accent hover:bg-white/5 hover:scale-105"
+                  }`}
               >
-                {link.label}
-              </motion.span>
-            </Link>
-          </MagneticWrapper>
-        ))}
+                <span className="flex-shrink-0">
+                  <NavIcon type={link.icon} />
+                </span>
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: isExpanded ? 1 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-sm whitespace-nowrap overflow-hidden"
+                >
+                  {link.label}
+                </motion.span>
+                {/* Tooltip - only show when collapsed */}
+                {!isExpanded && (
+                  <span className="absolute left-full ml-3 px-2 py-1 bg-bg-secondary text-text-primary text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-300 pointer-events-none whitespace-nowrap z-50">
+                    {link.label}
+                  </span>
+                )}
+              </Link>
+            </MagneticWrapper>
+          );
+        })}
       </div>
 
       {/* Social Links */}
       <div className="flex flex-col gap-2 px-3 pb-6 border-t border-white/5 pt-4">
-        <MagneticWrapper radius={50} maxDistance={4}>
+        <MagneticWrapper radius={60} maxDistance={5}>
           <a
             href="https://github.com/Smear6uard"
             target="_blank"
@@ -124,7 +141,7 @@ export function SideNav() {
             </motion.span>
           </a>
         </MagneticWrapper>
-        <MagneticWrapper radius={50} maxDistance={4}>
+        <MagneticWrapper radius={60} maxDistance={5}>
           <a
             href="https://linkedin.com/in/sameer-a-akhtar"
             target="_blank"
@@ -144,7 +161,7 @@ export function SideNav() {
             </motion.span>
           </a>
         </MagneticWrapper>
-        <MagneticWrapper radius={50} maxDistance={4}>
+        <MagneticWrapper radius={60} maxDistance={5}>
           <a
             href="mailto:Sameer_Akhtar@icloud.com"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-accent transition-colors"
@@ -165,7 +182,7 @@ export function SideNav() {
         </MagneticWrapper>
 
         {/* Resume link */}
-        <MagneticWrapper radius={50} maxDistance={4}>
+        <MagneticWrapper radius={60} maxDistance={5}>
           <a
             href="/Sameer-Akhtar-Resume.pdf"
             target="_blank"

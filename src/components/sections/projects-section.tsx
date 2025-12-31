@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 const projects = [
@@ -39,12 +39,18 @@ export function ProjectsSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const updateScrollState = () => {
     if (!scrollRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+    // Hide scroll hint after first scroll
+    if (scrollLeft > 20 && !hasScrolled) {
+      setHasScrolled(true);
+    }
 
     // Calculate active index based on scroll position
     const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
@@ -85,12 +91,33 @@ export function ProjectsSection() {
           >
             <span className="section-heading">selected work</span>
 
-            {/* Desktop navigation arrows */}
-            <div className="hidden md:flex items-center gap-2">
+            <div className="flex items-center gap-4">
+              {/* Scroll hint */}
+              <AnimatePresence>
+                {!hasScrolled && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 1, 0.5, 1] }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 2,
+                      times: [0, 0.3, 0.6, 0.8, 1],
+                      ease: "easeOut"
+                    }}
+                    className="font-mono text-xs uppercase tracking-widest text-text-muted/60"
+                  >
+                    <span className="hidden md:inline">drag or scroll →</span>
+                    <span className="md:hidden">swipe →</span>
+                  </motion.span>
+                )}
+              </AnimatePresence>
+
+              {/* Desktop navigation arrows */}
+              <div className="hidden md:flex items-center gap-2">
               <button
                 onClick={() => scroll("left")}
                 disabled={!canScrollLeft}
-                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
                 aria-label="Previous project"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
@@ -100,13 +127,14 @@ export function ProjectsSection() {
               <button
                 onClick={() => scroll("right")}
                 disabled={!canScrollRight}
-                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
                 aria-label="Next project"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
               </button>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -124,21 +152,21 @@ export function ProjectsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: i * 0.1 }}
-              className="group flex-shrink-0 w-[85vw] md:w-[calc(50vw-80px)] lg:w-[calc(40vw-60px)] snap-center border border-white/[0.06] rounded-lg overflow-hidden hover:border-accent/50 hover:shadow-[0_0_30px_rgba(249,115,22,0.06)] transition-all duration-300"
+              className="group flex-shrink-0 w-[85vw] md:w-[calc(50vw-80px)] lg:w-[calc(40vw-60px)] min-h-[420px] md:min-h-[520px] snap-center border border-white/[0.06] rounded-lg overflow-hidden hover:border-accent/50 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all duration-200 ease-out"
             >
               {/* Project Image Placeholder */}
-              <div className="relative h-[200px] md:h-[240px] bg-[#112240] border-b border-white/[0.06] overflow-hidden flex items-center justify-center">
-                <span className="text-[100px] md:text-[140px] font-bold text-white/[0.03] select-none">
+              <div className="relative h-[240px] md:h-[300px] bg-[#112240] border-b border-white/[0.06] overflow-hidden flex items-center justify-center">
+                <span className="text-[120px] md:text-[160px] font-bold text-white/[0.03] select-none">
                   {project.num}
                 </span>
               </div>
 
-              <div className="p-5 md:p-6">
+              <div className="p-6 md:p-8">
                 <div className="flex items-start justify-between mb-3">
                   <span className="font-mono text-sm text-text-muted">
                     {project.num}
                   </span>
-                  <span className="font-mono text-sm text-accent">
+                  <span className="font-mono text-base font-semibold text-accent">
                     {project.metric}
                   </span>
                 </div>
@@ -188,7 +216,7 @@ export function ProjectsSection() {
         </div>
 
         {/* Dot indicators */}
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex justify-center items-center gap-2 mt-6">
           {projects.map((_, i) => (
             <button
               key={i}
@@ -201,10 +229,10 @@ export function ProjectsSection() {
                   behavior: "smooth",
                 });
               }}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 ${
                 i === activeIndex
-                  ? "bg-accent w-6"
-                  : "bg-white/20 hover:bg-white/40"
+                  ? "w-6 bg-accent"
+                  : "w-2 bg-white/20 hover:bg-white/40"
               }`}
               aria-label={`Go to project ${i + 1}`}
             />

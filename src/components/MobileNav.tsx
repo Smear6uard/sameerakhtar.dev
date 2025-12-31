@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
 const navLinks = [
   { href: "#work", label: "work", icon: "work" },
@@ -42,6 +43,8 @@ function NavIcon({ type, className = "w-5 h-5" }: { type: string; className?: st
 }
 
 export function MobileNav() {
+  const activeSection = useActiveSection();
+
   return (
     <motion.nav
       initial={{ y: 64 }}
@@ -51,16 +54,26 @@ export function MobileNav() {
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="flex items-center justify-around h-16 px-2">
-        {navLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className="flex flex-col items-center justify-center gap-1 px-4 py-2 text-text-muted hover:text-accent active:text-accent transition-colors"
-          >
-            <NavIcon type={link.icon} className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{link.label}</span>
-          </Link>
-        ))}
+        {navLinks.map((link) => {
+          const sectionId = link.href.replace("#", "");
+          const isActive = activeSection === sectionId;
+
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`relative flex flex-col items-center justify-center gap-1 px-4 py-2 transition-colors duration-[180ms]
+                ${isActive ? "text-accent" : "text-text-muted hover:text-accent active:text-accent"}`}
+            >
+              {/* Active indicator dot */}
+              {isActive && (
+                <span className="absolute top-0 w-1 h-1 rounded-full bg-accent" />
+              )}
+              <NavIcon type={link.icon} className="w-5 h-5" />
+              <span className="text-[10px] font-medium">{link.label}</span>
+            </Link>
+          );
+        })}
         <a
           href="/Sameer-Akhtar-Resume.pdf"
           target="_blank"
