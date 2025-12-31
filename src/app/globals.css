@@ -229,3 +229,13 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Force padding on mobile */
+@media (max-width: 768px) {
+  section > div,
+  main > div,
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}

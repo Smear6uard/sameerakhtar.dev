@@ -22,14 +22,14 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="min-h-screen flex flex-col justify-center pt-20 relative"
+      className="min-h-screen flex flex-col justify-center pt-20 relative overflow-x-hidden"
     >
       {/* Subtle gradient blob */}
       <div
-        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[500px] h-[300px] bg-gradient-to-r from-accent/[0.18] via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
+        className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[300px] sm:w-[400px] md:w-[500px] h-[200px] sm:h-[250px] md:h-[300px] bg-gradient-to-r from-accent/[0.18] via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
         aria-hidden="true"
       />
-      <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto w-full px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
