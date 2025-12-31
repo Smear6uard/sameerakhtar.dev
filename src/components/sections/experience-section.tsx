@@ -9,15 +9,15 @@ const experiences = [
       {
         company: "STYLEUM",
         title: "Founder & CEO",
-        period: "Dec 2024 – Present",
+        period: "Dec 2025 – Present",
         description:
           "Building the AI stylist that becomes your daily ritual. Designed hybrid Claude Haiku pipeline at $0.002/call — 10x cheaper than funded competitors. Targeting 1,000 users by Q2 2025 with $6.99/mo Pro tier.",
-        tech: "Next.js · Supabase · Claude API · Stripe · Vercel",
+        tech: "Next.js · Supabase · Claude API · Stripe",
       },
       {
         company: "BRUNOSOFT",
         title: "Software Engineering Intern",
-        period: "Oct 2024 – Present",
+        period: "Oct 2025 – Present",
         description:
           "Leading migration of 100+ AngularJS components to Angular 17 using incremental ngUpgrade strategy. Introduced Docker/Kubernetes workflows enabling parallel staging environments for a 5-person engineering team.",
         tech: "Angular · Docker · Kubernetes · PHP",
@@ -25,7 +25,7 @@ const experiences = [
       {
         company: "APPLE",
         title: "Specialist",
-        period: "Jul 2024 – Present",
+        period: "Jul 2025 – Nov 2025",
         description:
           "Technical advisor resolving complex iOS/macOS issues for 50+ monthly clients. Specialized in enterprise MDM enrollment and multi-device configurations. Consistently achieved 95%+ satisfaction rating.",
         tech: "iOS · macOS · MDM",
