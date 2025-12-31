@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { AsciiArt } from "@/components/AsciiArt";
-import { ScrambleText } from "@/components/ui/ScrambleText";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 
 export function HeroSection() {
@@ -51,7 +50,7 @@ export function HeroSection() {
           className="mt-12 md:mt-16 ml-2 md:ml-4"
         >
           <h1 className="text-5xl md:text-6xl font-bold text-text-primary tracking-tight">
-            <ScrambleText text="sameer akhtar" />
+            sameer akhtar
           </h1>
           <p className="text-lg md:text-xl text-accent mt-2 font-mono">
             software engineer & founder

@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { SectionScramble } from "@/components/ui/SectionScramble";
 
 const projects = [
   {
@@ -89,7 +90,7 @@ export function ProjectsSection() {
             transition={{ duration: 0.3 }}
             className="flex items-center justify-between"
           >
-            <span className="section-heading">selected work</span>
+            <SectionScramble text="selected work" className="section-heading" />
 
             <div className="flex items-center gap-4">
               {/* Scroll hint */}

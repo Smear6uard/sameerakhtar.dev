@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
+import { SectionScramble } from "@/components/ui/SectionScramble";
 
 export function ContactSection() {
   return (
@@ -14,7 +15,7 @@ export function ContactSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.3 }}
           >
-            <span className="section-heading">contact</span>
+            <SectionScramble text="contact" className="section-heading" />
             <h2 className="heading-lg mt-2">Let&apos;s build something together</h2>
           </motion.div>
 

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { SectionScramble } from "@/components/ui/SectionScramble";
 
 export function AboutSection() {
   return (
@@ -13,7 +14,7 @@ export function AboutSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
         >
-          <span className="section-heading">about</span>
+          <SectionScramble text="about" className="section-heading" />
         </motion.div>
 
         <div className="mt-8 grid md:grid-cols-[280px_1fr] gap-12">

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { SectionScramble } from "@/components/ui/SectionScramble";
 
 const experiences = [
   {
@@ -57,7 +58,7 @@ export function ExperienceSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.3 }}
         >
-          <span className="section-heading">experience</span>
+          <SectionScramble text="experience" className="section-heading" />
         </motion.div>
 
         <div className="mt-16 space-y-12">
