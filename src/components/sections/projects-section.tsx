@@ -23,7 +23,7 @@ const projects = [
     metric: "98% accuracy",
     slug: "ai-answer-engine",
     github: "https://github.com/Smear6uard/AI-Answer-Engine",
-    live: "https://ai-answer-engine.vercel.app",
+    live: "https://ai-answer-engine-addv.vercel.app/",
   },
   {
     num: "03",
