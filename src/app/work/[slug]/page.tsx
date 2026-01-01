@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
 
 const projects: Record<
   string,
@@ -184,8 +185,23 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${project.title} | Sameer Akhtar`,
+    title: project.title,
     description: project.subtitle,
+    alternates: {
+      canonical: `https://sameerakhtar.dev/work/${slug}`,
+    },
+    openGraph: {
+      title: `${project.title} | Sameer Akhtar`,
+      description: project.subtitle,
+      url: `https://sameerakhtar.dev/work/${slug}`,
+      type: "article",
+      authors: ["Sameer Akhtar"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} | Sameer Akhtar`,
+      description: project.subtitle,
+    },
   };
 }
 
@@ -214,14 +230,29 @@ export default async function CaseStudy({
   }
 
   return (
-    <article className="pt-32 pb-20 px-6">
-      <div className="max-w-3xl mx-auto">
-        <Link
-          href="/#work"
-          className="text-sm text-text-muted hover:text-accent transition-colors mb-8 inline-block"
-        >
-          ← back to projects
-        </Link>
+    <>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "https://sameerakhtar.dev" },
+          { name: "Projects", url: "https://sameerakhtar.dev/#work" },
+          { name: project.title, url: `https://sameerakhtar.dev/work/${slug}` },
+        ]}
+      />
+      <ProjectJsonLd
+        title={project.title}
+        description={project.subtitle}
+        url={`https://sameerakhtar.dev/work/${slug}`}
+        datePublished={project.timeline.split(" – ")[0].includes("Dec 2024") ? "2024-12-01" : "2024-09-01"}
+        author="Sameer Akhtar"
+      />
+      <article className="pt-32 pb-20 px-6">
+        <div className="max-w-3xl mx-auto">
+          <Link
+            href="/#work"
+            className="text-sm text-text-muted hover:text-accent transition-colors mb-8 inline-block"
+          >
+            ← back to projects
+          </Link>
 
         <header className="mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">
@@ -293,7 +324,8 @@ export default async function CaseStudy({
           className="prose-custom text-text-secondary"
           dangerouslySetInnerHTML={{ __html: formatMarkdown(project.content) }}
         />
-      </div>
-    </article>
+        </div>
+      </article>
+    </>
   );
 }

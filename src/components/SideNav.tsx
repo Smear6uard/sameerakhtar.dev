@@ -64,7 +64,7 @@ export function SideNav() {
         <Link href="/" className="flex items-center gap-3 text-text-primary hover:text-accent transition-colors">
           <Image
             src="/logo.png"
-            alt=""
+            alt="Sameer Akhtar logo"
             width={32}
             height={32}
             className="rounded-sm flex-shrink-0"
@@ -126,6 +126,7 @@ export function SideNav() {
             href="https://github.com/Smear6uard"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="GitHub profile"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-accent transition-colors"
           >
             <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -146,6 +147,7 @@ export function SideNav() {
             href="https://linkedin.com/in/sameer-a-akhtar"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="LinkedIn profile"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-accent transition-colors"
           >
             <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
@@ -164,6 +166,7 @@ export function SideNav() {
         <MagneticWrapper radius={60} maxDistance={5}>
           <a
             href="mailto:Sameer_Akhtar@icloud.com"
+            aria-label="Send email"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-accent transition-colors"
           >
             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
@@ -187,6 +190,7 @@ export function SideNav() {
             href="/Sameer-Akhtar-Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Download resume"
             className="flex items-center gap-3 px-3 py-2 mt-2 rounded-lg text-accent border border-accent/30 hover:bg-accent/10 transition-colors"
           >
             <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">

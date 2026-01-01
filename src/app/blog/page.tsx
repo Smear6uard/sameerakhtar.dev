@@ -1,8 +1,19 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Blog | Sameer Akhtar",
-  description: "Thoughts on software engineering, AI, and technology.",
+  title: "Blog",
+  description:
+    "Thoughts on software engineering, AI development, startups, and technology by Sameer Akhtar.",
+  alternates: {
+    canonical: "https://sameerakhtar.dev/blog",
+  },
+  openGraph: {
+    title: "Blog | Sameer Akhtar",
+    description:
+      "Thoughts on software engineering, AI development, startups, and technology.",
+    url: "https://sameerakhtar.dev/blog",
+    type: "website",
+  },
 };
 
 const upcomingPosts = [

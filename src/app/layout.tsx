@@ -8,6 +8,7 @@ import { Footer } from "@/components/footer";
 import { Analytics } from "@vercel/analytics/react";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
+import { JsonLd } from "@/components/JsonLd";
 
 const satoshi = localFont({
   src: [
@@ -27,37 +28,51 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://sameerakhtar.dev"),
-  title: "Sameer Akhtar | Software Engineer & Founder",
+  title: {
+    default: "Sameer Akhtar | Software Engineer & Founder",
+    template: "%s | Sameer Akhtar",
+  },
   description:
-    "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul. Previously BRUNOSOFT, Apple.",
+    "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul University. Previously BRUNOSOFT, Apple.",
   keywords: [
     "Sameer Akhtar",
     "Software Engineer",
+    "Full Stack Developer",
     "Founder",
     "Styleum",
-    "Startup",
+    "Startup Founder",
     "AI Developer",
-    "React",
-    "Next.js",
+    "React Developer",
+    "Next.js Developer",
+    "TypeScript",
     "JavaScript",
     "Python",
     "DePaul University",
+    "Chicago Developer",
+    "Tech Entrepreneur",
   ],
-  authors: [{ name: "Sameer Akhtar" }],
+  authors: [{ name: "Sameer Akhtar", url: "https://sameerakhtar.dev" }],
   creator: "Sameer Akhtar",
+  publisher: "Sameer Akhtar",
+  category: "Technology",
+  classification: "Portfolio",
+  alternates: {
+    canonical: "https://sameerakhtar.dev",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://sameerakhtar.dev",
     title: "Sameer Akhtar | Software Engineer & Founder",
-    description: "Building Styleum, an AI-powered personal styling platform.",
+    description:
+      "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul. Previously BRUNOSOFT, Apple.",
     siteName: "Sameer Akhtar",
     images: [
       {
         url: "/SameerAkhtar.dev-logo-navybg.jpg",
         width: 1200,
         height: 630,
-        alt: "Sameer Akhtar - Software Engineer",
+        alt: "Sameer Akhtar - Software Engineer & Founder",
       },
     ],
   },
@@ -67,7 +82,13 @@ export const metadata: Metadata = {
     description:
       "Building Styleum, an AI-powered personal styling platform. CS @ DePaul.",
     creator: "@sameerakhtar",
-    images: ["/SameerAkhtar.dev-logo-navybg.jpg"],
+    site: "@sameerakhtar",
+    images: [
+      {
+        url: "/SameerAkhtar.dev-logo-navybg.jpg",
+        alt: "Sameer Akhtar - Software Engineer & Founder",
+      },
+    ],
   },
   robots: {
     index: true,
@@ -80,6 +101,11 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  other: {
+    "theme-color": "#0a192f",
+    "color-scheme": "dark",
+    "format-detection": "telephone=no",
+  },
 };
 
 export default function RootLayout({
@@ -89,6 +115,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${satoshi.variable} ${jetbrains.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Sameer Akhtar" />
+        <JsonLd />
+      </head>
       <body className="font-sans antialiased">
         <SmoothScroll>
           <Cursor />
