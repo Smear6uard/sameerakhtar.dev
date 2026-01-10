@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useActiveSection } from "@/hooks/useActiveSection";
 
 const navLinks = [
@@ -48,6 +49,12 @@ function NavIcon({ type }: { type: string }) {
 export function SideNav() {
   const [isExpanded, setIsExpanded] = useState(false);
   const activeSection = useActiveSection();
+  const { scrollYProgress } = useScroll();
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   return (
     <motion.nav
@@ -59,8 +66,14 @@ export function SideNav() {
       className="fixed left-0 top-0 h-screen z-50 hidden md:flex flex-col bg-bg-primary/95 backdrop-blur-sm border-r border-white/5 transition-all duration-300 ease-out"
       style={{ width: isExpanded ? 200 : 72 }}
     >
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="absolute left-0 top-0 w-[2px] bg-accent origin-top"
+        style={{ scaleY, height: "100%" }}
+      />
+
       {/* Logo/Name */}
-      <div className="flex items-center h-20 px-4 border-b border-white/5">
+      <div className="flex items-center justify-between h-20 px-4 border-b border-white/5">
         <Link href="/" className="flex items-center gap-3 text-text-primary hover:text-accent transition-colors">
           <Image
             src="/logo.png"
@@ -78,6 +91,14 @@ export function SideNav() {
             sameer
           </motion.span>
         </Link>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: isExpanded ? 1 : 0, scale: isExpanded ? 1 : 0.8 }}
+          transition={{ duration: 0.2 }}
+          className="overflow-hidden"
+        >
+          <ThemeToggle />
+        </motion.div>
       </div>
 
       {/* Nav Links */}
@@ -96,6 +117,22 @@ export function SideNav() {
                     : "text-text-muted hover:text-accent hover:bg-white/5 hover:scale-105"
                   }`}
               >
+                {/* Active indicator dot */}
+                {isActive && (
+                  <motion.span
+                    layoutId="activeNavIndicator"
+                    className="absolute -left-[5px] w-[6px] h-[6px] bg-accent rounded-full"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{
+                      scale: {
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      },
+                    }}
+                  />
+                )}
                 <span className="flex-shrink-0">
                   <NavIcon type={link.icon} />
                 </span>

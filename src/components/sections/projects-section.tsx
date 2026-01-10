@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import Tilt from "react-parallax-tilt";
 import { SectionScramble } from "@/components/ui/SectionScramble";
 
 const projects = [
@@ -15,7 +16,6 @@ const projects = [
     metric: "$0.002/call",
     slug: "styleum",
     live: "https://styleum.co",
-    // Replace with actual screenshot once available
     image: "/projects/styleum-hero.png",
     imageAlt: "Styleum AI styling app interface",
     gradient: "from-orange-500/20 to-amber-500/10",
@@ -60,18 +60,15 @@ export function ProjectsSection() {
     setCanScrollLeft(scrollLeft > 10);
     setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
 
-    // Hide scroll hint after first scroll
     if (scrollLeft > 20 && !hasScrolled) {
       setHasScrolled(true);
     }
 
-    // Calculate active index based on scroll position
     const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
-    const gap = 24; // gap-6 = 24px
+    const gap = 24;
     const index = Math.round(scrollLeft / (cardWidth + gap));
     setActiveIndex(Math.min(index, projects.length - 1));
 
-    // Calculate scroll progress for desktop progress bar
     const maxScroll = scrollWidth - clientWidth;
     setScrollProgress(maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0);
   };
@@ -82,15 +79,17 @@ export function ProjectsSection() {
     container.addEventListener("scroll", updateScrollState);
     updateScrollState();
     return () => container.removeEventListener("scroll", updateScrollState);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
     const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
     const gap = 24;
-    const targetIndex = direction === "left"
-      ? Math.max(0, activeIndex - 1)
-      : Math.min(projects.length - 1, activeIndex + 1);
+    const targetIndex =
+      direction === "left"
+        ? Math.max(0, activeIndex - 1)
+        : Math.min(projects.length - 1, activeIndex + 1);
     scrollRef.current.scrollTo({
       left: targetIndex * (cardWidth + gap),
       behavior: "smooth",
@@ -111,7 +110,6 @@ export function ProjectsSection() {
             <SectionScramble text="selected work" className="section-heading" />
 
             <div className="flex items-center gap-4">
-              {/* Scroll hint */}
               <AnimatePresence>
                 {!hasScrolled && (
                   <motion.span
@@ -121,7 +119,7 @@ export function ProjectsSection() {
                     transition={{
                       duration: 2,
                       times: [0, 0.3, 0.6, 0.8, 1],
-                      ease: "easeOut"
+                      ease: "easeOut",
                     }}
                     className="font-mono text-xs uppercase tracking-widest text-text-muted/60"
                   >
@@ -131,28 +129,47 @@ export function ProjectsSection() {
                 )}
               </AnimatePresence>
 
-              {/* Desktop navigation arrows */}
               <div className="hidden md:flex items-center gap-2">
-              <button
-                onClick={() => scroll("left")}
-                disabled={!canScrollLeft}
-                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
-                aria-label="Previous project"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-                </svg>
-              </button>
-              <button
-                onClick={() => scroll("right")}
-                disabled={!canScrollRight}
-                className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
-                aria-label="Next project"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </button>
+                <button
+                  onClick={() => scroll("left")}
+                  disabled={!canScrollLeft}
+                  className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
+                  aria-label="Previous project"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 19.5L8.25 12l7.5-7.5"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => scroll("right")}
+                  disabled={!canScrollRight}
+                  className="p-2 rounded-full border border-white/10 text-text-muted hover:text-accent hover:border-accent/50 hover:scale-110 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-[180ms]"
+                  aria-label="Next project"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </motion.div>
@@ -165,76 +182,90 @@ export function ProjectsSection() {
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {projects.map((project, i) => (
-            <motion.article
+            <Tilt
               key={project.slug}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: i * 0.1 }}
-              className="group flex-shrink-0 w-[85vw] md:w-[calc(50vw-80px)] lg:w-[calc(40vw-60px)] min-h-[420px] md:min-h-[520px] snap-center border border-white/[0.06] rounded-lg overflow-hidden hover:border-accent/50 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all duration-200 ease-out"
+              tiltMaxAngleX={5}
+              tiltMaxAngleY={5}
+              glareEnable={true}
+              glareMaxOpacity={0.1}
+              glareColor="#f97316"
+              glarePosition="all"
+              glareBorderRadius="8px"
+              scale={1.02}
+              transitionSpeed={400}
+              className="flex-shrink-0 w-[85vw] md:w-[calc(50vw-80px)] lg:w-[calc(40vw-60px)] snap-center"
             >
-              {/* Project Image */}
-              <div className={`relative h-[240px] md:h-[300px] bg-gradient-to-br ${project.gradient} border-b border-white/[0.06] overflow-hidden`}>
-                <ProjectImage
-                  src={project.image}
-                  alt={project.imageAlt}
-                  fallbackNum={project.num}
-                />
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
-              </div>
-
-              <div className="p-6 md:p-8">
-                <div className="flex items-start justify-between mb-3">
-                  <span className="font-mono text-sm text-text-muted">
-                    {project.num}
-                  </span>
-                  <span className="font-mono text-base font-semibold text-accent">
-                    {project.metric}
-                  </span>
+              <motion.article
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.1 }}
+                className="group h-full min-h-[420px] md:min-h-[520px] border border-white/[0.06] rounded-lg overflow-hidden hover:border-accent/50 hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all duration-200 ease-out bg-bg-primary"
+              >
+                {/* Project Image */}
+                <div
+                  className={`relative h-[240px] md:h-[300px] bg-gradient-to-br ${project.gradient} border-b border-white/[0.06] overflow-hidden`}
+                >
+                  <ProjectImage
+                    src={project.image}
+                    alt={project.imageAlt}
+                    fallbackNum={project.num}
+                  />
+                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
                 </div>
 
-                <h3 className="text-xl md:text-2xl font-semibold text-text-primary mb-3">
-                  {project.title}
-                </h3>
-
-                <p className="text-text-secondary text-sm md:text-base mb-5 line-clamp-3">
-                  {project.description}
-                </p>
-
-                <div className="flex items-center gap-5">
-                  <Link
-                    href={`/work/${project.slug}`}
-                    className="text-sm text-accent link-underline inline-flex items-center gap-1"
-                  >
-                    view case study{" "}
-                    <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
-                      →
+                <div className="p-6 md:p-8">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="font-mono text-sm text-text-muted">
+                      {project.num}
                     </span>
-                  </Link>
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-text-muted hover:text-accent transition-colors"
+                    <span className="font-mono text-base font-semibold text-accent">
+                      {project.metric}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl md:text-2xl font-semibold text-text-primary mb-3">
+                    {project.title}
+                  </h3>
+
+                  <p className="text-text-secondary text-sm md:text-base mb-5 line-clamp-3">
+                    {project.description}
+                  </p>
+
+                  <div className="flex items-center gap-5">
+                    <Link
+                      href={`/work/${project.slug}`}
+                      className="text-sm text-accent link-underline inline-flex items-center gap-1"
                     >
-                      github
-                    </a>
-                  )}
-                  {project.live && (
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-text-muted hover:text-accent transition-colors"
-                    >
-                      live
-                    </a>
-                  )}
+                      view case study{" "}
+                      <span className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </Link>
+                    {project.github && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-text-muted hover:text-accent transition-colors"
+                      >
+                        github
+                      </a>
+                    )}
+                    {project.live && (
+                      <a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-text-muted hover:text-accent transition-colors"
+                      >
+                        live
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.article>
+              </motion.article>
+            </Tilt>
           ))}
         </div>
 
@@ -257,7 +288,8 @@ export function ProjectsSection() {
                 key={i}
                 onClick={() => {
                   if (!scrollRef.current) return;
-                  const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
+                  const cardWidth =
+                    scrollRef.current.firstElementChild?.clientWidth || 0;
                   const gap = 24;
                   scrollRef.current.scrollTo({
                     left: i * (cardWidth + gap),
@@ -279,7 +311,6 @@ export function ProjectsSection() {
   );
 }
 
-// Component to handle image loading with fallback
 function ProjectImage({
   src,
   alt,
@@ -292,7 +323,6 @@ function ProjectImage({
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if image exists
   useEffect(() => {
     const img = new window.Image();
     img.src = src;
@@ -309,7 +339,6 @@ function ProjectImage({
   if (hasError || isLoading) {
     return (
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        {/* Fallback: Show the number with a message */}
         <span className="text-[100px] md:text-[140px] font-bold text-white/[0.04] select-none">
           {fallbackNum}
         </span>

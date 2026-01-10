@@ -10,6 +10,10 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
 import { JsonLd } from "@/components/JsonLd";
 import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
+import { KonamiEasterEgg } from "@/components/KonamiEasterEgg";
+import { GSAPProvider } from "@/components/providers/GSAPProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ToastProvider } from "@/components/ui/Toast";
 
 const satoshi = localFont({
   src: [
@@ -130,15 +134,22 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className="font-sans antialiased">
-        <ConsoleEasterEgg />
-        <SmoothScroll>
-          <Cursor />
-          <SideNav />
-          <MobileNav />
-          <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
-          <Footer />
-          <Analytics />
-        </SmoothScroll>
+        <ThemeProvider>
+          <ToastProvider>
+            <ConsoleEasterEgg />
+            <KonamiEasterEgg />
+            <GSAPProvider>
+              <SmoothScroll>
+                <Cursor />
+                <SideNav />
+                <MobileNav />
+                <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
+                <Footer />
+                <Analytics />
+              </SmoothScroll>
+            </GSAPProvider>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

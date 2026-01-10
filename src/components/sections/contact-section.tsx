@@ -32,7 +32,7 @@ export function ContactSection() {
             <MagneticWrapper radius={100} maxDistance={6}>
               <a
                 href="mailto:Sameer_Akhtar@icloud.com"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium bg-accent text-bg-primary rounded-md hover:bg-[#ea580c] transition-all duration-200"
+                className="btn-primary"
               >
                 Send me an email
                 <span>→</span>
@@ -43,7 +43,7 @@ export function ContactSection() {
                 href="/Sameer-Akhtar-Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium border border-white/15 text-text-primary rounded-md hover:border-accent hover:text-accent transition-all duration-200"
+                className="btn-secondary"
               >
                 View my resume
                 <span>↗</span>
