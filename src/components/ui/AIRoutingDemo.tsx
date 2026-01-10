@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface PipelineStage {
   id: string;
   name: string;
   shortName: string;
-  cost: string;
-  costValue: number;
+  baseCost: number;
   description: string;
   color: string;
+  requiredFor: ("simple" | "medium" | "complex")[];
 }
 
 const PIPELINE_STAGES: PipelineStage[] = [
@@ -18,136 +18,182 @@ const PIPELINE_STAGES: PipelineStage[] = [
     id: "moderation",
     name: "Content Moderation",
     shortName: "Moderation",
-    cost: "$0.001",
-    costValue: 0.001,
+    baseCost: 0.001,
     description: "AWS Rekognition",
     color: "#ef4444",
+    requiredFor: ["medium", "complex"],
   },
   {
     id: "background",
     name: "Background Removal",
     shortName: "BG Remove",
-    cost: "$0.003",
-    costValue: 0.003,
+    baseCost: 0.003,
     description: "BiRefNet",
     color: "#8b5cf6",
+    requiredFor: ["complex"],
   },
   {
     id: "vision",
     name: "Vision Analysis",
     shortName: "Vision",
-    cost: "$0.001",
-    costValue: 0.001,
+    baseCost: 0.001,
     description: "Florence-2",
     color: "#3b82f6",
+    requiredFor: ["simple", "medium", "complex"],
   },
   {
     id: "embeddings",
     name: "Fashion Embeddings",
     shortName: "Embeddings",
-    cost: "$0.00002",
-    costValue: 0.00002,
+    baseCost: 0.00002,
     description: "FashionSigLIP",
     color: "#10b981",
+    requiredFor: ["simple", "medium", "complex"],
   },
   {
     id: "reasoning",
     name: "Reasoning",
     shortName: "Reasoning",
-    cost: "$0.002",
-    costValue: 0.002,
+    baseCost: 0.002,
     description: "Gemini 2.5 Flash",
     color: "#f97316",
+    requiredFor: ["simple", "medium", "complex"],
   },
   {
     id: "storage",
     name: "Vector Storage",
     shortName: "Storage",
-    cost: "—",
-    costValue: 0,
+    baseCost: 0,
     description: "pgvector",
     color: "#6366f1",
+    requiredFor: ["medium", "complex"],
   },
 ];
 
-interface QueryExample {
-  text: string;
-  type: "simple" | "complex";
-  stages: string[];
-  totalCost: string;
+// GPT-4 Vision baseline costs for comparison
+const GPT4_VISION_COST_PER_IMAGE = 0.01; // ~$0.01 per image with GPT-4 Vision
+const GPT4_REASONING_COST = 0.03; // GPT-4 reasoning cost
+
+type ComplexityLevel = "simple" | "medium" | "complex";
+
+interface SliderConfig {
+  id: string;
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  unit: string;
+  defaultValue: number;
 }
 
-const QUERY_EXAMPLES: QueryExample[] = [
+const SLIDERS: SliderConfig[] = [
   {
-    text: "Does this shirt match these pants?",
-    type: "simple",
-    stages: ["vision", "embeddings", "reasoning"],
-    totalCost: "$0.003",
+    id: "images",
+    label: "Images to Process",
+    min: 1,
+    max: 50,
+    step: 1,
+    unit: "",
+    defaultValue: 5,
   },
   {
-    text: "Build me a capsule wardrobe",
-    type: "complex",
-    stages: ["moderation", "background", "vision", "embeddings", "reasoning", "storage"],
-    totalCost: "$0.01",
-  },
-  {
-    text: "What's my style profile?",
-    type: "simple",
-    stages: ["embeddings", "reasoning", "storage"],
-    totalCost: "$0.002",
+    id: "complexity",
+    label: "Query Complexity",
+    min: 0,
+    max: 2,
+    step: 1,
+    unit: "",
+    defaultValue: 1,
   },
 ];
 
+const COMPLEXITY_LABELS: Record<number, { label: string; level: ComplexityLevel }> = {
+  0: { label: "Simple", level: "simple" },
+  1: { label: "Medium", level: "medium" },
+  2: { label: "Complex", level: "complex" },
+};
+
 export function AIRoutingDemo() {
-  const [activeStage, setActiveStage] = useState<number>(-1);
-  const [currentQuery, setCurrentQuery] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState(true);
-  const [runningCost, setRunningCost] = useState(0);
-  const [showComparison, setShowComparison] = useState(false);
+  const [sliderValues, setSliderValues] = useState<Record<string, number>>({
+    images: 5,
+    complexity: 1,
+  });
   const [isClient, setIsClient] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(false);
+  const [processingStage, setProcessingStage] = useState<number>(-1);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const animateQuery = useCallback(() => {
-    const query = QUERY_EXAMPLES[currentQuery];
-    const activeStages = PIPELINE_STAGES.filter((s) => query.stages.includes(s.id));
+  const complexityLevel = COMPLEXITY_LABELS[sliderValues.complexity].level;
 
-    setRunningCost(0);
-    setActiveStage(-1);
-    setShowComparison(false);
+  // Calculate which stages are active based on complexity
+  const activeStages = useMemo(() => {
+    return PIPELINE_STAGES.filter((stage) =>
+      stage.requiredFor.includes(complexityLevel)
+    );
+  }, [complexityLevel]);
 
+  // Calculate costs
+  const costs = useMemo(() => {
+    const imageCount = sliderValues.images;
+
+    // Our pipeline cost
+    let pipelineCost = 0;
+    activeStages.forEach((stage) => {
+      // Most stages scale with image count
+      if (stage.id === "reasoning" || stage.id === "storage") {
+        pipelineCost += stage.baseCost; // Fixed cost per request
+      } else {
+        pipelineCost += stage.baseCost * imageCount; // Scales with images
+      }
+    });
+
+    // GPT-4 Vision alternative cost
+    const gpt4Cost =
+      GPT4_VISION_COST_PER_IMAGE * imageCount + GPT4_REASONING_COST;
+
+    // Savings
+    const savings = gpt4Cost - pipelineCost;
+    const savingsPercent = ((savings / gpt4Cost) * 100).toFixed(0);
+
+    return {
+      pipeline: pipelineCost,
+      gpt4: gpt4Cost,
+      savings,
+      savingsPercent,
+    };
+  }, [sliderValues.images, activeStages]);
+
+  // Animate through stages when values change
+  useEffect(() => {
+    if (!isInteractive) return;
+
+    setProcessingStage(-1);
     let stageIndex = 0;
-    let accumulatedCost = 0;
 
-    const animateStage = () => {
+    const animateStages = () => {
       if (stageIndex < activeStages.length) {
         const globalIndex = PIPELINE_STAGES.findIndex(
           (s) => s.id === activeStages[stageIndex].id
         );
-        setActiveStage(globalIndex);
-        accumulatedCost += activeStages[stageIndex].costValue;
-        setRunningCost(accumulatedCost);
+        setProcessingStage(globalIndex);
         stageIndex++;
-        setTimeout(animateStage, 600);
+        setTimeout(animateStages, 200);
       } else {
-        setShowComparison(true);
-        setTimeout(() => {
-          setCurrentQuery((prev) => (prev + 1) % QUERY_EXAMPLES.length);
-        }, 2500);
+        setTimeout(() => setProcessingStage(-1), 500);
       }
     };
 
-    setTimeout(animateStage, 500);
-  }, [currentQuery]);
+    const timeout = setTimeout(animateStages, 100);
+    return () => clearTimeout(timeout);
+  }, [sliderValues, isInteractive, activeStages]);
 
-  useEffect(() => {
-    if (!isClient || !isAnimating) return;
-    animateQuery();
-  }, [currentQuery, isAnimating, isClient, animateQuery]);
-
-  const query = QUERY_EXAMPLES[currentQuery];
+  const handleSliderChange = (id: string, value: number) => {
+    if (!isInteractive) setIsInteractive(true);
+    setSliderValues((prev) => ({ ...prev, [id]: value }));
+  };
 
   if (!isClient) {
     return <StaticPipeline />;
@@ -160,136 +206,146 @@ export function AIRoutingDemo() {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="font-mono text-xs text-text-muted uppercase tracking-wider">
-            Live Pipeline
+            Cost Calculator
           </span>
         </div>
-        <button
-          onClick={() => setIsAnimating(!isAnimating)}
-          className="font-mono text-xs text-text-muted hover:text-accent transition-colors"
-        >
-          {isAnimating ? "[pause]" : "[play]"}
-        </button>
+        <span className="font-mono text-xs text-accent">
+          Interactive
+        </span>
       </div>
 
-      {/* Query Display */}
-      <motion.div
-        className="mb-6 p-3 rounded-lg border border-white/10 bg-bg-secondary"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1">
-            <span className="font-mono text-xs text-text-muted block mb-1">Query:</span>
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={currentQuery}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="text-sm text-text-primary"
-              >
-                &ldquo;{query.text}&rdquo;
-              </motion.p>
-            </AnimatePresence>
+      {/* Sliders */}
+      <div className="mb-6 space-y-4 p-4 rounded-lg border border-white/10 bg-bg-secondary">
+        {SLIDERS.map((slider) => (
+          <div key={slider.id}>
+            <div className="flex items-center justify-between mb-2">
+              <label className="font-mono text-xs text-text-muted uppercase tracking-wider">
+                {slider.label}
+              </label>
+              <span className="font-mono text-sm text-accent font-semibold">
+                {slider.id === "complexity"
+                  ? COMPLEXITY_LABELS[sliderValues[slider.id]].label
+                  : `${sliderValues[slider.id]}${slider.unit}`}
+              </span>
+            </div>
+            <div className="relative">
+              <input
+                type="range"
+                min={slider.min}
+                max={slider.max}
+                step={slider.step}
+                value={sliderValues[slider.id]}
+                onChange={(e) =>
+                  handleSliderChange(slider.id, Number(e.target.value))
+                }
+                className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer
+                  [&::-webkit-slider-thumb]:appearance-none
+                  [&::-webkit-slider-thumb]:w-4
+                  [&::-webkit-slider-thumb]:h-4
+                  [&::-webkit-slider-thumb]:rounded-full
+                  [&::-webkit-slider-thumb]:bg-accent
+                  [&::-webkit-slider-thumb]:cursor-grab
+                  [&::-webkit-slider-thumb]:active:cursor-grabbing
+                  [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(249,115,22,0.5)]
+                  [&::-webkit-slider-thumb]:transition-shadow
+                  [&::-webkit-slider-thumb]:hover:shadow-[0_0_15px_rgba(249,115,22,0.7)]
+                  [&::-moz-range-thumb]:w-4
+                  [&::-moz-range-thumb]:h-4
+                  [&::-moz-range-thumb]:rounded-full
+                  [&::-moz-range-thumb]:bg-accent
+                  [&::-moz-range-thumb]:border-0
+                  [&::-moz-range-thumb]:cursor-grab"
+              />
+              {/* Progress fill */}
+              <div
+                className="absolute top-0 left-0 h-2 bg-accent/30 rounded-full pointer-events-none"
+                style={{
+                  width: `${((sliderValues[slider.id] - slider.min) / (slider.max - slider.min)) * 100}%`,
+                }}
+              />
+            </div>
+            {slider.id === "complexity" && (
+              <div className="flex justify-between mt-1 font-mono text-[10px] text-text-muted">
+                <span>Simple</span>
+                <span>Medium</span>
+                <span>Complex</span>
+              </div>
+            )}
           </div>
-          <div className="text-right">
-            <span
-              className={`inline-block px-2 py-0.5 rounded text-xs font-mono ${
-                query.type === "simple"
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-accent/20 text-accent"
-              }`}
-            >
-              {query.type}
-            </span>
-          </div>
-        </div>
-      </motion.div>
+        ))}
+      </div>
 
       {/* Pipeline Visualization */}
       <div className="relative">
-        {/* Connection lines */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{ zIndex: 0 }}
-        >
-          {PIPELINE_STAGES.slice(0, -1).map((_, i) => {
-            const isActive =
-              activeStage >= i && query.stages.includes(PIPELINE_STAGES[i].id);
-            const nextIsActive =
-              activeStage >= i + 1 &&
-              query.stages.includes(PIPELINE_STAGES[i + 1].id);
-            return (
-              <motion.line
-                key={i}
-                x1="50%"
-                y1={`${(i + 1) * (100 / PIPELINE_STAGES.length) - 2}%`}
-                x2="50%"
-                y2={`${(i + 1) * (100 / PIPELINE_STAGES.length) + 5}%`}
-                stroke={isActive && nextIsActive ? "#f97316" : "rgba(255,255,255,0.1)"}
-                strokeWidth="2"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.3, delay: i * 0.1 }}
-              />
-            );
-          })}
-        </svg>
-
-        {/* Stage nodes */}
         <div className="relative z-10 space-y-2">
           {PIPELINE_STAGES.map((stage, index) => {
-            const isActive = query.stages.includes(stage.id);
-            const isCurrentlyProcessing = activeStage === index;
-            const isProcessed = activeStage > index && isActive;
+            const isActive = activeStages.some((s) => s.id === stage.id);
+            const isProcessing = processingStage === index;
+            const isProcessed = processingStage > index && isActive;
 
             return (
               <motion.div
                 key={stage.id}
+                layout
                 className={`relative flex items-center gap-3 p-3 rounded-lg border transition-all duration-300 ${
-                  isCurrentlyProcessing
+                  isProcessing
                     ? "border-accent bg-accent/10"
                     : isProcessed
                       ? "border-white/20 bg-white/5"
                       : isActive
                         ? "border-white/10 bg-bg-secondary"
-                        : "border-white/5 bg-bg-secondary/50 opacity-40"
+                        : "border-white/5 bg-bg-secondary/30 opacity-30"
                 }`}
                 initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
+                animate={{
+                  opacity: isActive ? 1 : 0.3,
+                  x: 0,
+                  scale: isProcessing ? 1.02 : 1,
+                }}
+                transition={{ duration: 0.2 }}
               >
                 {/* Stage indicator */}
                 <div
                   className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                    isCurrentlyProcessing
+                    isProcessing
                       ? "bg-accent"
-                      : isProcessed
+                      : isActive
                         ? "bg-white/20"
-                        : "bg-white/10"
+                        : "bg-white/5"
                   }`}
                   style={{
-                    boxShadow: isCurrentlyProcessing
+                    boxShadow: isProcessing
                       ? `0 0 20px ${stage.color}40`
                       : "none",
                   }}
                 >
-                  {isCurrentlyProcessing && (
-                    <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-accent"
-                      animate={{ scale: [1, 1.3, 1], opacity: [1, 0, 1] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                    />
+                  {isActive ? (
+                    <svg
+                      className={`w-4 h-4 ${isProcessing ? "text-bg-primary" : "text-text-muted"}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  ) : (
+                    <span className="font-mono text-xs text-text-muted">—</span>
                   )}
-                  <span className="font-mono text-xs text-bg-primary font-bold">
-                    {index + 1}
-                  </span>
                 </div>
 
                 {/* Stage info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-text-primary truncate">
+                    <span
+                      className={`text-sm font-medium truncate ${
+                        isActive ? "text-text-primary" : "text-text-muted"
+                      }`}
+                    >
                       {stage.shortName}
                     </span>
                     <span className="text-xs text-text-muted hidden sm:inline">
@@ -300,46 +356,16 @@ export function AIRoutingDemo() {
 
                 {/* Cost */}
                 <div className="text-right">
-                  <motion.span
+                  <span
                     className={`font-mono text-xs ${
-                      isCurrentlyProcessing || isProcessed
-                        ? "text-accent"
-                        : "text-text-muted"
+                      isActive ? "text-accent" : "text-text-muted/50"
                     }`}
-                    animate={
-                      isCurrentlyProcessing
-                        ? { scale: [1, 1.1, 1] }
-                        : { scale: 1 }
-                    }
-                    transition={{ duration: 0.3 }}
                   >
-                    {stage.cost}
-                  </motion.span>
+                    {stage.baseCost === 0
+                      ? "—"
+                      : `$${(stage.baseCost * (stage.id === "reasoning" || stage.id === "storage" ? 1 : sliderValues.images)).toFixed(5)}`}
+                  </span>
                 </div>
-
-                {/* Processing indicator */}
-                {isCurrentlyProcessing && (
-                  <motion.div
-                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
-                    <div className="flex gap-0.5">
-                      {[0, 1, 2].map((i) => (
-                        <motion.div
-                          key={i}
-                          className="w-1 h-3 bg-accent rounded-full"
-                          animate={{ scaleY: [0.5, 1, 0.5] }}
-                          transition={{
-                            duration: 0.6,
-                            repeat: Infinity,
-                            delay: i * 0.1,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
               </motion.div>
             );
           })}
@@ -349,83 +375,102 @@ export function AIRoutingDemo() {
       {/* Cost Summary */}
       <motion.div
         className="mt-6 p-4 rounded-lg border border-white/10 bg-bg-secondary"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        layout
       >
-        <div className="flex items-center justify-between">
+        <div className="grid grid-cols-2 gap-4">
+          {/* Our Cost */}
           <div>
-            <span className="font-mono text-xs text-text-muted block">
-              Running Cost
+            <span className="font-mono text-xs text-text-muted block mb-1">
+              Styleum Cost
             </span>
             <motion.span
-              key={runningCost}
-              className="font-mono text-2xl font-bold text-accent"
-              initial={{ scale: 1.2 }}
+              key={costs.pipeline}
+              className="font-mono text-2xl font-bold text-accent block"
+              initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 500 }}
             >
-              ${runningCost.toFixed(5)}
+              ${costs.pipeline.toFixed(4)}
             </motion.span>
+            <span className="font-mono text-[10px] text-text-muted">
+              per request
+            </span>
           </div>
 
-          <AnimatePresence>
-            {showComparison && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                className="text-right"
-              >
-                <span className="font-mono text-xs text-text-muted block">
-                  vs. GPT-4 Direct
-                </span>
-                <span className="font-mono text-lg text-red-400 line-through">
-                  $0.03
-                </span>
-                <span className="font-mono text-xs text-green-400 ml-2">
-                  10x cheaper
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* GPT-4 Cost Comparison */}
+          <div className="text-right">
+            <span className="font-mono text-xs text-text-muted block mb-1">
+              GPT-4 Vision
+            </span>
+            <span className="font-mono text-xl text-red-400 line-through block">
+              ${costs.gpt4.toFixed(2)}
+            </span>
+            <motion.span
+              key={costs.savingsPercent}
+              className="font-mono text-xs text-green-400"
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              You save {costs.savingsPercent}%
+            </motion.span>
+          </div>
         </div>
 
-        {/* Progress bar */}
-        <div className="mt-3 h-1 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-accent rounded-full"
-            initial={{ width: "0%" }}
-            animate={{
-              width: `${(runningCost / 0.01) * 100}%`,
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-        <div className="mt-1 flex justify-between font-mono text-[10px] text-text-muted">
-          <span>$0</span>
-          <span>$0.01 budget</span>
+        {/* Savings Highlight */}
+        <AnimatePresence>
+          {costs.savings > 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mt-4 pt-4 border-t border-white/10"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-text-secondary">
+                  Total Savings
+                </span>
+                <span className="font-mono text-lg font-bold text-green-400">
+                  ${costs.savings.toFixed(4)}
+                </span>
+              </div>
+              <p className="mt-2 text-xs text-text-muted">
+                Process {sliderValues.images} image{sliderValues.images > 1 ? "s" : ""} with{" "}
+                <span className="text-accent">{COMPLEXITY_LABELS[sliderValues.complexity].label.toLowerCase()}</span>{" "}
+                analysis for {costs.savingsPercent}% less than GPT-4 Vision.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Progress bar showing cost relative to GPT-4 */}
+        <div className="mt-4">
+          <div className="flex justify-between font-mono text-[10px] text-text-muted mb-1">
+            <span>Our cost</span>
+            <span>GPT-4 cost</span>
+          </div>
+          <div className="h-2 bg-white/10 rounded-full overflow-hidden relative">
+            <motion.div
+              className="absolute left-0 top-0 h-full bg-accent rounded-full"
+              initial={{ width: "0%" }}
+              animate={{
+                width: `${Math.min((costs.pipeline / costs.gpt4) * 100, 100)}%`,
+              }}
+              transition={{ duration: 0.3 }}
+            />
+            <div className="absolute right-0 top-0 h-full w-px bg-red-400" />
+          </div>
         </div>
       </motion.div>
 
-      {/* Query selector */}
-      <div className="mt-4 flex gap-2">
-        {QUERY_EXAMPLES.map((q, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setCurrentQuery(i);
-              setIsAnimating(true);
-            }}
-            className={`flex-1 py-2 px-3 rounded border text-xs font-mono transition-all ${
-              currentQuery === i
-                ? "border-accent bg-accent/10 text-accent"
-                : "border-white/10 text-text-muted hover:border-white/20"
-            }`}
-          >
-            {q.type}
-          </button>
-        ))}
-      </div>
+      {/* CTA */}
+      <motion.p
+        className="mt-4 text-center text-xs text-text-muted"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        Drag the sliders to see how costs scale
+      </motion.p>
     </div>
   );
 }
@@ -436,11 +481,11 @@ function StaticPipeline() {
       <div className="mb-4 flex items-center gap-2">
         <div className="w-2 h-2 rounded-full bg-green-500" />
         <span className="font-mono text-xs text-text-muted uppercase tracking-wider">
-          AI Pipeline
+          Cost Calculator
         </span>
       </div>
       <div className="space-y-2">
-        {PIPELINE_STAGES.map((stage, index) => (
+        {PIPELINE_STAGES.slice(0, 4).map((stage, index) => (
           <div
             key={stage.id}
             className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-bg-secondary"
@@ -455,9 +500,15 @@ function StaticPipeline() {
                 {stage.shortName}
               </span>
             </div>
-            <span className="font-mono text-xs text-text-muted">{stage.cost}</span>
+            <span className="font-mono text-xs text-text-muted">
+              ${stage.baseCost.toFixed(4)}
+            </span>
           </div>
         ))}
+      </div>
+      <div className="mt-4 p-4 rounded-lg border border-white/10 bg-bg-secondary">
+        <span className="font-mono text-2xl font-bold text-accent">$0.002</span>
+        <span className="font-mono text-xs text-text-muted ml-2">per request</span>
       </div>
     </div>
   );
