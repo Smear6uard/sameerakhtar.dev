@@ -16,11 +16,11 @@ export function ContactSection() {
             transition={{ duration: 0.3 }}
           >
             <SectionScramble text="contact" className="section-heading" />
-            <h2 className="heading-lg mt-2">I'm always up to chat.</h2>
+            <h2 className="heading-lg mt-2">I&apos;m always up to chat.</h2>
           </motion.div>
 
           <p className="mt-6 text-text-secondary text-lg">
-            I'm looking for Summer 2026 opportunities in software engineering or AI/ML—somewhere
+            I&apos;m looking for Summer 2026 opportunities in software engineering or AI/ML—somewhere
             I can learn fast and contribute meaningfully.
           </p>
 
