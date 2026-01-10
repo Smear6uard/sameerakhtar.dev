@@ -16,12 +16,16 @@ export function ContactSection() {
             transition={{ duration: 0.3 }}
           >
             <SectionScramble text="contact" className="section-heading" />
-            <h2 className="heading-lg mt-2">Let&apos;s build something together</h2>
+            <h2 className="heading-lg mt-2">I'm always up to chat.</h2>
           </motion.div>
 
           <p className="mt-6 text-text-secondary text-lg">
-            Currently seeking Summer 2026 internships at companies solving hard problems
-            in software engineering, AI/ML, and full-stack development.
+            I'm looking for Summer 2026 opportunities in software engineering or AI/ML—somewhere
+            I can learn fast and contribute meaningfully.
+          </p>
+
+          <p className="mt-4 text-text-muted">
+            Open to full-time internships, contract work, or interesting collaborations.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -66,6 +70,16 @@ export function ContactSection() {
                 className="text-text-muted hover:text-accent link-underline transition-colors"
               >
                 linkedin
+              </a>
+            </MagneticWrapper>
+            <MagneticWrapper radius={60} maxDistance={6}>
+              <a
+                href="https://sameerakhtar.substack.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-text-muted hover:text-accent link-underline transition-colors"
+              >
+                newsletter
               </a>
             </MagneticWrapper>
           </div>

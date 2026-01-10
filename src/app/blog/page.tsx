@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Metadata } from "next";
+import { blogPosts } from "@/lib/blog-posts";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Blog",
   description:
     "Thoughts on software engineering, AI development, startups, and technology by Sameer Akhtar.",
@@ -15,27 +17,6 @@ export const metadata = {
     type: "website",
   },
 };
-
-const upcomingPosts = [
-  {
-    title: "Building Styleum: Designing an AI Pipeline at $0.002/call",
-    description:
-      "How I optimized OpenAI API costs while building a personal styling platform that delivers real-time recommendations.",
-    status: "Coming January 2025",
-  },
-  {
-    title: "How I Scaled the AI Answer Engine to 100+ URLs/hour",
-    description:
-      "Deep dive into hybrid scraping, caching strategies, and achieving 98% accuracy with Groq SDK.",
-    status: "Coming January 2025",
-  },
-  {
-    title: "Lessons from Migrating 100+ Angular Components",
-    description:
-      "What I learned leading an enterprise migration from AngularJS to Angular 17+ at BRUNOSOFT.",
-    status: "Coming January 2025",
-  },
-];
 
 export default function BlogPage() {
   return (
@@ -57,27 +38,46 @@ export default function BlogPage() {
         </p>
 
         <div className="mt-16 space-y-6">
-          {upcomingPosts.map((post) => (
-            <article
-              key={post.title}
-              className="border border-white/10 rounded-lg p-6 hover:border-accent/30 transition-colors"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="font-mono text-xs text-accent bg-accent/10 px-2 py-1 rounded">
-                  {post.status}
-                </span>
-              </div>
-              <h2 className="text-xl font-semibold text-text-primary mb-2">
-                {post.title}
-              </h2>
-              <p className="text-text-secondary">{post.description}</p>
-            </article>
+          {blogPosts.map((post) => (
+            <Link key={post.slug} href={`/blog/${post.slug}`}>
+              <article className="border border-white/10 rounded-lg p-6 hover:border-accent/30 hover:bg-white/[0.02] transition-all group">
+                <div className="flex items-center gap-3 mb-3">
+                  <time className="font-mono text-xs text-text-muted">
+                    {new Date(post.date).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </time>
+                  <span className="text-text-muted/40">·</span>
+                  <span className="font-mono text-xs text-text-muted">
+                    {post.readingTime}
+                  </span>
+                </div>
+                <h2 className="text-xl font-semibold text-text-primary mb-2 group-hover:text-accent transition-colors">
+                  {post.title}
+                </h2>
+                <p className="text-text-secondary mb-4">{post.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-xs text-accent/70 bg-accent/10 px-2 py-1 rounded"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
 
-        <p className="mt-12 text-center text-text-muted font-mono text-sm">
-          Subscribe to get notified when new posts are published.
-        </p>
+        {blogPosts.length === 0 && (
+          <p className="mt-12 text-center text-text-muted">
+            No posts yet. Check back soon!
+          </p>
+        )}
       </div>
     </div>
   );

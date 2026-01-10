@@ -2,38 +2,39 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { HomeIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+      {/* Background gradient */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-gradient-to-r from-accent/20 via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
+        aria-hidden="true"
+      />
 
-      {/* Floating gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-r from-violet-400/10 to-cyan-400/10 rounded-full blur-3xl float" style={{ animationDelay: '0s', animationDuration: '8s' }} />
-        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-r from-emerald-400/10 to-amber-400/10 rounded-full blur-3xl float" style={{ animationDelay: '2s', animationDuration: '10s' }} />
-      </div>
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-2xl mx-auto px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl mx-auto"
+          className="text-center"
         >
-          {/* 404 Text */}
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
+          {/* 404 ASCII art */}
+          <motion.pre
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mb-8"
+            className="font-mono text-xs sm:text-sm text-accent/40 mb-8 leading-tight"
           >
-            <h1 className="text-9xl sm:text-[12rem] font-bold gradient-text-animated mb-4">
-              404
-            </h1>
-          </motion.div>
+{`
+    _  _    ___  _  _
+   | || |  / _ \\| || |
+   | || |_| | | | || |_
+   |__   _| | | |__   _|
+      | | | |_| |  | |
+      |_|  \\___/   |_|
+`}
+          </motion.pre>
 
           {/* Message */}
           <motion.div
@@ -42,15 +43,19 @@ export default function NotFound() {
             transition={{ delay: 0.4 }}
             className="space-y-4 mb-12"
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-              Page Not Found
-            </h2>
-            <p className="text-base sm:text-lg text-muted-foreground max-w-md mx-auto">
-              Looks like this page took an unexpected route. Let&apos;s get you back on track!
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">
+              This page doesn&apos;t exist
+            </h1>
+            <p className="text-text-secondary">
+              Either I haven&apos;t built it yet, or you&apos;re testing my 404 page.
+              <br />
+              <span className="text-text-muted text-sm">
+                (If it&apos;s the latter, thanks for snooping around.)
+              </span>
             </p>
           </motion.div>
 
-          {/* Quick Links */}
+          {/* Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -59,46 +64,30 @@ export default function NotFound() {
           >
             <Link
               href="/"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-bg-primary font-medium rounded-md hover:bg-[#ea580c] transition-all duration-200"
             >
-              <HomeIcon className="w-5 h-5" />
-              <span>Go Home</span>
+              ← Back to safety
             </Link>
 
             <button
               onClick={() => window.history.back()}
-              className="inline-flex items-center gap-2 px-8 py-4 bg-muted text-foreground font-semibold rounded-lg border-2 border-border hover:border-primary hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-text-primary font-medium rounded-md hover:border-accent hover:text-accent transition-all duration-200"
             >
-              <ArrowLeftIcon className="w-5 h-5" />
-              <span>Go Back</span>
+              Go back
             </button>
           </motion.div>
 
-          {/* Popular Pages */}
-          <motion.div
+          {/* Fun fact */}
+          <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="mt-16 pt-8 border-t border-border"
+            transition={{ delay: 1 }}
+            className="mt-16 text-sm text-text-muted font-mono"
           >
-            <p className="text-sm text-muted-foreground mb-4">Or explore these sections:</p>
-            <div className="flex flex-wrap gap-3 justify-center">
-              {[
-                { name: "About", href: "/#about" },
-                { name: "Projects", href: "/#projects" },
-                { name: "Skills", href: "/#skills" },
-                { name: "Contact", href: "/#contact" },
-              ].map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-all duration-200"
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
+            Fun fact: HTTP 404 was named after room 404 at CERN where the web was invented.
+            <br />
+            <span className="text-text-muted/50">(okay that&apos;s probably not true, but it&apos;s a good story)</span>
+          </motion.p>
         </motion.div>
       </div>
     </div>

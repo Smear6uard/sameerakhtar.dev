@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { SectionScramble } from "@/components/ui/SectionScramble";
 
 const projects = [
@@ -10,28 +11,38 @@ const projects = [
     num: "01",
     title: "Styleum",
     description:
-      "Existing wardrobe apps take 20+ minutes to set up and lack habit mechanics. Styleum gets users styled in 3 minutes with a hybrid AI pipeline at $0.002/call — 10x cheaper than competitors. Launching Q1 2025.",
+      "Existing wardrobe apps take 20+ minutes to set up and lack habit mechanics. Styleum gets users styled in 3 minutes with a hybrid AI pipeline at $0.002/call — 10x cheaper than competitors.",
     metric: "$0.002/call",
     slug: "styleum",
     live: "https://styleum.co",
+    // Replace with actual screenshot once available
+    image: "/projects/styleum-hero.png",
+    imageAlt: "Styleum AI styling app interface",
+    gradient: "from-orange-500/20 to-amber-500/10",
   },
   {
     num: "02",
     title: "AI Answer Engine",
     description:
-      "Research is slow — finding answers means dozens of tabs. Built a system that scrapes 100+ URLs/hour and synthesizes answers in under 2 seconds. Key challenge: graceful fallbacks for unreliable external sources.",
+      "Research is slow — finding answers means dozens of tabs. Built a system that scrapes 100+ URLs/hour and synthesizes answers in under 2 seconds with 98% accuracy.",
     metric: "98% accuracy",
     slug: "ai-answer-engine",
     github: "https://github.com/Smear6uard/AI-Answer-Engine",
     live: "https://ai-answer-engine-addv.vercel.app/",
+    image: "/projects/ai-engine-screenshot.png",
+    imageAlt: "AI Answer Engine search interface",
+    gradient: "from-blue-500/20 to-cyan-500/10",
   },
   {
     num: "03",
     title: "Mock Stock Exchange",
     description:
-      "Built a complete trading system to understand exchange mechanics. Price-time priority matching engine executes 500+ trades with millisecond order-book updates. Hardest part: handling partial fills correctly.",
+      "Built a complete trading system to understand exchange mechanics. Price-time priority matching engine executes 500+ trades with millisecond order-book updates.",
     metric: "500+ trades/session",
     slug: "stock-exchange",
+    image: "/projects/stock-exchange.png",
+    imageAlt: "Stock exchange matching engine visualization",
+    gradient: "from-green-500/20 to-emerald-500/10",
   },
 ];
 
@@ -162,11 +173,15 @@ export function ProjectsSection() {
               transition={{ duration: 0.3, delay: i * 0.1 }}
               className="group flex-shrink-0 w-[85vw] md:w-[calc(50vw-80px)] lg:w-[calc(40vw-60px)] min-h-[420px] md:min-h-[520px] snap-center border border-white/[0.06] rounded-lg overflow-hidden hover:border-accent/50 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(249,115,22,0.08)] transition-all duration-200 ease-out"
             >
-              {/* Project Image Placeholder */}
-              <div className="relative h-[240px] md:h-[300px] bg-[#112240] border-b border-white/[0.06] overflow-hidden flex items-center justify-center">
-                <span className="text-[120px] md:text-[160px] font-bold text-white/[0.03] select-none">
-                  {project.num}
-                </span>
+              {/* Project Image */}
+              <div className={`relative h-[240px] md:h-[300px] bg-gradient-to-br ${project.gradient} border-b border-white/[0.06] overflow-hidden`}>
+                <ProjectImage
+                  src={project.image}
+                  alt={project.imageAlt}
+                  fallbackNum={project.num}
+                />
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
               </div>
 
               <div className="p-6 md:p-8">
@@ -261,5 +276,59 @@ export function ProjectsSection() {
         </div>
       </div>
     </section>
+  );
+}
+
+// Component to handle image loading with fallback
+function ProjectImage({
+  src,
+  alt,
+  fallbackNum,
+}: {
+  src: string;
+  alt: string;
+  fallbackNum: string;
+}) {
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check if image exists
+  useEffect(() => {
+    const img = new window.Image();
+    img.src = src;
+    img.onload = () => {
+      setIsLoading(false);
+      setHasError(false);
+    };
+    img.onerror = () => {
+      setIsLoading(false);
+      setHasError(true);
+    };
+  }, [src]);
+
+  if (hasError || isLoading) {
+    return (
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        {/* Fallback: Show the number with a message */}
+        <span className="text-[100px] md:text-[140px] font-bold text-white/[0.04] select-none">
+          {fallbackNum}
+        </span>
+        {hasError && (
+          <span className="absolute bottom-4 text-xs text-text-muted/50 font-mono">
+            screenshot coming soon
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+      sizes="(max-width: 768px) 85vw, (max-width: 1024px) 50vw, 40vw"
+    />
   );
 }

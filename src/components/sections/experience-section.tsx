@@ -12,15 +12,15 @@ const experiences = [
         title: "Founder & CEO",
         period: "Dec 2025 – Present",
         description:
-          "Building the AI stylist that becomes your daily ritual. Designed hybrid Claude Haiku pipeline at $0.002/call — 10x cheaper than funded competitors. Targeting 1,000 users by Q2 2025 with $6.99/mo Pro tier.",
-        tech: "Next.js · Supabase · Claude API · Stripe",
+          "6-stage AI pipeline: AWS Rekognition, BiRefNet, Florence-2, FashionSigLIP (768-dim), Gemini 2.5 Flash-Lite, pgvector. Total cost: $0.01/item processed. FashionSigLIP over CLIP—74% vs 47% fashion retrieval accuracy.",
+        tech: "Next.js · Hono · Railway · pgvector · Gemini",
       },
       {
         company: "BRUNOSOFT",
         title: "Software Engineering Intern",
         period: "Oct 2025 – Present",
         description:
-          "Leading migration of 100+ AngularJS components to Angular 17 using incremental ngUpgrade strategy. Introduced Docker/Kubernetes workflows enabling parallel staging environments for a 5-person engineering team.",
+          "Migrating 100+ AngularJS components to Angular 17 via ngUpgrade. Built Docker/Kubernetes CI pipeline that cut deploy times from 45min to 12min. Team of 5 engineers.",
         tech: "Angular · Docker · Kubernetes · PHP",
       },
       {
@@ -28,7 +28,7 @@ const experiences = [
         title: "Specialist",
         period: "Jul 2025 – Nov 2025",
         description:
-          "Technical advisor resolving complex iOS/macOS issues for 50+ monthly clients. Specialized in enterprise MDM enrollment and multi-device configurations. Consistently achieved 95%+ satisfaction rating.",
+          "Diagnosed and resolved iOS/macOS issues for 50+ clients monthly. Focused on enterprise MDM configurations and multi-device sync failures. 95%+ satisfaction rating.",
         tech: "iOS · macOS · MDM",
       },
     ],
@@ -41,8 +41,8 @@ const experiences = [
         title: "Systems Integration Specialist",
         period: "Jul 2022 – Feb 2024",
         description:
-          "Reduced partner response times by 30% through software tools. Streamlined operations for 15+ corporate clients.",
-        tech: "Operations · Software Tools",
+          "Built internal tools that cut partner communication from 24hrs to 8hrs average. Managed software integrations for 15+ corporate transportation clients.",
+        tech: "Operations · Software Integration",
       },
     ],
   },

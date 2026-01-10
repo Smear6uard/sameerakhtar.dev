@@ -9,6 +9,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
 import { JsonLd } from "@/components/JsonLd";
+import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
 
 const satoshi = localFont({
   src: [
@@ -129,6 +130,7 @@ export default function RootLayout({
         <JsonLd />
       </head>
       <body className="font-sans antialiased">
+        <ConsoleEasterEgg />
         <SmoothScroll>
           <Cursor />
           <SideNav />

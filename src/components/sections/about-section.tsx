@@ -32,31 +32,44 @@ export function AboutSection() {
 
           <div className="space-y-6">
             <p className="text-lg text-text-secondary leading-relaxed">
-              I&apos;m a Computer Science student at DePaul University (3.8 GPA)
-              graduating July 2027. Member of Upsilon Pi Epsilon Honor Society.
+              I care about the details most people skip.
+              The animation that&apos;s 200ms faster. The API call that costs $0.002 instead of $0.02.
+              The feature that users don&apos;t notice—because it doesn&apos;t get in their way.
             </p>
 
             <p className="text-lg text-text-secondary leading-relaxed">
-              Currently, I&apos;m building{" "}
-              <a href="https://styleum.co" target="_blank" rel="noopener noreferrer" className="text-accent link-underline">Styleum</a>
-              —an AI-powered personal styling platform—while leading the modernization
-              of a legacy codebase at BRUNOSOFT. I believe in shipping fast and learning from real users.
+              Right now I&apos;m building{" "}
+              <a
+                href="https://styleum.co"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent link-underline"
+              >
+                Styleum
+              </a>
+              , because getting dressed shouldn&apos;t require a 20-minute app setup.
+              By day, I&apos;m at BRUNOSOFT wrestling legacy code into modern Angular—migration is
+              where you learn what &ldquo;at scale&rdquo; actually means.
             </p>
 
             <p className="text-lg text-text-secondary leading-relaxed">
-              I co-founded DePaul&apos;s Computer Science Club and curate a tech
-              newsletter reaching 300+ subscribers. Outside of code, I shoot with a
-              Fujifilm X-T30 II — I believe good engineers have an eye for
-              craft.
+              Co-founded DePaul&apos;s CS Club to build the community I wished existed.
+              I write a{" "}
+              <a
+                href="https://sameerakhtar.substack.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent link-underline"
+              >
+                weekly tech newsletter
+              </a>
+              {" "}for 300+ builders.
             </p>
 
-            {/* Social Proof */}
-            <div className="pt-4">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-accent">300+</span>
-                <span className="text-text-muted text-sm">newsletter subscribers</span>
-              </div>
-            </div>
+            <p className="text-lg text-text-secondary leading-relaxed">
+              When I&apos;m not shipping code, I shoot on a Fujifilm X-T30 II.
+              Photography taught me that composition matters—in pixels and in prose.
+            </p>
 
             {/* Tech Stack */}
             <p className="text-xs sm:text-sm text-white/30 font-mono pt-4 break-words">
