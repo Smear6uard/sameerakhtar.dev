@@ -4,16 +4,94 @@
   --background: #0a192f;
 }
 
-/* Light theme overrides */
+/* Light theme */
 [data-theme="light"] {
   --background: #f8fafc;
   --color-bg-primary: #f8fafc;
-  --color-bg-secondary: #e2e8f0;
-  --color-bg-tertiary: #cbd5e1;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #e2e8f0;
   --color-text-primary: #0f172a;
-  --color-text-secondary: #334155;
+  --color-text-secondary: #475569;
   --color-text-muted: #64748b;
   --color-accent: #ea580c;
+}
+
+[data-theme="light"] body {
+  background: #f8fafc !important;
+  color: #475569;
+}
+
+[data-theme="light"] main,
+[data-theme="light"] section,
+[data-theme="light"] nav,
+[data-theme="light"] .project-card {
+  background: #f8fafc !important;
+}
+
+/* Override Tailwind utility classes in light mode */
+[data-theme="light"] .bg-bg-primary {
+  background-color: #f8fafc !important;
+}
+
+[data-theme="light"] .bg-bg-secondary {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .bg-bg-tertiary {
+  background-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .text-text-primary {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .text-text-secondary {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .text-text-muted {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .text-accent {
+  color: #ea580c !important;
+}
+
+[data-theme="light"] .bg-accent {
+  background-color: #ea580c !important;
+}
+
+[data-theme="light"] .border-white\/5,
+[data-theme="light"] .border-white\/10,
+[data-theme="light"] .border-white\/15 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .bg-white\/5,
+[data-theme="light"] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] ::selection {
+  background-color: rgba(234, 88, 12, 0.2);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #ea580c;
+}
+
+/* Fix: Bento card backgrounds with opacity variants */
+[data-theme="light"] [class*="bg-bg-secondary"] {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="light"] [class*="bg-bg-tertiary"] {
+  background-color: rgba(226, 232, 240, 0.5) !important;
+}
+
+/* Fix: Gradient overlays in photography/bio cards */
+[data-theme="light"] [class*="from-bg-secondary"] {
+  --tw-gradient-from: rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Theme colors for Tailwind v4 */

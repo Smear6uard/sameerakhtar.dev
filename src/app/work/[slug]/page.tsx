@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
 import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
 import { HeroImage } from "@/components/ui/HeroImage";
+import { CaseStudyClient } from "@/components/case-study/CaseStudyClient";
 
 type ContentBlock =
   | { type: "text"; content: string }
@@ -28,261 +27,356 @@ interface Project {
 const projects: Record<string, Project> = {
   styleum: {
     title: "Styleum",
-    subtitle: "AI-powered personal styling platform helping users discover their unique style",
-    timeline: "Dec 2024 – Present",
-    role: "Founder & Lead Developer",
-    stack: ["Next.js", "TypeScript", "OpenAI", "Supabase", "Stripe", "Vercel"],
-    live: "https://styleum.co",
+    subtitle: "AI-powered iOS styling app generating outfits at $0.002 each — shipped to the App Store in 8 weeks",
+    timeline: "Dec 2025 – Present",
+    role: "Founder & Engineer",
+    stack: ["Swift", "SwiftUI", "Hono", "TypeScript", "AWS Rekognition", "BiRefNet", "Florence-2", "FashionSigLIP", "Gemini"],
+    live: "https://styleum.xyz",
     heroImage: "/projects/styleum-hero.png",
     metrics: [
-      { label: "Cost per Call", value: "$0.002" },
-      { label: "Setup Time", value: "3 min" },
-      { label: "Stack", value: "Full-Stack" },
-      { label: "Status", value: "Building" },
+      { label: "Cost per Outfit", value: "$0.002" },
+      { label: "vs. Competitors", value: "40% cheaper" },
+      { label: "Time to App Store", value: "8 weeks" },
+      { label: "Status", value: "Live" },
     ],
     content: [
       { type: "heading", level: 2, content: "The Problem" },
       {
         type: "text",
         content:
-          "Existing wardrobe apps are broken. They demand 20+ minutes of tedious photo uploads before you can even get started. Most users abandon before seeing any value. And the AI recommendations? Either too expensive to scale ($0.02+ per call) or too generic to be useful.",
+          "Existing wardrobe apps demand 20+ minutes of setup before delivering any value. The AI recommendations are either too expensive to scale ($0.02+ per call) or too generic to be useful. Users churn before they ever see a styled outfit.",
       },
       { type: "heading", level: 2, content: "The Insight" },
       {
         type: "text",
         content:
-          "Fashion is deeply personal, but the technology to deliver personalized styling doesn't need to be expensive. By routing simple requests through lightweight models and only escalating complex style decisions to GPT-4, I cut costs by 10x while maintaining quality.",
+          "Fashion-specific vision models outperform general-purpose ones by a wide margin. FashionSigLIP achieves 74% fashion retrieval accuracy vs. CLIP's 47%. By chaining specialized models instead of throwing everything at one expensive API, the pipeline costs drop dramatically.",
       },
       { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Hybrid AI Pipeline" },
+      { type: "heading", level: 3, content: "5-Stage ML Pipeline" },
       {
         type: "text",
         content:
-          "The key innovation is a two-stage AI pipeline. Stage 1 uses a fast, cheap model to classify the request type and extract key parameters. Stage 2 routes only the complex requests to GPT-4 with rich context.",
-      },
-      {
-        type: "code",
-        language: "typescript",
-        filename: "ai-router.ts",
-        content: `async function routeStyleRequest(request: StyleRequest) {
-  // Stage 1: Fast classification (< 100ms, $0.0001)
-  const classification = await classifyRequest(request);
-
-  if (classification.complexity === 'simple') {
-    // Handle with rules + lightweight model
-    return generateSimpleRecommendation(request);
-  }
-
-  // Stage 2: Complex requests get full AI treatment
-  return generateAIRecommendation(request, {
-    model: 'gpt-4-turbo',
-    context: buildRichContext(request.userProfile),
-  });
-}`,
-      },
-      { type: "heading", level: 3, content: "3-Minute Onboarding" },
-      {
-        type: "text",
-        content:
-          "Instead of demanding a full wardrobe photo shoot, Styleum starts with style preferences and body measurements. The AI builds your profile iteratively—every interaction makes recommendations smarter.",
+          "Each stage handles one responsibility, optimized for cost and accuracy:",
       },
       {
         type: "list",
         items: [
-          "Style quiz identifies aesthetic preferences (60 seconds)",
-          "Basic measurements for fit recommendations (60 seconds)",
-          "First outfit generated immediately (30 seconds)",
-          "Profile refines with every interaction",
+          "BiRefNet: Background removal and garment segmentation",
+          "Florence-2: Fine-grained garment attribute extraction (color, pattern, category)",
+          "FashionSigLIP: 768-dim fashion-specific embeddings for style matching",
+          "AWS Rekognition: Body type and proportion analysis",
+          "Gemini: Final outfit composition and natural language styling rationale",
         ],
+      },
+      {
+        type: "code",
+        language: "typescript",
+        filename: "pipeline.ts",
+        content: `async function generateOutfit(wardrobe: GarmentImage[]) {
+  // Stage 1: Segment garments ($0.0003)
+  const segments = await birefnet.segment(wardrobe);
+
+  // Stage 2: Extract attributes ($0.001)
+  const attributes = await florence2.analyze(segments);
+
+  // Stage 3: Style embeddings ($0.00002)
+  const embeddings = await fashionSigLIP.encode(attributes);
+
+  // Stage 4: Body analysis ($0.001)
+  const bodyProfile = await rekognition.analyze(userPhoto);
+
+  // Stage 5: Compose outfit ($0.002)
+  return gemini.compose({ embeddings, bodyProfile, attributes });
+  // Total: ~$0.002/outfit
+}`,
+      },
+      { type: "heading", level: 3, content: "Native iOS App" },
+      {
+        type: "text",
+        content:
+          "Built the full-stack iOS app in Swift/SwiftUI with a Hono/TypeScript backend. Engineered push notification scheduling with streak tracking and XP rewards using APNs and local persistence, supporting daily delivery to all users. Shipped from first commit to App Store in 8 weeks as sole engineer.",
       },
       { type: "heading", level: 2, content: "Results" },
       {
         type: "callout",
         variant: "success",
         content:
-          "Achieved $0.002/call average cost—10x cheaper than competitors using direct GPT-4 calls for everything.",
+          "Achieved $0.002/outfit — 40% below competitor costs. Full pipeline processes wardrobe scans to styled outfits end-to-end.",
       },
       { type: "heading", level: 2, content: "Reflections" },
       {
         type: "text",
         content:
-          "The hardest part isn't the AI—it's the product decisions. Which features actually matter to users? What's the right balance between personalization and simplicity? I'm learning that shipping fast and talking to users beats theorizing in isolation.",
+          "The hardest part was finding the right model for each stage. General-purpose vision APIs are easy to integrate but expensive and inaccurate for fashion. Specialized models like FashionSigLIP require more pipeline engineering but deliver dramatically better results at a fraction of the cost.",
       },
     ],
   },
-  "ai-answer-engine": {
-    title: "AI Answer Engine",
-    subtitle: "Production AI-powered search processing 100+ URLs/hour",
-    timeline: "Sep 2024 – Oct 2024",
+  hazardlens: {
+    title: "HazardLens",
+    subtitle: "Real-time construction safety detection pipeline using YOLO26 at 15+ FPS",
+    timeline: "Feb 2026",
     role: "Solo Developer",
-    stack: ["Next.js", "Groq SDK", "Cheerio", "Puppeteer", "Vercel"],
-    github: "https://github.com/Smear6uard/AI-Answer-Engine",
-    live: "https://ai-answer-engine-addv.vercel.app",
-    heroImage: "/projects/ai-engine-screenshot.png",
+    stack: ["Python", "YOLO26", "OpenCV", "FastAPI", "React"],
+    github: "https://github.com/Smear6uard/HazardLens",
+    heroImage: "/projects/hazardlens.png",
     metrics: [
-      { label: "Accuracy", value: "98%" },
-      { label: "Response Time", value: "<2s" },
-      { label: "URLs/Hour", value: "100+" },
-      { label: "Queries Handled", value: "1,000+" },
+      { label: "Inference Speed", value: "15+ FPS" },
+      { label: "Detection Model", value: "YOLO26" },
+      { label: "Event Types", value: "Multi-class" },
+      { label: "Alerting", value: "Real-time" },
     ],
     content: [
       { type: "heading", level: 2, content: "The Problem" },
       {
         type: "text",
         content:
-          "Research is slow. Finding accurate answers across multiple sources requires opening dozens of tabs, reading through irrelevant content, and manually synthesizing information. I wanted to build a tool that could do this automatically with high accuracy.",
+          "Construction sites are among the most dangerous work environments. PPE compliance monitoring is typically manual, intermittent, and reactive — violations are caught after incidents, not before them.",
       },
       { type: "heading", level: 2, content: "The Insight" },
       {
         type: "text",
         content:
-          "Most AI search tools fail because they either scrape poorly or synthesize poorly. The key is doing both well: aggressive content extraction with smart fallbacks, combined with AI that actually cites its sources.",
+          "YOLO26's NMS-free inference architecture eliminates the post-processing bottleneck that limits real-time detection pipelines. Combined with centroid-based object tracking, you can monitor compliance continuously without sacrificing frame rate.",
       },
       { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Architecture" },
+      { type: "heading", level: 3, content: "Detection Pipeline" },
       {
         type: "text",
-        content: "The system works in three stages:",
+        content:
+          "Built a real-time video processing pipeline that handles multi-class PPE compliance classification with centroid object tracking across frames:",
       },
       {
         type: "list",
         items: [
-          "Query Analysis: Parse user's question to identify key entities and intent",
-          "Content Extraction: Scrape relevant URLs using Cheerio for static content, Puppeteer for JS-rendered pages",
-          "AI Synthesis: Generate accurate answers with source citations using Groq SDK",
+          "YOLO26 NMS-free inference for hard hats, safety vests, gloves, and goggles at 15+ FPS",
+          "Centroid-based object tracking maintains identity across frames without re-identification overhead",
+          "Temporal event detection identifies zone violations, PPE removal mid-shift, and near-miss incidents",
+          "Severity-based alerting with risk scoring triggers appropriate response levels",
         ],
       },
-      { type: "heading", level: 3, content: "Key Technical Decisions" },
+      {
+        type: "code",
+        language: "python",
+        filename: "detector.py",
+        content: `class SafetyDetector:
+    def process_frame(self, frame: np.ndarray) -> DetectionResult:
+        # YOLO26 NMS-free inference
+        detections = self.model.predict(frame, conf=0.5)
+
+        # Update centroid tracker
+        tracked = self.tracker.update(detections)
+
+        # Temporal event analysis
+        events = self.event_detector.analyze(
+            tracked,
+            zone_boundaries=self.zones,
+            ppe_history=self.compliance_log
+        )
+
+        # Risk scoring and alerting
+        for event in events:
+            severity = self.risk_scorer.evaluate(event)
+            if severity >= AlertLevel.WARNING:
+                self.alert_system.trigger(event, severity)
+
+        return DetectionResult(tracked, events)`,
+      },
+      { type: "heading", level: 3, content: "Live Dashboard" },
+      {
+        type: "text",
+        content:
+          "React-based compliance analytics dashboard with real-time metrics, violation heatmaps, and shift-level safety scoring. FastAPI backend streams detection events via WebSocket for instant updates.",
+      },
+      { type: "heading", level: 2, content: "Results" },
+      {
+        type: "callout",
+        variant: "success",
+        content:
+          "Processing video at 15+ FPS with multi-class PPE detection, temporal event tracking, and real-time severity-based alerting across an entire construction site feed.",
+      },
+      { type: "heading", level: 2, content: "Reflections" },
+      {
+        type: "text",
+        content:
+          "The biggest challenge was temporal event detection — distinguishing between a worker briefly adjusting their hard hat vs. actually removing PPE. Sliding window analysis over tracked object states solved most false positives, but edge cases around occlusion required careful tuning of the tracker's confidence decay.",
+      },
+    ],
+  },
+  "llm-router": {
+    title: "Intelligent LLM Router",
+    subtitle: "Smart routing layer that cuts LLM API costs by up to 40% with under 50ms overhead",
+    timeline: "Feb 2026",
+    role: "Solo Developer",
+    stack: ["Python", "FastAPI", "React", "OpenRouter"],
+    github: "https://github.com/Smear6uard/Intelligent-LLM-Router",
+    heroImage: "/projects/llm-router.png",
+    metrics: [
+      { label: "Cost Reduction", value: "Up to 40%" },
+      { label: "Routing Overhead", value: "<50ms" },
+      { label: "Task Types", value: "7" },
+      { label: "Models Supported", value: "4+" },
+    ],
+    content: [
+      { type: "heading", level: 2, content: "The Problem" },
+      {
+        type: "text",
+        content:
+          "Most applications send every prompt to the same expensive model. A simple greeting gets the same GPT-4o treatment as a complex multi-step reasoning task. This wastes money and adds unnecessary latency.",
+      },
+      { type: "heading", level: 2, content: "The Insight" },
+      {
+        type: "text",
+        content:
+          "Prompt complexity is predictable. By analyzing 6 weighted signals — token count, vocabulary diversity, question depth, domain specificity, reasoning requirements, and output format — you can classify tasks into 7 types and route each to the cheapest model that handles it well.",
+      },
+      { type: "heading", level: 2, content: "The Solution" },
+      { type: "heading", level: 3, content: "Routing Engine" },
+      {
+        type: "text",
+        content:
+          "The router classifies incoming prompts and selects the optimal model from GPT-4o, Claude, Gemini, or DeepSeek based on task type and cost efficiency:",
+      },
+      {
+        type: "code",
+        language: "python",
+        filename: "router.py",
+        content: `class LLMRouter:
+    def route(self, prompt: str) -> ModelSelection:
+        # Extract 6 weighted signals
+        signals = self.analyzer.extract_signals(prompt)
+
+        # Classify into 7 task types
+        task_type = self.classifier.predict(signals)
+
+        # Select optimal model for task
+        model = self.model_selector.select(
+            task_type=task_type,
+            budget=self.cost_constraints,
+            latency_target=self.latency_sla
+        )
+
+        return ModelSelection(
+            model=model,
+            confidence=signals.confidence,
+            estimated_cost=model.estimate_cost(prompt)
+        )`,
+      },
+      { type: "heading", level: 3, content: "A/B Testing Arena" },
+      {
+        type: "text",
+        content:
+          "Built a real-time analytics dashboard with an A/B testing arena that compares latency, accuracy, and cost across 3+ LLMs simultaneously. The dashboard surfaces which model performs best for each task type, enabling continuous routing optimization.",
+      },
+      { type: "heading", level: 2, content: "Results" },
+      {
+        type: "callout",
+        variant: "success",
+        content:
+          "Cuts API costs by up to 40% by routing simple tasks to cheaper models, with under 50ms routing overhead. The A/B testing arena validated that cheaper models match expensive ones on 60%+ of typical prompts.",
+      },
+      { type: "heading", level: 2, content: "Reflections" },
+      {
+        type: "text",
+        content:
+          "The hardest part was calibrating the complexity classifier. Early versions over-routed to expensive models because they weighted token count too heavily. Vocabulary diversity and reasoning chain depth turned out to be much stronger signals for actual task difficulty.",
+      },
+    ],
+  },
+  deepcite: {
+    title: "DeepCite",
+    subtitle: "AI research engine with dual-mode retrieval processing 100+ URLs/hr with inline citations",
+    timeline: "Oct 2025 – Jan 2026",
+    role: "Solo Developer",
+    stack: ["Next.js", "TypeScript", "Groq", "Redis", "Puppeteer"],
+    github: "https://github.com/Smear6uard/DeepCite",
+    live: "https://deep-cite-git-main-sameer-akhtars-projects.vercel.app/",
+    heroImage: "/projects/deepcite.png",
+    metrics: [
+      { label: "URLs/Hour", value: "100+" },
+      { label: "Perceived Latency", value: "<100ms" },
+      { label: "Retrieval Modes", value: "Dual" },
+      { label: "Components", value: "10+" },
+    ],
+    content: [
+      { type: "heading", level: 2, content: "The Problem" },
+      {
+        type: "text",
+        content:
+          "AI search tools either scrape poorly or synthesize poorly. Most fail to handle JavaScript-rendered pages, rate-limit themselves on parallel requests, or generate answers without verifiable citations. Research still requires dozens of open tabs.",
+      },
+      { type: "heading", level: 2, content: "The Insight" },
+      {
+        type: "text",
+        content:
+          "A dual-mode retrieval strategy — fast static scraping that falls back to headless rendering only when needed — handles 90%+ of pages via the cheap path while still capturing JS-heavy content. Redis caching eliminates redundant fetches across queries.",
+      },
+      { type: "heading", level: 2, content: "The Solution" },
+      { type: "heading", level: 3, content: "Retrieval Pipeline" },
+      {
+        type: "text",
+        content:
+          "Engineered a dual-mode pipeline that maximizes throughput while maintaining content quality:",
+      },
+      {
+        type: "list",
+        items: [
+          "Cheerio for fast static HTML parsing (primary path, <50ms per page)",
+          "Puppeteer fallback for JavaScript-rendered content (triggered on empty content detection)",
+          "Serper web search API for real-time source discovery",
+          "Redis caching layer for deduplication across queries",
+          "Promise.allSettled for parallel scraping with graceful failure handling",
+        ],
+      },
       {
         type: "code",
         language: "typescript",
-        filename: "scraper.ts",
-        content: `async function scrapeWithFallback(url: string) {
-  try {
-    // Try fast path first (Cheerio)
-    const response = await fetch(url);
-    const html = await response.text();
+        filename: "retrieval.ts",
+        content: `async function retrieveSources(query: string): Promise<Source[]> {
+  // Check Redis cache first
+  const cached = await redis.get(\`query:\${hash(query)}\`);
+  if (cached) return JSON.parse(cached);
 
-    // Check if content is JavaScript-rendered
-    if (isJSRendered(html)) {
-      return await scrapeWithPuppeteer(url);
-    }
+  // Discover sources via Serper
+  const urls = await serper.search(query, { num: 10 });
 
-    return parseWithCheerio(html);
-  } catch (error) {
-    // Graceful degradation
-    console.log(\`Fallback for \${url}\`);
-    return { success: false, error };
-  }
+  // Parallel dual-mode scraping
+  const results = await Promise.allSettled(
+    urls.map(async (url) => {
+      const static_ = await cheerio.extract(url);
+      if (static_.contentLength < MIN_THRESHOLD) {
+        return puppeteer.render(url);
+      }
+      return static_;
+    })
+  );
+
+  const sources = results
+    .filter(r => r.status === 'fulfilled')
+    .map(r => r.value);
+
+  await redis.set(\`query:\${hash(query)}\`, JSON.stringify(sources));
+  return sources;
 }`,
       },
+      { type: "heading", level: 3, content: "Streaming UI" },
+      {
+        type: "text",
+        content:
+          "Built LLM streaming with pipeline status updates via server-sent events, achieving sub-100ms perceived latency. The frontend renders inline source citations across 10+ modular React components, with real-time pipeline progress indicators.",
+      },
+      { type: "heading", level: 2, content: "Results" },
       {
         type: "callout",
-        variant: "info",
+        variant: "success",
         content:
-          "Groq over OpenAI: Groq's inference speed (40% faster) was critical for keeping response times under 2 seconds. The accuracy tradeoff was minimal.",
-      },
-      { type: "heading", level: 2, content: "Results" },
-      {
-        type: "text",
-        content:
-          "The system processes 100+ URLs per hour with 98% accuracy on factual queries. Deployed on Vercel, it handles 1,000+ queries with consistent sub-2-second response times.",
+          "Processes 100+ URLs/hr via parallel scraping with sub-100ms perceived latency through SSE streaming. Redis caching eliminates redundant fetches, and the dual-mode pipeline handles both static and JS-rendered pages reliably.",
       },
       { type: "heading", level: 2, content: "Reflections" },
       {
         type: "text",
         content:
-          "The biggest challenge was handling unreliable external URLs—timeouts, rate limits, malformed HTML. Building robust error handling and fallback strategies was more complex than the core AI integration. In production, the edge cases are always harder than the happy path.",
-      },
-    ],
-  },
-  "stock-exchange": {
-    title: "Mock Stock Exchange Platform",
-    subtitle: "Real-time matching engine handling 500+ trades per session",
-    timeline: "Sep 2024 – Oct 2024",
-    role: "Solo Developer",
-    stack: ["Java", "JUnit", "Data Structures"],
-    heroImage: "/projects/stock-exchange.png",
-    metrics: [
-      { label: "Trades/Session", value: "500+" },
-      { label: "Users Simulated", value: "100+" },
-      { label: "Test Coverage", value: "100%" },
-      { label: "Order Updates", value: "ms-level" },
-    ],
-    content: [
-      { type: "heading", level: 2, content: "The Problem" },
-      {
-        type: "text",
-        content:
-          "Understanding how real exchanges work requires hands-on implementation. Reading about price-time priority is one thing; handling partial fills and maintaining order book integrity is another. I built this to deeply understand exchange mechanics.",
-      },
-      { type: "heading", level: 2, content: "The Insight" },
-      {
-        type: "text",
-        content:
-          "Financial systems demand precision. A single edge case in the matching engine—say, a partial fill that doesn't update remaining quantity correctly—can cascade into incorrect portfolio states and audit trail gaps. The devil is in the details.",
-      },
-      { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Core Architecture" },
-      {
-        type: "text",
-        content: "Modular class design with clear separation of concerns:",
-      },
-      {
-        type: "list",
-        items: [
-          "Price: Immutable value object for currency handling",
-          "Order: Buy/sell orders with quantity, price, and timestamp",
-          "Quote: Real-time bid/ask spread tracking",
-          "OrderBook: Price-time priority matching engine",
-          "Portfolio: User holdings and balance validation",
-        ],
-      },
-      { type: "heading", level: 3, content: "Matching Engine" },
-      {
-        type: "code",
-        language: "java",
-        filename: "OrderBook.java",
-        content: `public List<Trade> match(Order incomingOrder) {
-    List<Trade> trades = new ArrayList<>();
-
-    PriorityQueue<Order> oppositeBook = incomingOrder.isBuy()
-        ? sellOrders : buyOrders;
-
-    while (!oppositeBook.isEmpty() && canMatch(incomingOrder, oppositeBook.peek())) {
-        Order matchedOrder = oppositeBook.peek();
-        int fillQty = Math.min(
-            incomingOrder.getRemainingQty(),
-            matchedOrder.getRemainingQty()
-        );
-
-        // Execute trade
-        trades.add(new Trade(incomingOrder, matchedOrder, fillQty));
-
-        // Handle partial fills
-        incomingOrder.fill(fillQty);
-        matchedOrder.fill(fillQty);
-
-        if (matchedOrder.isFilled()) {
-            oppositeBook.poll();
-        }
-        if (incomingOrder.isFilled()) break;
-    }
-
-    return trades;
-}`,
-      },
-      { type: "heading", level: 2, content: "Results" },
-      {
-        type: "text",
-        content:
-          "The system handles 100+ concurrent users and 1,000+ trade events per session. The matching engine executes 500+ trades with millisecond-level order book updates. 50+ unit and integration tests provide 100% coverage.",
-      },
-      { type: "heading", level: 2, content: "Reflections" },
-      {
-        type: "text",
-        content:
-          "The hardest part was handling partial fills correctly—when a large order matches against multiple smaller orders at different prices. Edge cases in financial systems compound quickly. This project taught me why exchanges invest so heavily in testing infrastructure.",
+          "The biggest challenge was handling unreliable external URLs — timeouts, rate limits, malformed HTML, and anti-bot detection. Promise.allSettled was critical for graceful degradation, but tuning timeout thresholds and retry logic for the Puppeteer fallback path required extensive real-world testing.",
       },
     ],
   },
@@ -367,102 +461,17 @@ function highlightCode(code: string, language: string): string {
   return highlighted;
 }
 
-function renderContentBlock(block: ContentBlock, index: number) {
-  switch (block.type) {
-    case "heading":
-      if (block.level === 2) {
-        return (
-          <h2
-            key={index}
-            className="text-xl font-semibold text-text-primary mt-12 mb-4"
-          >
-            {block.content}
-          </h2>
-        );
-      }
-      return (
-        <h3
-          key={index}
-          className="text-lg font-medium text-text-primary mt-8 mb-3"
-        >
-          {block.content}
-        </h3>
-      );
-
-    case "text":
-      return (
-        <p key={index} className="text-text-secondary leading-relaxed mb-4">
-          {block.content}
-        </p>
-      );
-
-    case "code":
-      return (
-        <div key={index} className="my-6 rounded-lg overflow-hidden border border-white/10">
-          {block.filename && (
-            <div className="px-4 py-2 bg-white/5 border-b border-white/10 font-mono text-xs text-text-muted">
-              {block.filename}
-            </div>
-          )}
-          <pre className="p-4 bg-[#0d1117] overflow-x-auto">
-            <code
-              className="text-sm font-mono leading-relaxed"
-              dangerouslySetInnerHTML={{
-                __html: highlightCode(block.content, block.language),
-              }}
-            />
-          </pre>
-        </div>
-      );
-
-    case "image":
-      return (
-        <figure key={index} className="my-8">
-          <div className="relative aspect-video rounded-lg overflow-hidden border border-white/10">
-            <Image
-              src={block.src}
-              alt={block.alt}
-              fill
-              className="object-cover"
-            />
-          </div>
-          {block.caption && (
-            <figcaption className="mt-2 text-center text-sm text-text-muted">
-              {block.caption}
-            </figcaption>
-          )}
-        </figure>
-      );
-
-    case "list":
-      return (
-        <ul key={index} className="list-disc list-inside mb-4 space-y-2">
-          {block.items.map((item, i) => (
-            <li key={i} className="text-text-secondary">
-              {item}
-            </li>
-          ))}
-        </ul>
-      );
-
-    case "callout":
-      const variants = {
-        info: "border-blue-500/50 bg-blue-500/10",
-        warning: "border-yellow-500/50 bg-yellow-500/10",
-        success: "border-green-500/50 bg-green-500/10",
+// Pre-process content blocks to add highlighted code (for client component)
+function processContentBlocks(content: ContentBlock[]) {
+  return content.map((block) => {
+    if (block.type === "code") {
+      return {
+        ...block,
+        highlightedCode: highlightCode(block.content, block.language),
       };
-      return (
-        <div
-          key={index}
-          className={`my-6 p-4 rounded-lg border-l-4 ${variants[block.variant || "info"]}`}
-        >
-          <p className="text-text-secondary">{block.content}</p>
-        </div>
-      );
-
-    default:
-      return null;
-  }
+    }
+    return block;
+  });
 }
 
 export default async function CaseStudy({
@@ -491,103 +500,33 @@ export default async function CaseStudy({
         description={project.subtitle}
         url={`https://sameerakhtar.dev/work/${slug}`}
         datePublished={
-          project.timeline.split(" – ")[0].includes("Dec 2024")
-            ? "2024-12-01"
-            : "2024-09-01"
+          project.timeline.includes("Dec 2025")
+            ? "2025-12-01"
+            : project.timeline.includes("Feb 2026")
+            ? "2026-02-01"
+            : "2025-10-01"
         }
         author="Sameer Akhtar"
       />
-      <article className="pt-32 pb-20">
-        {/* Back link */}
-        <div className="max-w-3xl mx-auto px-6 mb-8">
-          <Link
-            href="/#work"
-            className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1"
-          >
-            <span>←</span> back to projects
-          </Link>
-        </div>
 
-        {/* Hero image */}
-        {project.heroImage && (
+      {/* Hero image */}
+      {project.heroImage && (
+        <div className="pt-32">
           <HeroImage src={project.heroImage} alt={project.title} />
-        )}
-
-        <div className="max-w-3xl mx-auto px-6">
-          <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">
-              {project.title}
-            </h1>
-            <p className="mt-4 text-xl text-text-secondary">{project.subtitle}</p>
-
-            <div className="mt-8 flex flex-wrap gap-6 text-sm">
-              <div>
-                <span className="text-text-muted">Timeline</span>
-                <p className="text-text-primary">{project.timeline}</p>
-              </div>
-              <div>
-                <span className="text-text-muted">Role</span>
-                <p className="text-text-primary">{project.role}</p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2">
-              {project.stack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 text-sm font-mono text-accent bg-accent/10 rounded"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-              {project.metrics.map((metric) => (
-                <div
-                  key={metric.label}
-                  className="p-4 border border-white/10 rounded-lg"
-                >
-                  <p className="text-2xl font-bold text-accent">{metric.value}</p>
-                  <p className="text-sm text-text-muted">{metric.label}</p>
-                </div>
-              ))}
-            </div>
-
-            {(project.github || project.live) && (
-              <div className="mt-8 flex gap-4">
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent link-underline inline-flex items-center gap-1"
-                  >
-                    View on GitHub <span>→</span>
-                  </a>
-                )}
-                {project.live && (
-                  <a
-                    href={project.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent link-underline inline-flex items-center gap-1"
-                  >
-                    Live Demo <span>↗</span>
-                  </a>
-                )}
-              </div>
-            )}
-          </header>
-
-          {/* Content blocks */}
-          <div className="prose-custom">
-            {project.content.map((block, index) =>
-              renderContentBlock(block, index)
-            )}
-          </div>
         </div>
-      </article>
+      )}
+
+      <CaseStudyClient
+        title={project.title}
+        subtitle={project.subtitle}
+        timeline={project.timeline}
+        role={project.role}
+        stack={project.stack}
+        github={project.github}
+        live={project.live}
+        metrics={project.metrics}
+        content={processContentBlocks(project.content)}
+      />
     </>
   );
 }

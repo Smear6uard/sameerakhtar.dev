@@ -31,7 +31,7 @@ export function ContactSection() {
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <MagneticWrapper radius={100} maxDistance={6}>
               <a
-                href="mailto:Sameer_Akhtar@icloud.com"
+                href="mailto:sameer@sameerakhtar.dev"
                 className="btn-primary"
               >
                 Send me an email

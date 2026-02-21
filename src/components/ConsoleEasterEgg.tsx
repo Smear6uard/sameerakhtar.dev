@@ -15,7 +15,7 @@ export function ConsoleEasterEgg() {
       `%c
   ┌─────────────────────────────────────┐
   │  SAMEER AKHTAR                      │
-  │  $0.002 per AI call                 │
+  │  $0.002 per AI outfit               │
   └─────────────────────────────────────┘
 `,
       "color: #f97316; font-family: monospace; font-size: 10px;"
@@ -40,14 +40,13 @@ export function ConsoleEasterEgg() {
 
     console.log(
       `%c
-  Stage 1: AWS Rekognition ─────── $0.001
-  Stage 2: BiRefNet ────────────── $0.003
-  Stage 3: Florence-2 ──────────── $0.001
-  Stage 4: FashionSigLIP (768d) ── $0.00002
-  Stage 5: Gemini 2.5 Flash ────── $0.002
-  Stage 6: pgvector ────────────── —
+  Stage 1: BiRefNet ────────────── $0.0003
+  Stage 2: Florence-2 ──────────── $0.001
+  Stage 3: FashionSigLIP (768d) ── $0.00002
+  Stage 4: AWS Rekognition ─────── $0.001
+  Stage 5: Gemini ─────────────── $0.002
   ──────────────────────────────────────
-  Total: $0.01/item
+  Total: ~$0.002/outfit
 `,
       "color: #64748b; font-size: 11px; font-family: monospace;"
     );
@@ -64,7 +63,7 @@ export function ConsoleEasterEgg() {
     );
 
     console.log(
-      "%cSameer_Akhtar@icloud.com",
+      "%csameer@sameerakhtar.dev",
       "color: #f97316; font-size: 12px; font-weight: bold;"
     );
 

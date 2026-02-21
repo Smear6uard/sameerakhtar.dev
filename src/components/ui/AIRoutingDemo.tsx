@@ -15,27 +15,18 @@ interface PipelineStage {
 
 const PIPELINE_STAGES: PipelineStage[] = [
   {
-    id: "moderation",
-    name: "Content Moderation",
-    shortName: "Moderation",
-    baseCost: 0.001,
-    description: "AWS Rekognition",
-    color: "#ef4444",
-    requiredFor: ["medium", "complex"],
-  },
-  {
     id: "background",
-    name: "Background Removal",
-    shortName: "BG Remove",
-    baseCost: 0.003,
+    name: "Garment Segmentation",
+    shortName: "Segmentation",
+    baseCost: 0.0003,
     description: "BiRefNet",
     color: "#8b5cf6",
-    requiredFor: ["complex"],
+    requiredFor: ["simple", "medium", "complex"],
   },
   {
     id: "vision",
-    name: "Vision Analysis",
-    shortName: "Vision",
+    name: "Attribute Extraction",
+    shortName: "Attributes",
     baseCost: 0.001,
     description: "Florence-2",
     color: "#3b82f6",
@@ -43,7 +34,7 @@ const PIPELINE_STAGES: PipelineStage[] = [
   },
   {
     id: "embeddings",
-    name: "Fashion Embeddings",
+    name: "Style Matching",
     shortName: "Embeddings",
     baseCost: 0.00002,
     description: "FashionSigLIP",
@@ -51,22 +42,22 @@ const PIPELINE_STAGES: PipelineStage[] = [
     requiredFor: ["simple", "medium", "complex"],
   },
   {
-    id: "reasoning",
-    name: "Reasoning",
-    shortName: "Reasoning",
-    baseCost: 0.002,
-    description: "Gemini 2.5 Flash",
-    color: "#f97316",
-    requiredFor: ["simple", "medium", "complex"],
+    id: "moderation",
+    name: "Body Analysis",
+    shortName: "Analysis",
+    baseCost: 0.001,
+    description: "AWS Rekognition",
+    color: "#ef4444",
+    requiredFor: ["medium", "complex"],
   },
   {
-    id: "storage",
-    name: "Vector Storage",
-    shortName: "Storage",
-    baseCost: 0,
-    description: "pgvector",
-    color: "#6366f1",
-    requiredFor: ["medium", "complex"],
+    id: "reasoning",
+    name: "Outfit Composition",
+    shortName: "Compose",
+    baseCost: 0.002,
+    description: "Gemini",
+    color: "#f97316",
+    requiredFor: ["simple", "medium", "complex"],
   },
 ];
 
@@ -143,7 +134,7 @@ export function AIRoutingDemo() {
     let pipelineCost = 0;
     activeStages.forEach((stage) => {
       // Most stages scale with image count
-      if (stage.id === "reasoning" || stage.id === "storage") {
+      if (stage.id === "reasoning") {
         pipelineCost += stage.baseCost; // Fixed cost per request
       } else {
         pipelineCost += stage.baseCost * imageCount; // Scales with images
@@ -363,7 +354,7 @@ export function AIRoutingDemo() {
                   >
                     {stage.baseCost === 0
                       ? "—"
-                      : `$${(stage.baseCost * (stage.id === "reasoning" || stage.id === "storage" ? 1 : sliderValues.images)).toFixed(5)}`}
+                      : `$${(stage.baseCost * (stage.id === "reasoning" ? 1 : sliderValues.images)).toFixed(5)}`}
                   </span>
                 </div>
               </motion.div>

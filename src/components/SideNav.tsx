@@ -5,8 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
   { href: "#work", label: "work", icon: "work" },
@@ -73,7 +73,7 @@ export function SideNav() {
       />
 
       {/* Logo/Name */}
-      <div className="flex items-center justify-between h-20 px-4 border-b border-white/5">
+      <div className="flex items-center h-20 px-4 border-b border-white/5">
         <Link href="/" className="flex items-center gap-3 text-text-primary hover:text-accent transition-colors">
           <Image
             src="/logo.png"
@@ -91,14 +91,6 @@ export function SideNav() {
             sameer
           </motion.span>
         </Link>
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: isExpanded ? 1 : 0, scale: isExpanded ? 1 : 0.8 }}
-          transition={{ duration: 0.2 }}
-          className="overflow-hidden"
-        >
-          <ThemeToggle />
-        </motion.div>
       </div>
 
       {/* Nav Links */}
@@ -202,7 +194,7 @@ export function SideNav() {
         </MagneticWrapper>
         <MagneticWrapper radius={60} maxDistance={5}>
           <a
-            href="mailto:Sameer_Akhtar@icloud.com"
+            href="mailto:sameer@sameerakhtar.dev"
             aria-label="Send email"
             className="flex items-center gap-3 px-3 py-2 rounded-lg text-text-muted hover:text-accent transition-colors"
           >
@@ -243,6 +235,19 @@ export function SideNav() {
             </motion.span>
           </a>
         </MagneticWrapper>
+
+        {/* Theme Toggle */}
+        <div className="flex items-center gap-3 px-3 py-2 mt-2">
+          <ThemeToggle />
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isExpanded ? 1 : 0 }}
+            transition={{ duration: 0.2 }}
+            className="text-sm text-text-muted whitespace-nowrap"
+          >
+            theme
+          </motion.span>
+        </div>
       </div>
     </motion.nav>
   );

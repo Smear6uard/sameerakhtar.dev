@@ -9,19 +9,19 @@ const experiences = [
     roles: [
       {
         company: "STYLEUM",
-        title: "Founder & CEO",
+        title: "Founder & Engineer",
         period: "Dec 2025 – Present",
         description:
-          "6-stage AI pipeline: AWS Rekognition, BiRefNet, Florence-2, FashionSigLIP (768-dim), Gemini 2.5 Flash-Lite, pgvector. Total cost: $0.01/item processed. FashionSigLIP over CLIP—74% vs 47% fashion retrieval accuracy.",
-        tech: "Next.js · Hono · Railway · pgvector · Gemini",
+          "Architected 5-stage ML pipeline (BiRefNet, Florence-2, FashionSigLIP, AWS Rekognition, Gemini) for AI outfit generation at $0.002/outfit — 40% below competitor costs. Built full-stack iOS app (Swift/SwiftUI + Hono/TypeScript backend), shipping first commit to App Store in 8 weeks as sole engineer.",
+        tech: "Swift · SwiftUI · Hono · TypeScript · AWS · Gemini",
       },
       {
         company: "BRUNOSOFT",
         title: "Software Engineering Intern",
         period: "Oct 2025 – Present",
         description:
-          "Migrating 100+ AngularJS components to Angular 17 via ngUpgrade. Built Docker/Kubernetes CI pipeline that cut deploy times from 45min to 12min. Team of 5 engineers.",
-        tech: "Angular · Docker · Kubernetes · PHP",
+          "Led migration of 100+ AngularJS components to Angular with lazy-loaded routing and modular state management, reducing bundle size by ~30% and build times by ~40%. Containerized dev and prod environments with Docker/docker-compose, cutting setup from 2+ hrs to 15 min; configured Kubernetes for zero-downtime releases.",
+        tech: "Angular · Docker · Kubernetes · CI/CD",
       },
       {
         company: "APPLE",
@@ -41,8 +41,8 @@ const experiences = [
         title: "Systems Integration Specialist",
         period: "Jul 2022 – Feb 2024",
         description:
-          "Built internal tools that cut partner communication from 24hrs to 8hrs average. Managed software integrations for 15+ corporate transportation clients.",
-        tech: "Operations · Software Integration",
+          "Integrated FastTrak booking API with internal dispatch via REST, automating reservations for 50+ affiliates and reducing manual entry by 40% across 3,000+ weekly bookings. Built real-time ride tracking workflows improving coordination for 15+ corporate accounts, reducing partner response times by 30%.",
+        tech: "REST APIs · Operations · Software Integration",
       },
     ],
   },

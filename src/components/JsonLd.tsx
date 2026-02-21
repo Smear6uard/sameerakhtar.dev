@@ -13,7 +13,7 @@ export function JsonLd() {
     worksFor: {
       "@type": "Organization",
       name: "Styleum",
-      url: "https://styleum.co",
+      url: "https://styleum.xyz",
     },
     alumniOf: {
       "@type": "CollegeOrUniversity",
@@ -25,7 +25,12 @@ export function JsonLd() {
       "Next.js",
       "TypeScript",
       "Python",
+      "Swift",
+      "SwiftUI",
+      "Machine Learning",
+      "Computer Vision",
       "AI Development",
+      "iOS Development",
       "Startup Founding",
     ],
   };
@@ -36,7 +41,7 @@ export function JsonLd() {
     name: "Sameer Akhtar",
     url: "https://sameerakhtar.dev",
     description:
-      "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul. Previously BRUNOSOFT, Apple.",
+      "Founder of Styleum — AI outfit generation at $0.002/call. Software engineering intern at Brunosoft. Math & CS at DePaul. Previously Apple.",
     author: {
       "@type": "Person",
       name: "Sameer Akhtar",
@@ -50,7 +55,7 @@ export function JsonLd() {
       "@type": "Person",
       name: "Sameer Akhtar",
       description:
-        "Software Engineer and Founder building Styleum. DePaul University student.",
+        "Software Engineer and Founder building Styleum. Mathematics & Computer Science at DePaul University.",
       image: "https://sameerakhtar.dev/profile.jpg",
     },
   };

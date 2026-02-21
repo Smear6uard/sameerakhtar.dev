@@ -144,7 +144,7 @@ The goal isn't just cheap AI—it's sustainable AI. If costs scale linearly with
 
 ---
 
-*Building something similar? I'm happy to chat about AI cost optimization. Reach out on [LinkedIn](https://linkedin.com/in/sameer-a-akhtar) or [email](mailto:Sameer_Akhtar@icloud.com).*
+*Building something similar? I'm happy to chat about AI cost optimization. Reach out on [LinkedIn](https://linkedin.com/in/sameer-a-akhtar) or [email](mailto:sameer@sameerakhtar.dev).*
     `.trim(),
   },
 ];

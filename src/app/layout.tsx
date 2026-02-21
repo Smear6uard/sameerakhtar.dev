@@ -12,8 +12,9 @@ import { JsonLd } from "@/components/JsonLd";
 import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
 import { KonamiEasterEgg } from "@/components/KonamiEasterEgg";
 import { GSAPProvider } from "@/components/providers/GSAPProvider";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
+import { PageTransition } from "@/components/providers/PageTransition";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const satoshi = localFont({
   src: [
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     template: "%s | Sameer Akhtar",
   },
   description:
-    "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul University. Previously BRUNOSOFT, Apple.",
+    "Founder of Styleum — AI outfit generation at $0.002/call. Software engineering intern at Brunosoft. Math & CS at DePaul University. Previously Apple.",
   keywords: [
     "Sameer Akhtar",
     "Software Engineer",
@@ -47,11 +48,15 @@ export const metadata: Metadata = {
     "Styleum",
     "Startup Founder",
     "AI Developer",
+    "iOS Developer",
+    "Swift Developer",
     "React Developer",
     "Next.js Developer",
     "TypeScript",
     "JavaScript",
     "Python",
+    "Machine Learning",
+    "Computer Vision",
     "DePaul University",
     "Chicago Developer",
     "Tech Entrepreneur",
@@ -70,7 +75,7 @@ export const metadata: Metadata = {
     url: "https://sameerakhtar.dev",
     title: "Sameer Akhtar | Software Engineer & Founder",
     description:
-      "Building Styleum, an AI-powered personal styling platform. Software engineering student at DePaul. Previously BRUNOSOFT, Apple.",
+      "Founder of Styleum — AI outfit generation at $0.002/call. Software engineering intern at Brunosoft. Math & CS at DePaul. Previously Apple.",
     siteName: "Sameer Akhtar",
     images: [
       {
@@ -85,7 +90,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sameer Akhtar | Software Engineer & Founder",
     description:
-      "Building Styleum, an AI-powered personal styling platform. CS @ DePaul.",
+      "Founder of Styleum — AI outfit generation at $0.002/call. Math & CS @ DePaul.",
     creator: "@sameerakhtar",
     site: "@sameerakhtar",
     images: [
@@ -119,7 +124,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${satoshi.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${satoshi.variable} ${jetbrains.variable}`} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -143,7 +148,9 @@ export default function RootLayout({
                 <Cursor />
                 <SideNav />
                 <MobileNav />
-                <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
+                <main className="md:pl-[72px] pb-20 md:pb-0">
+                  <PageTransition>{children}</PageTransition>
+                </main>
                 <Footer />
                 <Analytics />
               </SmoothScroll>

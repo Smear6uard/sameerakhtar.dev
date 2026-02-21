@@ -8,10 +8,14 @@ import { AIRoutingDemo } from "@/components/ui/AIRoutingDemo";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 import { ParallaxBackground } from "@/components/ui/ParallaxBackground";
 import { CopyEmail } from "@/components/ui/CopyEmail";
+import { WaveText } from "@/components/ui/CylinderText";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
+
+// Feature flag for 3D effect - can toggle between simple and advanced
+const USE_3D_TEXT = true;
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -94,29 +98,57 @@ export function HeroSection() {
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
                   <span className="inline-block animate-pulse mr-2">●</span>
-                  i make AI systems 10x cheaper
+                  building AI that ships to the App Store
                 </motion.p>
 
-                <h1
-                  ref={headingRef}
-                  className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight"
-                >
-                  {nameChars.map((char, index) => (
-                    <motion.span
-                      key={index}
-                      className="char inline-block"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.1 + index * 0.03,
-                        ease: [0.25, 0.46, 0.45, 0.94],
-                      }}
-                    >
-                      {char === " " ? "\u00A0" : char}
-                    </motion.span>
-                  ))}
-                </h1>
+                {/* 3D Text effect on desktop, simple animation on mobile */}
+                {USE_3D_TEXT ? (
+                  <>
+                    {/* Desktop: 3D Wave Text */}
+                    <div className="hidden md:block">
+                      <WaveText text={name} />
+                    </div>
+                    {/* Mobile: Simple animation */}
+                    <h1 className="md:hidden text-5xl font-bold text-text-primary tracking-tight">
+                      {nameChars.map((char, index) => (
+                        <motion.span
+                          key={index}
+                          className="char inline-block"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{
+                            duration: 0.4,
+                            delay: 0.1 + index * 0.03,
+                            ease: [0.25, 0.46, 0.45, 0.94],
+                          }}
+                        >
+                          {char === " " ? "\u00A0" : char}
+                        </motion.span>
+                      ))}
+                    </h1>
+                  </>
+                ) : (
+                  <h1
+                    ref={headingRef}
+                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight"
+                  >
+                    {nameChars.map((char, index) => (
+                      <motion.span
+                        key={index}
+                        className="char inline-block"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: 0.1 + index * 0.03,
+                          ease: [0.25, 0.46, 0.45, 0.94],
+                        }}
+                      >
+                        {char === " " ? "\u00A0" : char}
+                      </motion.span>
+                    ))}
+                  </h1>
+                )}
                 <motion.p
                   className="text-lg md:text-xl text-text-secondary mt-3"
                   initial={{ opacity: 0 }}
@@ -133,9 +165,9 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.7 }}
                 className="mt-6 text-text-secondary max-w-lg text-lg leading-relaxed"
               >
-                Every styling request on{" "}
+                Every outfit on{" "}
                 <a
-                  href="https://styleum.co"
+                  href="https://styleum.xyz"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent link-underline"
@@ -146,8 +178,8 @@ export function HeroSection() {
                 <span className="text-accent font-mono font-semibold">
                   $0.002
                 </span>
-                . That&apos;s a 6-stage AI pipeline processing your wardrobe for
-                less than a penny.
+                . That&apos;s a 5-stage ML pipeline — from wardrobe scan to styled
+                outfit — shipped to the App Store in 8 weeks.
               </motion.p>
 
               <motion.p
@@ -156,7 +188,7 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.8 }}
                 className="mt-4 text-text-muted text-base"
               >
-                Engineering at BRUNOSOFT. CS at DePaul.
+                Engineering at Brunosoft. Math &amp; CS at DePaul.
               </motion.p>
 
               <motion.div
@@ -202,7 +234,7 @@ export function HeroSection() {
                   </MagneticWrapper>
                   <MagneticWrapper radius={60} maxDistance={8}>
                     <CopyEmail
-                      email="Sameer_Akhtar@icloud.com"
+                      email="sameer@sameerakhtar.dev"
                       className="text-text-muted hover:text-accent transition-colors duration-300"
                     >
                       <svg
@@ -238,7 +270,7 @@ export function HeroSection() {
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
                   </svg>
-                  <span>Writing a tech newsletter for 300+ builders</span>
+                  <span>Writing a tech newsletter for 500+ subscribers</span>
                 </motion.div>
               </motion.div>
 
@@ -282,7 +314,7 @@ export function HeroSection() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="hidden lg:block"
+              className="hidden lg:block mt-16"
             >
               <AIRoutingDemo />
             </motion.div>
