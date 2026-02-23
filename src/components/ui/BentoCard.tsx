@@ -32,7 +32,7 @@ export function BentoCard({
       className={`
         ${colClass} ${rowClass}
         group relative overflow-hidden rounded-xl
-        bg-bg-secondary/50 backdrop-blur-sm
+        bg-bg-secondary/50 md:backdrop-blur-sm
         border border-white/[0.06]
         ${hover ? "hover:border-accent/30 hover:shadow-[0_0_30px_rgba(249,115,22,0.08)]" : ""}
         transition-all duration-300 ease-out

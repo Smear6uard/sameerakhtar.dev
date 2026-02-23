@@ -108,24 +108,15 @@ export function HeroSection() {
                     <div className="hidden md:block">
                       <WaveText text={name} />
                     </div>
-                    {/* Mobile: Simple animation */}
-                    <h1 className="md:hidden text-5xl font-bold text-text-primary tracking-tight">
-                      {nameChars.map((char, index) => (
-                        <motion.span
-                          key={index}
-                          className="char inline-block"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            duration: 0.4,
-                            delay: 0.1 + index * 0.03,
-                            ease: [0.25, 0.46, 0.45, 0.94],
-                          }}
-                        >
-                          {char === " " ? "\u00A0" : char}
-                        </motion.span>
-                      ))}
-                    </h1>
+                    {/* Mobile: Simple fade-in (no per-char stagger) */}
+                    <motion.h1
+                      className="md:hidden text-5xl font-bold text-text-primary tracking-tight"
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.1 }}
+                    >
+                      {name}
+                    </motion.h1>
                   </>
                 ) : (
                   <h1
@@ -153,21 +144,21 @@ export function HeroSection() {
                   className="text-lg md:text-xl text-text-secondary mt-3"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
                 >
                   Software Engineer & Founder
                 </motion.p>
               </motion.div>
 
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
                 className="mt-6 text-text-secondary max-w-lg text-lg leading-relaxed"
               >
                 Every outfit on{" "}
                 <a
-                  href="https://styleum.xyz"
+                  href="https://apps.apple.com/us/app/styleum-daily-fits/id6757777880"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-accent link-underline"
@@ -183,18 +174,18 @@ export function HeroSection() {
               </motion.p>
 
               <motion.p
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
+                transition={{ duration: 0.4, delay: 0.45 }}
                 className="mt-4 text-text-muted text-base"
               >
                 Engineering at Brunosoft. Math &amp; CS at DePaul.
               </motion.p>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.9 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
                 className="mt-8 flex flex-col gap-4"
               >
                 <div className="flex items-center gap-6">
@@ -254,7 +245,7 @@ export function HeroSection() {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5, delay: 1.1 }}
+                  transition={{ duration: 0.4, delay: 0.55 }}
                   className="flex items-center gap-2 text-sm text-text-muted"
                 >
                   <svg
@@ -278,7 +269,7 @@ export function HeroSection() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1.3 }}
+                transition={{ duration: 0.4, delay: 0.6 }}
                 className="mt-12 hidden lg:flex items-center gap-3 text-text-muted text-sm"
               >
                 <motion.div
@@ -322,9 +313,9 @@ export function HeroSection() {
 
           {/* Mobile - AI Pipeline Demo below text */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
             className="lg:hidden mt-12"
           >
             <AIRoutingDemo />

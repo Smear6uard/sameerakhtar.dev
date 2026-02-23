@@ -76,7 +76,7 @@ export function MobileNav() {
           );
         })}
         <a
-          href="/Sameer-Akhtar-Resume.pdf"
+          href="/Sameer_Akhtar_Resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
           className="flex flex-col items-center justify-center gap-1 px-4 py-2 text-accent"

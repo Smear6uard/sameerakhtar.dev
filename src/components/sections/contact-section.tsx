@@ -40,7 +40,7 @@ export function ContactSection() {
             </MagneticWrapper>
             <MagneticWrapper radius={100} maxDistance={6}>
               <a
-                href="/Sameer-Akhtar-Resume.pdf"
+                href="/Sameer_Akhtar_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary"

@@ -60,7 +60,7 @@ export function Navigation() {
           ))}
           <MagneticWrapper radius={100} maxDistance={8}>
             <a
-              href="/Sameer-Akhtar-Resume.pdf"
+              href="/Sameer_Akhtar_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-accent border border-accent/50 px-4 py-2 rounded hover:bg-accent/10 transition-colors"
@@ -126,7 +126,7 @@ export function Navigation() {
               </Link>
             ))}
             <a
-              href="/Sameer-Akhtar-Resume.pdf"
+              href="/Sameer_Akhtar_Resume.pdf"
               target="_blank"
               className="text-xl text-accent"
             >

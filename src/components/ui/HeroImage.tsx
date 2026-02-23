@@ -37,7 +37,7 @@ export function HeroImage({ src, alt }: { src: string; alt: string }) {
         {(hasError || isLoading) && (
           <div className="absolute inset-0 flex items-center justify-center">
             <span className="text-text-muted/30 text-sm font-mono">
-              {hasError ? "screenshot coming soon" : ""}
+              {""}
             </span>
           </div>
         )}

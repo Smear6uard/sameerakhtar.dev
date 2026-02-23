@@ -15,7 +15,7 @@ const projects = [
       "5-stage ML pipeline (BiRefNet, Florence-2, FashionSigLIP, AWS Rekognition, Gemini) generating AI outfits at $0.002 each — 40% below competitors. Full-stack iOS app shipped to the App Store in 8 weeks.",
     metric: "$0.002/outfit",
     slug: "styleum",
-    live: "https://styleum.xyz",
+    live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
     image: "/projects/styleum-hero.png",
     imageAlt: "Styleum AI styling iOS app interface",
     gradient: "from-orange-500/20 to-amber-500/10",
@@ -355,11 +355,7 @@ function ProjectImage({
         <span className="text-[100px] md:text-[140px] font-bold text-white/[0.04] select-none">
           {fallbackNum}
         </span>
-        {hasError && (
-          <span className="absolute bottom-4 text-xs text-text-muted/50 font-mono">
-            screenshot coming soon
-          </span>
-        )}
+        {hasError && null}
       </div>
     );
   }

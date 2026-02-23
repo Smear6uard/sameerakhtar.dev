@@ -216,7 +216,7 @@ export function SideNav() {
         {/* Resume link */}
         <MagneticWrapper radius={60} maxDistance={5}>
           <a
-            href="/Sameer-Akhtar-Resume.pdf"
+            href="/Sameer_Akhtar_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Download resume"

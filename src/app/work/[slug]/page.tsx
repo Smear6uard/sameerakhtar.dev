@@ -31,7 +31,7 @@ const projects: Record<string, Project> = {
     timeline: "Dec 2025 – Present",
     role: "Founder & Engineer",
     stack: ["Swift", "SwiftUI", "Hono", "TypeScript", "AWS Rekognition", "BiRefNet", "Florence-2", "FashionSigLIP", "Gemini"],
-    live: "https://styleum.xyz",
+    live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
     heroImage: "/projects/styleum-hero.png",
     metrics: [
       { label: "Cost per Outfit", value: "$0.002" },

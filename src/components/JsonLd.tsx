@@ -13,7 +13,7 @@ export function JsonLd() {
     worksFor: {
       "@type": "Organization",
       name: "Styleum",
-      url: "https://styleum.xyz",
+      url: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
     },
     alumniOf: {
       "@type": "CollegeOrUniversity",

@@ -14,10 +14,10 @@ const techStack = {
 };
 
 const photos = [
-  { src: "/photography/photo1.jpg", alt: "Street photography" },
-  { src: "/photography/photo2.jpg", alt: "Architecture shot" },
-  { src: "/photography/photo3.jpg", alt: "Portrait photography" },
-  { src: "/photography/photo4.jpg", alt: "Urban landscape" },
+  { src: "/photography/DSCF0606.JPG", alt: "Photography by Sameer Akhtar" },
+  { src: "/photography/DSCF1295.JPG", alt: "Photography by Sameer Akhtar" },
+  { src: "/photography/DSCF1748.JPG", alt: "Photography by Sameer Akhtar" },
+  { src: "/photography/DSCF2111.jpg", alt: "Photography by Sameer Akhtar" },
 ];
 
 export function AboutSection() {
@@ -40,12 +40,12 @@ export function AboutSection() {
           <BentoCard colSpan={2} rowSpan={2} delay={0} className="p-0">
             <div className="h-full flex flex-col">
               {/* Profile Image */}
-              <div className="relative h-64 md:h-72 overflow-hidden">
+              <div className="relative h-64 md:h-[26rem] overflow-hidden">
                 <Image
                   src="/profile.jpg"
                   alt="Sameer Akhtar"
                   fill
-                  className="object-cover object-[center_25%]"
+                  className="object-cover object-[center_55%]"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary/60 via-transparent to-transparent" />
@@ -108,7 +108,7 @@ export function AboutSection() {
               <p className="text-sm text-text-secondary mt-1">AI styling iOS app — $0.002/outfit</p>
             </div>
             <a
-              href="https://styleum.xyz"
+              href="https://apps.apple.com/us/app/styleum-daily-fits/id6757777880"
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-accent link-underline mt-4 inline-flex items-center gap-1"
@@ -223,9 +223,9 @@ function PhotoGallery({ photos }: { photos: { src: string; alt: string }[] }) {
   const [hasError, setHasError] = useState<Record<number, boolean>>({});
 
   return (
-    <div className="h-full min-h-[200px] relative group">
+    <div className="flex flex-col">
       {/* Main image */}
-      <div className="absolute inset-0">
+      <div className="relative h-[280px] overflow-hidden rounded-t-xl">
         {!hasError[activeIndex] ? (
           <Image
             src={photos[activeIndex].src}
@@ -247,16 +247,21 @@ function PhotoGallery({ photos }: { photos: { src: string; alt: string }[] }) {
             </div>
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary/80 via-transparent to-transparent" />
+        {/* Label */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="text-xs uppercase tracking-wider text-white/80 font-mono bg-black/30 backdrop-blur-sm px-2 py-1 rounded">
+            Photography
+          </span>
+        </div>
       </div>
 
-      {/* Thumbnail strip */}
-      <div className="absolute bottom-4 left-4 right-4 flex gap-2">
+      {/* Thumbnail strip - below the image */}
+      <div className="flex gap-2 px-4 py-3">
         {photos.map((photo, i) => (
           <button
             key={i}
             onClick={() => setActiveIndex(i)}
-            className={`relative h-12 flex-1 rounded-lg overflow-hidden transition-all duration-200 ${
+            className={`relative h-14 flex-1 rounded-lg overflow-hidden transition-all duration-200 ${
               i === activeIndex
                 ? "ring-2 ring-accent ring-offset-2 ring-offset-bg-secondary"
                 : "opacity-60 hover:opacity-100"
@@ -278,13 +283,6 @@ function PhotoGallery({ photos }: { photos: { src: string; alt: string }[] }) {
             )}
           </button>
         ))}
-      </div>
-
-      {/* Label */}
-      <div className="absolute top-4 left-4">
-        <span className="text-xs uppercase tracking-wider text-white/80 font-mono bg-black/30 backdrop-blur-sm px-2 py-1 rounded">
-          Photography
-        </span>
       </div>
     </div>
   );

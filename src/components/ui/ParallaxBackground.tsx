@@ -59,16 +59,21 @@ const orbs: FloatingOrb[] = [
 export function ParallaxBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
   const orbRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const isMobileRef = useRef(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
     if (prefersReducedMotion) return;
+
+    isMobileRef.current = window.innerWidth < 768;
+
+    // On mobile, skip GSAP animations entirely — just show static orbs
+    if (isMobileRef.current) return;
 
     const ctx = gsap.context(() => {
       orbRefs.current.forEach((orb, index) => {
@@ -113,7 +118,7 @@ export function ParallaxBackground() {
           ref={(el) => {
             orbRefs.current[index] = el;
           }}
-          className="absolute rounded-full"
+          className="absolute rounded-full will-change-transform"
           style={{
             width: orb.size,
             height: orb.size,
@@ -121,14 +126,14 @@ export function ParallaxBackground() {
             top: orb.y,
             background: `radial-gradient(circle, ${orb.color} 0%, transparent 70%)`,
             filter: `blur(${orb.blur}px)`,
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) translateZ(0)",
           }}
         />
       ))}
 
       {/* Noise texture overlay for depth */}
       <div
-        className="absolute inset-0 opacity-[0.015]"
+        className="absolute inset-0 opacity-[0.015] hidden md:block"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
         }}
