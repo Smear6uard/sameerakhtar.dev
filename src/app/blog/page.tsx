@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { blogPosts } from "@/lib/blog-posts";
+import { blogPosts, formatBlogDate } from "@/lib/blog-posts";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -43,11 +43,7 @@ export default function BlogPage() {
               <article className="border border-white/10 rounded-lg p-6 hover:border-accent/30 hover:bg-white/[0.02] transition-all group">
                 <div className="flex items-center gap-3 mb-3">
                   <time className="font-mono text-xs text-text-muted">
-                    {new Date(post.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
+                    {formatBlogDate(post.date)}
                   </time>
                   <span className="text-text-muted/40">·</span>
                   <span className="font-mono text-xs text-text-muted">

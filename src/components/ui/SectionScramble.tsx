@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -14,24 +14,7 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
-    if (hasAnimated) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          runScramble();
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [hasAnimated, text]);
-
-  const runScramble = () => {
+  const runScramble = useCallback(() => {
     const scrambleFrames = 10; // Pure scramble before decode starts
     const decodeFrames = 20; // Frames to decode
     const intervalMs = 40;
@@ -73,7 +56,24 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
         setDisplayText(text);
       }
     }, intervalMs);
-  };
+  }, [text]);
+
+  useEffect(() => {
+    if (hasAnimated) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          runScramble();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [hasAnimated, runScramble]);
 
   return (
     <span ref={ref} className={className}>

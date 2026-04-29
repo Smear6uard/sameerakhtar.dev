@@ -2,12 +2,19 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { ProjectArchitectureVisual } from "@/components/ui/ProjectArchitectureVisual";
 
-export function HeroImage({ src, alt }: { src: string; alt: string }) {
+export function HeroImage({ src, alt }: { src?: string; alt: string }) {
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(Boolean(src));
 
   useEffect(() => {
+    if (!src) {
+      setIsLoading(false);
+      setHasError(true);
+      return;
+    }
+
     // Check if image exists
     const img = new window.Image();
     img.src = src;
@@ -24,7 +31,10 @@ export function HeroImage({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="max-w-5xl mx-auto px-6 mb-12">
       <div className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-gradient-to-br from-accent/10 to-purple-500/10">
-        {!hasError && !isLoading && (
+        {(hasError || isLoading) && (
+          <ProjectArchitectureVisual src={src} title={alt} />
+        )}
+        {src && !hasError && !isLoading && (
           <Image
             src={src}
             alt={alt}
@@ -32,14 +42,6 @@ export function HeroImage({ src, alt }: { src: string; alt: string }) {
             className="object-cover"
             priority
           />
-        )}
-        {/* Fallback content shown if image fails or is loading */}
-        {(hasError || isLoading) && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-text-muted/30 text-sm font-mono">
-              {""}
-            </span>
-          </div>
         )}
       </div>
     </div>

@@ -3,16 +3,17 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
-  { href: "#work", label: "work", icon: "work" },
-  { href: "#experience", label: "experience", icon: "experience" },
-  { href: "#about", label: "about", icon: "about" },
-  { href: "/blog", label: "blog", icon: "blog" },
+  { href: "/#work", label: "work", icon: "work", section: "work" },
+  { href: "/#experience", label: "experience", icon: "experience", section: "experience" },
+  { href: "/#about", label: "about", icon: "about", section: "about" },
+  { href: "/blog", label: "blog", icon: "blog", section: "blog" },
 ];
 
 function NavIcon({ type }: { type: string }) {
@@ -49,6 +50,8 @@ function NavIcon({ type }: { type: string }) {
 export function SideNav() {
   const [isExpanded, setIsExpanded] = useState(false);
   const activeSection = useActiveSection();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const { scrollYProgress } = useScroll();
   const scaleY = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -96,8 +99,10 @@ export function SideNav() {
       {/* Nav Links */}
       <div className="flex-1 flex flex-col justify-center gap-2 px-3">
         {navLinks.map((link) => {
-          const sectionId = link.href.replace("#", "");
-          const isActive = activeSection === sectionId;
+          const isActive =
+            link.section === "blog"
+              ? pathname.startsWith("/blog")
+              : isHome && activeSection === link.section;
 
           return (
             <MagneticWrapper key={link.href} radius={70} maxDistance={6}>

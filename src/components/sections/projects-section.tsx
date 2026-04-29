@@ -6,8 +6,22 @@ import Link from "next/link";
 import Image from "next/image";
 import Tilt from "react-parallax-tilt";
 import { SectionScramble } from "@/components/ui/SectionScramble";
+import { ProjectArchitectureVisual } from "@/components/ui/ProjectArchitectureVisual";
 
-const projects = [
+type ProjectCard = {
+  num: string;
+  title: string;
+  description: string;
+  metric: string;
+  slug: string;
+  live?: string;
+  github?: string;
+  image?: string;
+  imageAlt: string;
+  gradient: string;
+};
+
+const projects: ProjectCard[] = [
   {
     num: "01",
     title: "Styleum",
@@ -16,7 +30,6 @@ const projects = [
     metric: "$0.002/outfit",
     slug: "styleum",
     live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
-    image: "/projects/styleum-hero.png",
     imageAlt: "Styleum AI styling iOS app interface",
     gradient: "from-orange-500/20 to-amber-500/10",
   },
@@ -28,7 +41,6 @@ const projects = [
     metric: "15+ FPS",
     slug: "hazardlens",
     github: "https://github.com/Smear6uard/HazardLens",
-    image: "/projects/hazardlens.png",
     imageAlt: "HazardLens real-time safety detection dashboard",
     gradient: "from-red-500/20 to-orange-500/10",
   },
@@ -40,7 +52,6 @@ const projects = [
     metric: "40% cost savings",
     slug: "llm-router",
     github: "https://github.com/Smear6uard/Intelligent-LLM-Router",
-    image: "/projects/llm-router.png",
     imageAlt: "Intelligent LLM Router analytics dashboard",
     gradient: "from-blue-500/20 to-cyan-500/10",
   },
@@ -53,7 +64,6 @@ const projects = [
     slug: "deepcite",
     github: "https://github.com/Smear6uard/DeepCite",
     live: "https://deep-cite-git-main-sameer-akhtars-projects.vercel.app/",
-    image: "/projects/deepcite.png",
     imageAlt: "DeepCite AI research engine interface",
     gradient: "from-green-500/20 to-emerald-500/10",
   },
@@ -223,6 +233,7 @@ export function ProjectsSection() {
                     src={project.image}
                     alt={project.imageAlt}
                     fallbackNum={project.num}
+                    title={project.title}
                   />
                   <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300" />
                 </div>
@@ -328,15 +339,23 @@ function ProjectImage({
   src,
   alt,
   fallbackNum,
+  title,
 }: {
-  src: string;
+  src?: string;
   alt: string;
   fallbackNum: string;
+  title: string;
 }) {
   const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(Boolean(src));
 
   useEffect(() => {
+    if (!src) {
+      setIsLoading(false);
+      setHasError(false);
+      return;
+    }
+
     const img = new window.Image();
     img.src = src;
     img.onload = () => {
@@ -349,10 +368,11 @@ function ProjectImage({
     };
   }, [src]);
 
-  if (hasError || isLoading) {
+  if (!src || hasError || isLoading) {
     return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[100px] md:text-[140px] font-bold text-white/[0.04] select-none">
+      <div className="absolute inset-0">
+        <ProjectArchitectureVisual src={src} title={title} variant="thumbnail" />
+        <span className="absolute right-4 top-3 font-mono text-5xl font-bold text-white/[0.05] select-none md:text-7xl">
           {fallbackNum}
         </span>
         {hasError && null}

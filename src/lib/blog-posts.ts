@@ -156,3 +156,13 @@ export function getBlogPost(slug: string): BlogPost | undefined {
 export function getAllBlogSlugs(): string[] {
   return blogPosts.map((post) => post.slug);
 }
+
+export function formatBlogDate(date: string, format: "short" | "long" = "short") {
+  const localDate = new Date(`${date}T12:00:00`);
+
+  return localDate.toLocaleDateString("en-US", {
+    month: format === "long" ? "long" : "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}

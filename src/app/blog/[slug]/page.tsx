@@ -1,7 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { getBlogPost, getAllBlogSlugs, blogPosts } from "@/lib/blog-posts";
+import {
+  getBlogPost,
+  getAllBlogSlugs,
+  blogPosts,
+  formatBlogDate,
+} from "@/lib/blog-posts";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -71,11 +76,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         <header className="mb-12">
           <div className="flex items-center gap-3 mb-4">
             <time className="font-mono text-sm text-text-muted">
-              {new Date(post.date).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              })}
+              {formatBlogDate(post.date, "long")}
             </time>
             <span className="text-text-muted/40">·</span>
             <span className="font-mono text-sm text-text-muted">

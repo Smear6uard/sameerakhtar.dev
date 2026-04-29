@@ -1,4 +1,7 @@
 import { MetadataRoute } from "next";
+import { blogPosts } from "@/lib/blog-posts";
+
+const projectSlugs = ["styleum", "hazardlens", "llm-router", "deepcite"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://sameerakhtar.dev";
@@ -17,23 +20,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/work/styleum`,
+    ...blogPosts.map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: post.date,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+    ...projectSlugs.map((slug) => ({
+      url: `${baseUrl}/work/${slug}`,
       lastModified: currentDate,
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/work/ai-answer-engine`,
-      lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/work/stock-exchange`,
-      lastModified: currentDate,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
+    })),
   ];
 }

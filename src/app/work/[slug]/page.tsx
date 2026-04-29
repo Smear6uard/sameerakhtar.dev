@@ -32,7 +32,6 @@ const projects: Record<string, Project> = {
     role: "Founder & Engineer",
     stack: ["Swift", "SwiftUI", "Hono", "TypeScript", "AWS Rekognition", "BiRefNet", "Florence-2", "FashionSigLIP", "Gemini"],
     live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
-    heroImage: "/projects/styleum-hero.png",
     metrics: [
       { label: "Cost per Outfit", value: "$0.002" },
       { label: "vs. Competitors", value: "40% cheaper" },
@@ -119,7 +118,6 @@ const projects: Record<string, Project> = {
     role: "Solo Developer",
     stack: ["Python", "YOLO26", "OpenCV", "FastAPI", "React"],
     github: "https://github.com/Smear6uard/HazardLens",
-    heroImage: "/projects/hazardlens.png",
     metrics: [
       { label: "Inference Speed", value: "15+ FPS" },
       { label: "Detection Model", value: "YOLO26" },
@@ -210,7 +208,6 @@ const projects: Record<string, Project> = {
     role: "Solo Developer",
     stack: ["Python", "FastAPI", "React", "OpenRouter"],
     github: "https://github.com/Smear6uard/Intelligent-LLM-Router",
-    heroImage: "/projects/llm-router.png",
     metrics: [
       { label: "Cost Reduction", value: "Up to 40%" },
       { label: "Routing Overhead", value: "<50ms" },
@@ -291,7 +288,6 @@ const projects: Record<string, Project> = {
     stack: ["Next.js", "TypeScript", "Groq", "Redis", "Puppeteer"],
     github: "https://github.com/Smear6uard/DeepCite",
     live: "https://deep-cite-git-main-sameer-akhtars-projects.vercel.app/",
-    heroImage: "/projects/deepcite.png",
     metrics: [
       { label: "URLs/Hour", value: "100+" },
       { label: "Perceived Latency", value: "<100ms" },
@@ -509,12 +505,9 @@ export default async function CaseStudy({
         author="Sameer Akhtar"
       />
 
-      {/* Hero image */}
-      {project.heroImage && (
-        <div className="pt-32">
-          <HeroImage src={project.heroImage} alt={project.title} />
-        </div>
-      )}
+      <div className="pt-32">
+        <HeroImage src={project.heroImage} alt={project.title} />
+      </div>
 
       <CaseStudyClient
         title={project.title}
@@ -530,4 +523,3 @@ export default async function CaseStudy({
     </>
   );
 }
-

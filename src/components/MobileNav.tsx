@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { ThemeToggleCompact } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
-  { href: "#work", label: "work", icon: "work" },
-  { href: "#experience", label: "exp", icon: "experience" },
-  { href: "#about", label: "about", icon: "about" },
-  { href: "/blog", label: "blog", icon: "blog" },
+  { href: "/#work", label: "work", icon: "work", section: "work" },
+  { href: "/#experience", label: "exp", icon: "experience", section: "experience" },
+  { href: "/#about", label: "about", icon: "about", section: "about" },
+  { href: "/blog", label: "blog", icon: "blog", section: "blog" },
 ];
 
 function NavIcon({ type, className = "w-5 h-5" }: { type: string; className?: string }) {
@@ -45,6 +46,8 @@ function NavIcon({ type, className = "w-5 h-5" }: { type: string; className?: st
 
 export function MobileNav() {
   const activeSection = useActiveSection();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
     <motion.nav
@@ -56,8 +59,10 @@ export function MobileNav() {
     >
       <div className="flex items-center justify-around h-16 px-2">
         {navLinks.map((link) => {
-          const sectionId = link.href.replace("#", "");
-          const isActive = activeSection === sectionId;
+          const isActive =
+            link.section === "blog"
+              ? pathname.startsWith("/blog")
+              : isHome && activeSection === link.section;
 
           return (
             <Link
