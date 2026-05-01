@@ -42,6 +42,29 @@ function usePrefersReducedMotion(): boolean {
   return reduced
 }
 
+const LENS_VIEWPORT_QUERY = '(min-width: 768px)'
+
+function useDesktopLensEnabled(): boolean {
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const mq = window.matchMedia(LENS_VIEWPORT_QUERY)
+    // Hydrate from external media-query state on mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setEnabled(mq.matches)
+    const listener = (e: MediaQueryListEvent) => {
+      setEnabled(e.matches)
+    }
+    mq.addEventListener('change', listener)
+    return () => {
+      mq.removeEventListener('change', listener)
+    }
+  }, [])
+
+  return enabled
+}
+
 function useDetectionRects(): RectMap {
   const [rects, setRects] = useState<RectMap>({})
 
@@ -162,9 +185,10 @@ export function Hero() {
   const { setPosition, getPosition } = useLensPosition()
   const rects = useDetectionRects()
   const reducedMotion = usePrefersReducedMotion()
+  const desktopLensEnabled = useDesktopLensEnabled()
   const [entranceComplete, setEntranceComplete] = useState(false)
   const [currentDetectionId, setCurrentDetectionId] = useState<string | null>(null)
-  const [heroVisible, setHeroVisible] = useState(true)
+  const [heroDominant, setHeroDominant] = useState(true)
   const sectionRef = useRef<HTMLElement | null>(null)
   const userMovedRef = useRef(false)
   const scanned = useScannedSet(currentDetectionId, userMovedRef)
@@ -174,32 +198,43 @@ export function Hero() {
     const el = sectionRef.current
     if (!el) return
 
-    const checkRect = () => {
+    const measure = () => {
       const rect = el.getBoundingClientRect()
-      const inView = rect.bottom > 0 && rect.top < window.innerHeight
-      setHeroVisible((prev) => (prev === inView ? prev : inView))
+      const vh = window.innerHeight
+      if (vh <= 0) return false
+      const visible = Math.max(0, Math.min(rect.bottom, vh) - Math.max(rect.top, 0))
+      return visible / vh >= 0.4
     }
+
+    setHeroDominant(measure())
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const entry = entries[0]
+        const entry = entries[entries.length - 1]
         if (!entry) return
-        setHeroVisible(entry.isIntersecting)
+        const vh = window.innerHeight
+        if (vh <= 0) return
+        const visiblePortion = entry.intersectionRect.height / vh
+        setHeroDominant(visiblePortion >= 0.4)
       },
-      { threshold: 0 },
+      { threshold: Array.from({ length: 21 }, (_, i) => i / 20) },
     )
     observer.observe(el)
 
+    // Defensive rAF-throttled fallback: in some embedded contexts the
+    // IntersectionObserver callback doesn't fire even though scroll happens.
+    // This costs at most one rect read per animation frame and only runs
+    // setState when the boolean flips, so it's cheap and safe.
     let raf: number | null = null
+    const handle = () => {
+      raf = null
+      const next = measure()
+      setHeroDominant((prev) => (prev === next ? prev : next))
+    }
     const schedule = () => {
       if (raf !== null) return
-      raf = window.requestAnimationFrame(() => {
-        raf = null
-        checkRect()
-      })
+      raf = window.requestAnimationFrame(handle)
     }
-
-    checkRect()
     window.addEventListener('scroll', schedule, { passive: true })
     window.addEventListener('resize', schedule, { passive: true })
 
@@ -271,6 +306,8 @@ export function Hero() {
     }
   }, [rects])
 
+  const lensActive = heroDominant && desktopLensEnabled
+
   return (
     <section
       ref={sectionRef}
@@ -294,7 +331,7 @@ export function Hero() {
         </h1>
 
         <p
-          className="text-fg max-w-[34ch] font-[family-name:var(--font-display)] text-2xl leading-[1.18] sm:max-w-[42ch] sm:text-[clamp(22px,2.4vw,34px)]"
+          className="text-fg max-w-[34ch] text-2xl leading-[1.22] font-medium sm:max-w-[42ch] sm:text-[clamp(22px,2.4vw,32px)]"
           style={fadeStyle(540)}
         >
           <span className="hero-fade-in" style={fadeStyle(540)}>
@@ -331,9 +368,9 @@ export function Hero() {
         </p>
       </div>
 
-      {heroVisible && <DetectionLayer rects={rects} />}
-      {heroVisible && <Lens mode={mode} detection={detection} onCycle={cycleMode} />}
-      {heroVisible && (
+      {lensActive && <DetectionLayer rects={rects} />}
+      {lensActive && <Lens mode={mode} detection={detection} onCycle={cycleMode} />}
+      {lensActive && (
         <EntranceScan
           enabled={!reducedMotion}
           onComplete={() => {
@@ -343,7 +380,7 @@ export function Hero() {
           setLensPosition={setPosition}
         />
       )}
-      {heroVisible && (
+      {lensActive && (
         <AutoTour
           enabled={entranceComplete && !reducedMotion}
           rects={rects}
@@ -352,7 +389,7 @@ export function Hero() {
           userMovedRef={userMovedRef}
         />
       )}
-      {heroVisible && <DetectionCounter scanned={scanned.size} total={TOTAL_TARGETS} />}
+      {lensActive && <DetectionCounter scanned={scanned.size} total={TOTAL_TARGETS} />}
     </section>
   )
 }

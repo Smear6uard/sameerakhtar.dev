@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 
 const PHOTOS = [
-  { id: 'wrigley', src: '/images/wrigley.jpg', label: 'Wrigley' },
-  { id: 'chicago-skyline', src: '/images/chicago-skyline.jpg', label: 'Chicago Skyline' },
-  { id: 'colorado', src: '/images/colorado.jpg', label: 'Colorado' },
-  { id: 'utah', src: '/images/utah.jpg', label: 'Utah' },
-  { id: 'portrait-2', src: '/images/portrait-2.jpg', label: 'Portrait' },
+  { id: 'photo-01', src: '/photography/DSCF0606.JPG', label: 'Photo 01' },
+  { id: 'photo-02', src: '/photography/DSCF1295.JPG', label: 'Photo 02' },
+  { id: 'photo-03', src: '/photography/DSCF1748.JPG', label: 'Photo 03' },
+  { id: 'photo-04', src: '/photography/DSCF2111.jpg', label: 'Photo 04' },
 ] as const
 
 type PhotoId = (typeof PHOTOS)[number]['id']
@@ -52,7 +51,7 @@ function PhotoImg({
 }
 
 export function Photography() {
-  const [activeId, setActiveId] = useState<PhotoId>('wrigley')
+  const [activeId, setActiveId] = useState<PhotoId>('photo-01')
   const [failed, setFailed] = useState<Record<string, boolean>>({})
   const thumbs = PHOTOS.filter((p) => p.id !== activeId)
 

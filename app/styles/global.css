@@ -13,12 +13,11 @@
 }
 
 @font-face {
-  font-family: 'Bricolage Grotesque';
+  font-family: 'Geist Variable';
   font-style: normal;
-  font-weight: 200 800;
-  font-stretch: 75% 100%;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('../../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-standard-normal.woff2')
+  src: url('../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2')
     format('woff2-variations');
   unicode-range:
     U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
@@ -55,7 +54,7 @@
   --color-border: var(--border);
   --color-border-2: var(--border-2);
   --font-display: 'Fraunces', serif;
-  --font-body: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
   --spacing-rail: var(--rail-left);
   --spacing-topbar: var(--topbar-height);
@@ -90,15 +89,15 @@
   html[data-theme='dark'] {
     --bg: #0c0d10;
     --fg: #f2eddf;
-    --fg-2: #8a857a;
-    --fg-3: #4f4d47;
+    --fg-2: #a8a398;
+    --fg-3: #6b6860;
     --fg-4: #2a2925;
     --accent: #e8b548;
     --accent-soft: rgba(232, 181, 72, 0.16);
     --accent-line: rgba(232, 181, 72, 0.55);
     --lens-ring: rgba(232, 181, 72, 0.55);
-    --border: rgba(242, 237, 223, 0.07);
-    --border-2: rgba(242, 237, 223, 0.16);
+    --border: rgba(242, 237, 223, 0.1);
+    --border-2: rgba(242, 237, 223, 0.2);
     --status-live: #5dcaa5;
     color-scheme: dark;
   }
@@ -239,6 +238,13 @@
     will-change: transform, opacity;
     transition: opacity 200ms linear;
     cursor: none;
+  }
+
+  .lens-backdrop,
+  .lens-heat-bloom,
+  .lens-ring {
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .lens-hit {
@@ -990,17 +996,13 @@
   }
 
   .work-card-index {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 7vw, 96px);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(48px, 6vw, 80px);
     line-height: 0.85;
     color: transparent;
     -webkit-text-stroke: 1px var(--fg);
     opacity: 0.14;
-    font-variation-settings:
-      'opsz' 144,
-      'SOFT' 50,
-      'WONK' 0;
-    font-optical-sizing: auto;
     letter-spacing: -0.04em;
     user-select: none;
   }
@@ -1208,17 +1210,12 @@
 
   .work-card-title {
     margin: 0;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(36px, 4.4vw, 56px);
-    line-height: 0.96;
-    letter-spacing: -0.022em;
+    font-size: clamp(36px, 3.6vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 72,
-      'SOFT' 50,
-      'WONK' 0;
-    font-optical-sizing: auto;
     z-index: 1;
   }
 
@@ -1513,17 +1510,12 @@
 
   .case-study-title {
     margin: 12px 0 0 0;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(56px, 8vw, 120px);
-    line-height: 0.95;
-    letter-spacing: -0.025em;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.03em;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 144,
-      'SOFT' 50,
-      'WONK' 1;
-    font-optical-sizing: auto;
   }
 
   .case-study-body {
@@ -1685,17 +1677,12 @@
 
   .timeline-entry-role {
     margin: 0 0 12px 0;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 500;
-    font-size: clamp(22px, 2.2vw, 28px);
-    line-height: 1.15;
+    font-size: clamp(20px, 1.9vw, 24px);
+    line-height: 1.2;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 36,
-      'SOFT' 50,
-      'WONK' 0;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
   }
 
   .timeline-entry-description {
@@ -1942,24 +1929,19 @@
 
   .about-card-title {
     margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(22px, 2.2vw, 28px);
-    line-height: 1.1;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(22px, 2vw, 26px);
+    line-height: 1.15;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 36,
-      'SOFT' 50,
-      'WONK' 0;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
   }
 
   .about-card-sub {
     margin: 6px 0 0;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--fg-3);
   }
 
@@ -2033,26 +2015,20 @@
 
   .newsletter-card-number {
     display: block;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(64px, 8vw, 96px);
-    line-height: 0.9;
+    font-size: clamp(56px, 7vw, 80px);
+    line-height: 0.92;
     color: var(--accent);
-    font-variation-settings:
-      'opsz' 96,
-      'SOFT' 50,
-      'WONK' 1;
-    font-optical-sizing: auto;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.03em;
     margin-top: 4px;
   }
 
   .newsletter-card-label {
     display: block;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--fg-3);
     margin-top: 6px;
   }
@@ -2280,24 +2256,19 @@
 
   .education-card-text-school {
     margin: 0;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: clamp(22px, 2.2vw, 28px);
-    line-height: 1.1;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(22px, 2vw, 26px);
+    line-height: 1.15;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 36,
-      'SOFT' 50,
-      'WONK' 0;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
   }
 
   .education-card-text-meta {
     margin: 6px 0 0;
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.45;
     color: var(--fg-3);
   }
 
@@ -2317,26 +2288,20 @@
 
   .education-card-stat-number {
     display: block;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(48px, 6vw, 72px);
-    line-height: 0.9;
+    font-size: clamp(44px, 5.4vw, 64px);
+    line-height: 0.92;
     color: var(--accent);
-    font-variation-settings:
-      'opsz' 72,
-      'SOFT' 50,
-      'WONK' 1;
-    font-optical-sizing: auto;
     letter-spacing: -0.03em;
   }
 
   .education-card-stat-label {
     display: block;
     margin-top: 6px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.4;
     color: var(--fg-3);
   }
 
@@ -2474,6 +2439,12 @@
     padding: 0 4px;
   }
 
+  @media (max-width: 720px) {
+    section[id='contact'].section {
+      padding-bottom: calc(56px + 24px + clamp(56px, 8vh, 96px));
+    }
+  }
+
   /* Page footer
      ---------------------------------------------------------------------- */
 
@@ -2517,17 +2488,12 @@
 
   .writing-placeholder-title {
     margin: 18px 0 24px;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
     font-weight: 600;
-    font-size: clamp(48px, 7vw, 88px);
+    font-size: clamp(44px, 6.4vw, 80px);
     line-height: 1;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     color: var(--fg);
-    font-variation-settings:
-      'opsz' 96,
-      'SOFT' 50,
-      'WONK' 1;
-    font-optical-sizing: auto;
   }
 
   .writing-placeholder-body {

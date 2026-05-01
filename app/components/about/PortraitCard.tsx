@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const PORTRAIT_SRC = '/images/portrait.jpg'
+const PORTRAIT_SRC = '/profile.jpg'
 
 export function PortraitCard() {
   const imgRef = useRef<HTMLImageElement | null>(null)
