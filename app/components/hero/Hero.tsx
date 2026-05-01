@@ -264,8 +264,9 @@ export function Hero() {
           </span>
           <span className="hero-fade-in" style={fadeStyle(540)}>
             {' '}
-            systems that ship. From <span data-annotation="research-labs">research labs</span> to
-            the <span data-annotation="app-store">App Store</span>.
+            systems that ship. From <span data-annotation="research-labs">
+              research labs
+            </span> to <span data-annotation="production">production</span>.
           </span>
         </p>
 

@@ -53,7 +53,7 @@ export const ANNOTATIONS: readonly Annotation[] = [
     label: 'DOMAIN',
     confidence: 0.84,
   },
-  { id: 'app-store', kind: 'real', targetId: 'app-store', label: 'PLATFORM', confidence: 0.91 },
+  { id: 'production', kind: 'real', targetId: 'production', label: 'DOMAIN', confidence: 0.89 },
   {
     id: 'institution',
     kind: 'real',
@@ -92,7 +92,7 @@ export const TOUR_POINTS: readonly TourPoint[] = [
   { annotationId: 'computer-vision', holdMs: 1100 },
   { annotationId: 'period', holdMs: 900 },
   { annotationId: 'mentor', holdMs: 1000 },
-  { annotationId: 'app-store', holdMs: 1000 },
+  { annotationId: 'production', holdMs: 1000 },
   { annotationId: 'availability', holdMs: 1100 },
 ] as const
 
