@@ -164,8 +164,52 @@ export function Hero() {
   const reducedMotion = usePrefersReducedMotion()
   const [entranceComplete, setEntranceComplete] = useState(false)
   const [currentDetectionId, setCurrentDetectionId] = useState<string | null>(null)
+  const [heroVisible, setHeroVisible] = useState(true)
+  const sectionRef = useRef<HTMLElement | null>(null)
   const userMovedRef = useRef(false)
   const scanned = useScannedSet(currentDetectionId, userMovedRef)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const el = sectionRef.current
+    if (!el) return
+
+    const checkRect = () => {
+      const rect = el.getBoundingClientRect()
+      const inView = rect.bottom > 0 && rect.top < window.innerHeight
+      setHeroVisible((prev) => (prev === inView ? prev : inView))
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry) return
+        setHeroVisible(entry.isIntersecting)
+      },
+      { threshold: 0 },
+    )
+    observer.observe(el)
+
+    let raf: number | null = null
+    const schedule = () => {
+      if (raf !== null) return
+      raf = window.requestAnimationFrame(() => {
+        raf = null
+        checkRect()
+      })
+    }
+
+    checkRect()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule, { passive: true })
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      if (raf !== null) window.cancelAnimationFrame(raf)
+    }
+  }, [])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -229,6 +273,7 @@ export function Hero() {
 
   return (
     <section
+      ref={sectionRef}
       className="hero-section relative flex min-h-[calc(100dvh-var(--topbar-height)-3.5rem)] flex-col justify-center px-4 sm:px-10"
       data-lens-mode={mode}
     >
@@ -286,24 +331,28 @@ export function Hero() {
         </p>
       </div>
 
-      <DetectionLayer rects={rects} />
-      <Lens mode={mode} detection={detection} onCycle={cycleMode} />
-      <EntranceScan
-        enabled={!reducedMotion}
-        onComplete={() => {
-          setEntranceComplete(true)
-        }}
-        getStartPosition={getStartPosition}
-        setLensPosition={setPosition}
-      />
-      <AutoTour
-        enabled={entranceComplete && !reducedMotion}
-        rects={rects}
-        setLensPosition={setPosition}
-        getLensPosition={getPosition}
-        userMovedRef={userMovedRef}
-      />
-      <DetectionCounter scanned={scanned.size} total={TOTAL_TARGETS} />
+      {heroVisible && <DetectionLayer rects={rects} />}
+      {heroVisible && <Lens mode={mode} detection={detection} onCycle={cycleMode} />}
+      {heroVisible && (
+        <EntranceScan
+          enabled={!reducedMotion}
+          onComplete={() => {
+            setEntranceComplete(true)
+          }}
+          getStartPosition={getStartPosition}
+          setLensPosition={setPosition}
+        />
+      )}
+      {heroVisible && (
+        <AutoTour
+          enabled={entranceComplete && !reducedMotion}
+          rects={rects}
+          setLensPosition={setPosition}
+          getLensPosition={getPosition}
+          userMovedRef={userMovedRef}
+        />
+      )}
+      {heroVisible && <DetectionCounter scanned={scanned.size} total={TOTAL_TARGETS} />}
     </section>
   )
 }

@@ -1,6 +1,10 @@
 import { ThemeToggle } from '@/components/theme/ThemeToggle'
 
-const navItems = [{ label: 'index', href: '/' }, { label: 'work' }, { label: 'writing' }] as const
+const navItems = [
+  { label: 'index', href: '/' },
+  { label: 'work', href: '/#work' },
+  { label: 'writing', href: '/writing' },
+] as const
 
 export function TopBar() {
   return (
@@ -16,26 +20,15 @@ export function TopBar() {
 
         <div className="flex items-center gap-5">
           <nav aria-label="Primary" className="hidden items-center gap-5 sm:flex">
-            {navItems.map((item) =>
-              'href' in item ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  aria-current="page"
-                  className="text-fg hover:text-accent focus-visible:outline-accent font-mono text-[0.65rem] leading-none font-medium uppercase transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4"
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <span
-                  key={item.label}
-                  aria-disabled="true"
-                  className="text-fg-3 font-mono text-[0.65rem] leading-none font-medium uppercase"
-                >
-                  {item.label}
-                </span>
-              ),
-            )}
+            {navItems.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="text-fg hover:text-accent focus-visible:outline-accent font-mono text-[0.65rem] leading-none font-medium uppercase transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                {item.label}
+              </a>
+            ))}
           </nav>
 
           <ThemeToggle />
