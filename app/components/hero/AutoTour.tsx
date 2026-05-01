@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 
 import { easeInOutCubic, tween, type TweenHandle } from '@/lib/tween'
 
@@ -12,11 +12,18 @@ interface AutoTourProps {
   rects: RectMap
   setLensPosition: (x: number, y: number) => void
   getLensPosition: () => { x: number; y: number }
+  userMovedRef: RefObject<boolean>
 }
 
 const POINTER_FINE_QUERY = '(hover: hover) and (pointer: fine)'
 
-export function AutoTour({ enabled, rects, setLensPosition, getLensPosition }: AutoTourProps) {
+export function AutoTour({
+  enabled,
+  rects,
+  setLensPosition,
+  getLensPosition,
+  userMovedRef,
+}: AutoTourProps) {
   const rectsRef = useRef<RectMap>({})
 
   useEffect(() => {
@@ -79,6 +86,8 @@ export function AutoTour({ enabled, rects, setLensPosition, getLensPosition }: A
         return runStep()
       }
 
+      userMovedRef.current = false
+
       const targetX = rect.x + rect.w / 2
       const targetY = rect.y + rect.h / 2
       const fromPos = getLensPosition()
@@ -139,7 +148,7 @@ export function AutoTour({ enabled, rects, setLensPosition, getLensPosition }: A
       if (state.idleTimer !== null) clearTimeout(state.idleTimer)
       window.removeEventListener('mousemove', onMouseMove)
     }
-  }, [enabled, getLensPosition, setLensPosition])
+  }, [enabled, getLensPosition, setLensPosition, userMovedRef])
 
   return null
 }

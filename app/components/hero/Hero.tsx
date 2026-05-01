@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react'
-import { useEffect, useMemo, useState } from 'react'
+import type { CSSProperties, RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useLensMode } from '@/hooks/useLensMode'
 import { useLensPosition } from '@/hooks/useLensPosition'
@@ -106,7 +106,10 @@ function useDetectionRects(): RectMap {
   return rects
 }
 
-function useScannedSet(currentDetectionId: string | null): Set<string> {
+function useScannedSet(
+  currentDetectionId: string | null,
+  userMovedRef: RefObject<boolean>,
+): Set<string> {
   const [scanned, setScanned] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -137,6 +140,7 @@ function useScannedSet(currentDetectionId: string | null): Set<string> {
 
   useEffect(() => {
     if (!currentDetectionId) return
+    if (!userMovedRef.current) return
     const isReal = REAL_ANNOTATIONS.some((a) => a.id === currentDetectionId)
     if (!isReal) return
     // Updating in response to a derived ID change; React's docs allow this
@@ -148,7 +152,7 @@ function useScannedSet(currentDetectionId: string | null): Set<string> {
       next.add(currentDetectionId)
       return next
     })
-  }, [currentDetectionId])
+  }, [currentDetectionId, userMovedRef])
 
   return scanned
 }
@@ -160,7 +164,20 @@ export function Hero() {
   const reducedMotion = usePrefersReducedMotion()
   const [entranceComplete, setEntranceComplete] = useState(false)
   const [currentDetectionId, setCurrentDetectionId] = useState<string | null>(null)
-  const scanned = useScannedSet(currentDetectionId)
+  const userMovedRef = useRef(false)
+  const scanned = useScannedSet(currentDetectionId, userMovedRef)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!entranceComplete) return
+    const onMouseMove = () => {
+      userMovedRef.current = true
+    }
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+    }
+  }, [entranceComplete])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -283,6 +300,7 @@ export function Hero() {
         rects={rects}
         setLensPosition={setPosition}
         getLensPosition={getPosition}
+        userMovedRef={userMovedRef}
       />
       <DetectionCounter scanned={scanned.size} total={TOTAL_TARGETS} />
     </section>
