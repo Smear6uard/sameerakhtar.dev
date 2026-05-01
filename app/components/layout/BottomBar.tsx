@@ -7,9 +7,12 @@ export function BottomBar() {
           <span>scroll</span>
         </div>
 
-        <div className="text-fg-2 flex items-center gap-2 font-mono text-[0.65rem] leading-none font-medium uppercase">
+        <div
+          data-annotation="availability"
+          className="text-fg-2 flex items-center gap-2 font-mono text-[0.65rem] leading-none font-medium uppercase"
+        >
           <span className="bg-accent size-1.5 rounded-full" aria-hidden="true" />
-          <span>available</span>
+          <span>open · summer 2026</span>
         </div>
       </div>
     </footer>
