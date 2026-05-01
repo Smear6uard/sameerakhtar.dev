@@ -1,19 +1,14 @@
 {
-  "name": "Sameer Akhtar - Software Engineer & Founder",
+  "name": "Sameer Akhtar",
   "short_name": "Sameer Akhtar",
-  "description": "Founder of Styleum — AI outfit generation at $0.002/call. Math & CS at DePaul University. Previously Brunosoft, Apple.",
+  "description": "Portfolio of Sameer Akhtar.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0a192f",
-  "theme_color": "#0a192f",
+  "background_color": "#F4F0E6",
+  "theme_color": "#C58A1B",
   "icons": [
     {
-      "src": "/icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/apple-icon.png",
+      "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }
