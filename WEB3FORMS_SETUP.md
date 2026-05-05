@@ -23,6 +23,7 @@ Your contact form is now integrated with Web3Forms, but you need to add your acc
 ## Testing
 
 After adding your access key:
+
 1. Run `npm run dev`
 2. Navigate to the Contact section
 3. Fill out and submit the form

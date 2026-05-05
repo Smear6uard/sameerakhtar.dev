@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
-import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
-import { HeroImage } from "@/components/ui/HeroImage";
-import { CaseStudyClient } from "@/components/case-study/CaseStudyClient";
+// Project case study data + syntax highlighting.
+// Extracted from src/app/work/[slug]/page.tsx so the route file can stay
+// lean and the data is reusable from sitemap generation.
 
-type ContentBlock =
+export type ContentBlock =
   | { type: "text"; content: string }
   | { type: "heading"; level: 2 | 3; content: string }
   | { type: "code"; language: string; content: string; filename?: string }
@@ -11,7 +10,7 @@ type ContentBlock =
   | { type: "list"; items: string[] }
   | { type: "callout"; content: string; variant?: "info" | "warning" | "success" };
 
-interface Project {
+export interface Project {
   title: string;
   subtitle: string;
   timeline: string;
@@ -24,13 +23,24 @@ interface Project {
   content: ContentBlock[];
 }
 
-const projects: Record<string, Project> = {
+export const projects: Record<string, Project> = {
   styleum: {
     title: "Styleum",
-    subtitle: "AI-powered iOS styling app generating outfits at $0.002 each — shipped to the App Store in 8 weeks",
+    subtitle:
+      "AI-powered iOS styling app generating outfits at $0.002 each — shipped to the App Store in 8 weeks",
     timeline: "Dec 2025 – Present",
     role: "Founder & Engineer",
-    stack: ["Swift", "SwiftUI", "Hono", "TypeScript", "AWS Rekognition", "BiRefNet", "Florence-2", "FashionSigLIP", "Gemini"],
+    stack: [
+      "Swift",
+      "SwiftUI",
+      "Hono",
+      "TypeScript",
+      "AWS Rekognition",
+      "BiRefNet",
+      "Florence-2",
+      "FashionSigLIP",
+      "Gemini",
+    ],
     live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
     metrics: [
       { label: "Cost per Outfit", value: "$0.002" },
@@ -55,8 +65,7 @@ const projects: Record<string, Project> = {
       { type: "heading", level: 3, content: "5-Stage ML Pipeline" },
       {
         type: "text",
-        content:
-          "Each stage handles one responsibility, optimized for cost and accuracy:",
+        content: "Each stage handles one responsibility, optimized for cost and accuracy:",
       },
       {
         type: "list",
@@ -282,7 +291,8 @@ const projects: Record<string, Project> = {
   },
   deepcite: {
     title: "DeepCite",
-    subtitle: "AI research engine with dual-mode retrieval processing 100+ URLs/hr with inline citations",
+    subtitle:
+      "AI research engine with dual-mode retrieval processing 100+ URLs/hr with inline citations",
     timeline: "Oct 2025 – Jan 2026",
     role: "Solo Developer",
     stack: ["Next.js", "TypeScript", "Groq", "Redis", "Puppeteer"],
@@ -378,87 +388,75 @@ const projects: Record<string, Project> = {
   },
 };
 
-export async function generateStaticParams() {
-  return Object.keys(projects).map((slug) => ({ slug }));
+export function getProject(slug: string): Project | undefined {
+  return projects[slug];
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const project = projects[slug];
-
-  if (!project) {
-    return { title: "Project Not Found" };
-  }
-
-  return {
-    title: project.title,
-    description: project.subtitle,
-    alternates: {
-      canonical: `https://sameerakhtar.dev/work/${slug}`,
-    },
-    openGraph: {
-      title: `${project.title} | Sameer Akhtar`,
-      description: project.subtitle,
-      url: `https://sameerakhtar.dev/work/${slug}`,
-      type: "article",
-      authors: ["Sameer Akhtar"],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${project.title} | Sameer Akhtar`,
-      description: project.subtitle,
-    },
-  };
+export function getAllProjectSlugs(): string[] {
+  return Object.keys(projects);
 }
 
-/**
- * Syntax highlighting for code blocks.
- * Note: This is safe because it only processes static, developer-controlled content
- * from the projects object above. All HTML entities are escaped before highlighting.
- */
-function highlightCode(code: string, language: string): string {
+// Pre-renders code blocks to colored HTML. Inputs come exclusively from the
+// static `projects` object above (developer-controlled, never user input).
+// HTML entities are escaped before tokens are wrapped, so the resulting
+// string is safe to render as HTML inside <pre><code>.
+export function highlightCode(code: string, language: string): string {
   const keywords: Record<string, string[]> = {
-    typescript: ["async", "await", "const", "let", "function", "return", "if", "else", "try", "catch", "import", "export", "type", "interface"],
-    java: ["public", "private", "class", "void", "int", "boolean", "return", "if", "else", "while", "new", "List"],
+    typescript: [
+      "async",
+      "await",
+      "const",
+      "let",
+      "function",
+      "return",
+      "if",
+      "else",
+      "try",
+      "catch",
+      "import",
+      "export",
+      "type",
+      "interface",
+    ],
+    java: [
+      "public",
+      "private",
+      "class",
+      "void",
+      "int",
+      "boolean",
+      "return",
+      "if",
+      "else",
+      "while",
+      "new",
+      "List",
+    ],
   };
 
-  // Escape HTML entities first for safety
-  let highlighted = code
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  let highlighted = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  // Highlight strings
   highlighted = highlighted.replace(
     /(["'`])(?:(?!\1)[^\\]|\\.)*\1/g,
-    '<span class="text-green-400">$&</span>'
+    '<span class="text-green-400">$&</span>',
   );
 
-  // Highlight comments
-  highlighted = highlighted.replace(
-    /(\/\/.*$)/gm,
-    '<span class="text-text-muted">$1</span>'
-  );
+  highlighted = highlighted.replace(/(\/\/.*$)/gm, '<span class="text-text-muted">$1</span>');
 
-  // Highlight keywords
   const langKeywords = keywords[language] || keywords.typescript;
   langKeywords.forEach((keyword) => {
     const regex = new RegExp(`\\b(${keyword})\\b`, "g");
-    highlighted = highlighted.replace(
-      regex,
-      '<span class="text-purple-400">$1</span>'
-    );
+    highlighted = highlighted.replace(regex, '<span class="text-purple-400">$1</span>');
   });
 
   return highlighted;
 }
 
-// Pre-process content blocks to add highlighted code (for client component)
-function processContentBlocks(content: ContentBlock[]) {
+export type ProcessedContentBlock =
+  | Exclude<ContentBlock, { type: "code" }>
+  | (Extract<ContentBlock, { type: "code" }> & { highlightedCode: string });
+
+export function processContentBlocks(content: ContentBlock[]): ProcessedContentBlock[] {
   return content.map((block) => {
     if (block.type === "code") {
       return {
@@ -468,58 +466,4 @@ function processContentBlocks(content: ContentBlock[]) {
     }
     return block;
   });
-}
-
-export default async function CaseStudy({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const { slug } = await params;
-  const project = projects[slug];
-
-  if (!project) {
-    notFound();
-  }
-
-  return (
-    <>
-      <BreadcrumbJsonLd
-        items={[
-          { name: "Home", url: "https://sameerakhtar.dev" },
-          { name: "Projects", url: "https://sameerakhtar.dev/#work" },
-          { name: project.title, url: `https://sameerakhtar.dev/work/${slug}` },
-        ]}
-      />
-      <ProjectJsonLd
-        title={project.title}
-        description={project.subtitle}
-        url={`https://sameerakhtar.dev/work/${slug}`}
-        datePublished={
-          project.timeline.includes("Dec 2025")
-            ? "2025-12-01"
-            : project.timeline.includes("Feb 2026")
-            ? "2026-02-01"
-            : "2025-10-01"
-        }
-        author="Sameer Akhtar"
-      />
-
-      <div className="pt-32">
-        <HeroImage src={project.heroImage} alt={project.title} />
-      </div>
-
-      <CaseStudyClient
-        title={project.title}
-        subtitle={project.subtitle}
-        timeline={project.timeline}
-        role={project.role}
-        stack={project.stack}
-        github={project.github}
-        live={project.live}
-        metrics={project.metrics}
-        content={processContentBlocks(project.content)}
-      />
-    </>
-  );
 }

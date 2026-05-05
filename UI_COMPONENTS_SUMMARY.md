@@ -5,9 +5,11 @@
 Your portfolio now includes two premium UI components from the React ecosystem:
 
 ### 1. **Glowing Effect Component** ✨
+
 Interactive glowing border effect that follows the mouse cursor.
 
 ### 2. **3D Adaptive Navigation Bar** 🧭
+
 Premium pill-shaped navigation with 3D effects and hover expansion.
 
 ---
@@ -50,12 +52,12 @@ src/
 
 ## 📦 Dependencies Installed
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| motion | Latest | Animation library for glowing effect |
-| clsx | Latest | ClassName utility |
-| tailwind-merge | Latest | Tailwind class merging |
-| framer-motion | 12.23.24 | Already installed! Used by navigation |
+| Package        | Version  | Purpose                               |
+| -------------- | -------- | ------------------------------------- |
+| motion         | Latest   | Animation library for glowing effect  |
+| clsx           | Latest   | ClassName utility                     |
+| tailwind-merge | Latest   | Tailwind class merging                |
+| framer-motion  | 12.23.24 | Already installed! Used by navigation |
 
 ---
 
@@ -67,14 +69,9 @@ src/
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 
 <div className="relative modern-card">
-  <GlowingEffect
-    disabled={false}
-    glow={true}
-    proximity={80}
-    spread={40}
-  />
+  <GlowingEffect disabled={false} glow={true} proximity={80} spread={40} />
   {/* Your project content */}
-</div>
+</div>;
 ```
 
 ### 3D Navigation in Layout
@@ -112,23 +109,23 @@ Your portfolio is fully configured with:
 
 ### For Glowing Effect
 
-| Section | Recommended | Proximity | Spread | Border Width |
-|---------|-------------|-----------|--------|--------------|
-| Projects | ✅ High | 80 | 40 | 2 |
-| Skills Cards | ✅ Medium | 64 | 35 | 2 |
-| Resume Cards | ✅ Medium | 60 | 30 | 1.5 |
-| Stats Cards | ⚡ Optional | 50 | 25 | 1.5 |
-| CTA Buttons | ⚡ Optional | 50 | 45 | 2 |
-| Contact Form | ✅ High | 100 | 40 | 2 |
+| Section      | Recommended | Proximity | Spread | Border Width |
+| ------------ | ----------- | --------- | ------ | ------------ |
+| Projects     | ✅ High     | 80        | 40     | 2            |
+| Skills Cards | ✅ Medium   | 64        | 35     | 2            |
+| Resume Cards | ✅ Medium   | 60        | 30     | 1.5          |
+| Stats Cards  | ⚡ Optional | 50        | 25     | 1.5          |
+| CTA Buttons  | ⚡ Optional | 50        | 45     | 2            |
+| Contact Form | ✅ High     | 100       | 40     | 2            |
 
 ### For 3D Navigation
 
-| Placement | Recommended | Notes |
-|-----------|-------------|-------|
-| Fixed Top Nav | ✅ Best | Replace existing nav |
-| Hero Section | ⚡ Good | Unique focal point |
-| Section Switcher | ⚡ Good | Portfolio tabs |
-| Footer Nav | ❌ Not recommended | Better at top |
+| Placement        | Recommended        | Notes                |
+| ---------------- | ------------------ | -------------------- |
+| Fixed Top Nav    | ✅ Best            | Replace existing nav |
+| Hero Section     | ⚡ Good            | Unique focal point   |
+| Section Switcher | ⚡ Good            | Portfolio tabs       |
+| Footer Nav       | ❌ Not recommended | Better at top        |
 
 ---
 
@@ -164,7 +161,7 @@ background: `
     #d8b4fe 75%,  // Darker purple
     #c084fc 100%  // Your purple accent
   )
-`
+`;
 ```
 
 ---
@@ -212,12 +209,14 @@ The `/components/ui` folder structure is important because:
 ## 🧪 Testing Both Components
 
 ### Test Glowing Effect
+
 1. Visit `/demo`
 2. Hover over cards to see the glowing border
 3. Move mouse around to see the effect follow
 4. Test on different screen sizes
 
 ### Test 3D Navigation
+
 1. Visit `/nav-demo`
 2. Hover over the pill to see it expand
 3. Click different items to see transitions
@@ -228,6 +227,7 @@ The `/components/ui` folder structure is important because:
 ## 🎯 Next Steps
 
 ### Immediate Actions
+
 1. ✅ Components installed and working
 2. ✅ Demo pages created
 3. ⏭️ **Test both demos** - Visit `/demo` and `/nav-demo`
@@ -236,6 +236,7 @@ The `/components/ui` folder structure is important because:
 6. ⏭️ **Connect navigation** - Link to your actual sections
 
 ### Future Enhancements
+
 - Add dark mode support to 3D navigation
 - Implement scroll detection for navigation
 - Add keyboard navigation support
@@ -278,5 +279,4 @@ Both components are production-ready and can be integrated into your portfolio i
 
 ---
 
-*Last Updated: November 13, 2025*
-
+_Last Updated: November 13, 2025_

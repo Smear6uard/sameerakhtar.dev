@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { Img as Image } from "@/components/ui/Img";
 import { SectionScramble } from "@/components/ui/SectionScramble";
 import { BentoCard, StatCounter } from "@/components/ui/BentoCard";
 import { useState } from "react";
@@ -35,7 +35,6 @@ export function AboutSection() {
 
         {/* Bento Grid */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(140px,auto)]">
-
           {/* Main Bio Card - Large */}
           <BentoCard colSpan={2} rowSpan={2} delay={0} className="p-0">
             <div className="h-full flex flex-col">
@@ -54,10 +53,10 @@ export function AboutSection() {
               {/* Bio Text */}
               <div className="p-6 flex-1">
                 <p className="text-text-secondary leading-relaxed">
-                  I care about the details most people skip.
-                  The animation that&apos;s 200ms faster. The API call that costs{" "}
-                  <span className="text-accent font-mono">$0.002</span> instead of $0.02.
-                  The feature users don&apos;t notice—because it doesn&apos;t get in their way.
+                  I care about the details most people skip. The animation that&apos;s 200ms faster.
+                  The API call that costs <span className="text-accent font-mono">$0.002</span>{" "}
+                  instead of $0.02. The feature users don&apos;t notice—because it doesn&apos;t get
+                  in their way.
                 </p>
                 <p className="text-text-muted text-sm mt-4">
                   When I&apos;m not shipping code, I shoot on a Fujifilm X-T30 II.
@@ -82,9 +81,23 @@ export function AboutSection() {
                 animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.3, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-              <svg className="w-8 h-8 text-accent relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              <svg
+                className="w-8 h-8 text-accent relative z-10"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                />
               </svg>
             </div>
             <p className="text-sm text-text-primary mt-3 font-medium">Chicago Area</p>
@@ -93,7 +106,9 @@ export function AboutSection() {
 
           {/* Tech Stack Card */}
           <BentoCard colSpan={2} delay={3} className="p-6">
-            <h3 className="text-xs uppercase tracking-wider text-text-muted font-mono mb-4">Tech Stack</h3>
+            <h3 className="text-xs uppercase tracking-wider text-text-muted font-mono mb-4">
+              Tech Stack
+            </h3>
             <TechStackPills />
           </BentoCard>
 
@@ -120,7 +135,9 @@ export function AboutSection() {
           {/* Newsletter Card */}
           <BentoCard delay={5} className="p-6 flex flex-col justify-between">
             <div>
-              <span className="text-xs uppercase tracking-wider text-text-muted font-mono">Newsletter</span>
+              <span className="text-xs uppercase tracking-wider text-text-muted font-mono">
+                Newsletter
+              </span>
               <div className="flex items-baseline gap-2 mt-2">
                 <StatCounter value={500} suffix="+" label="" delay={0.5} />
                 <span className="text-sm text-text-muted">subscribers</span>
@@ -145,20 +162,31 @@ export function AboutSection() {
           <BentoCard colSpan={2} delay={7} className="p-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+                <svg
+                  className="w-6 h-6 text-accent"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"
+                  />
                 </svg>
               </div>
               <div>
                 <h3 className="font-semibold text-text-primary">DePaul University</h3>
-                <p className="text-sm text-text-muted">BS Mathematics & Computer Science · 3.8 GPA</p>
+                <p className="text-sm text-text-muted">
+                  BS Mathematics & Computer Science · 3.8 GPA
+                </p>
               </div>
             </div>
             <div className="text-right">
               <GraduationCountdown targetDate="2027-07-01" />
             </div>
           </BentoCard>
-
         </div>
       </div>
     </section>
@@ -233,14 +261,28 @@ function PhotoGallery({ photos }: { photos: { src: string; alt: string }[] }) {
             fill
             className="object-cover transition-opacity duration-500"
             sizes="(max-width: 768px) 100vw, 50vw"
-            onError={() => setHasError(prev => ({ ...prev, [activeIndex]: true }))}
+            onError={() => setHasError((prev) => ({ ...prev, [activeIndex]: true }))}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent/10 to-transparent">
             <div className="text-center">
-              <svg className="w-12 h-12 text-accent/40 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+              <svg
+                className="w-12 h-12 text-accent/40 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="1"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+                />
               </svg>
               <p className="text-xs text-text-muted mt-2 font-mono">Fujifilm X-T30 II</p>
               <p className="text-xs text-text-muted/60 mt-1">Photos coming soon</p>
@@ -274,7 +316,7 @@ function PhotoGallery({ photos }: { photos: { src: string; alt: string }[] }) {
                 fill
                 className="object-cover"
                 sizes="100px"
-                onError={() => setHasError(prev => ({ ...prev, [i]: true }))}
+                onError={() => setHasError((prev) => ({ ...prev, [i]: true }))}
               />
             ) : (
               <div className="absolute inset-0 bg-accent/10 flex items-center justify-center">

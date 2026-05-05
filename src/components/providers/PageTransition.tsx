@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { usePathname } from "next/navigation";
+import { useRouterState } from "@tanstack/react-router";
 import { ReactNode } from "react";
 
 interface PageTransitionProps {
@@ -9,7 +9,7 @@ interface PageTransitionProps {
 }
 
 export function PageTransition({ children }: PageTransitionProps) {
-  const pathname = usePathname();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <AnimatePresence mode="wait">
@@ -29,9 +29,8 @@ export function PageTransition({ children }: PageTransitionProps) {
   );
 }
 
-// Alternative: More dramatic slide transition
 export function SlidePageTransition({ children }: PageTransitionProps) {
-  const pathname = usePathname();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <AnimatePresence mode="wait">
@@ -51,9 +50,8 @@ export function SlidePageTransition({ children }: PageTransitionProps) {
   );
 }
 
-// Overlay transition with progress bar
 export function OverlayPageTransition({ children }: PageTransitionProps) {
-  const pathname = usePathname();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <>
@@ -69,7 +67,6 @@ export function OverlayPageTransition({ children }: PageTransitionProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Overlay that slides across on transition */}
       <AnimatePresence>
         <motion.div
           key={`overlay-${pathname}`}

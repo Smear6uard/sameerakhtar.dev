@@ -1,24 +1,26 @@
-import Link from "next/link";
-import { Metadata } from "next";
+// Blog index — equivalent of `src/app/blog/page.tsx` in the old Next.js app.
+
+import { createFileRoute } from "@tanstack/react-router";
+import { Link } from "@/components/ui/Link";
 import { blogPosts, formatBlogDate } from "@/lib/blog-posts";
+import { seo } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Blog",
-  description:
-    "Thoughts on software engineering, AI development, startups, and technology by Sameer Akhtar.",
-  alternates: {
-    canonical: "https://sameerakhtar.dev/blog",
-  },
-  openGraph: {
-    title: "Blog | Sameer Akhtar",
-    description:
-      "Thoughts on software engineering, AI development, startups, and technology.",
-    url: "https://sameerakhtar.dev/blog",
-    type: "website",
-  },
-};
+export const Route = createFileRoute("/blog/")({
+  head: () => ({
+    meta: [
+      ...seo({
+        title: "Blog | Sameer Akhtar",
+        description:
+          "Thoughts on software engineering, AI development, startups, and technology by Sameer Akhtar.",
+        url: "https://sameerakhtar.dev/blog",
+      }),
+    ],
+    links: [{ rel: "canonical", href: "https://sameerakhtar.dev/blog" }],
+  }),
+  component: BlogPage,
+});
 
-export default function BlogPage() {
+function BlogPage() {
   return (
     <div className="pt-32 pb-20 px-6">
       <div className="max-w-3xl mx-auto">
@@ -29,9 +31,7 @@ export default function BlogPage() {
           ← back home
         </Link>
 
-        <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">
-          Blog
-        </h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-text-primary tracking-tight">Blog</h1>
 
         <p className="mt-6 text-xl text-text-secondary">
           Thoughts on software engineering, AI, and building products.
@@ -46,9 +46,7 @@ export default function BlogPage() {
                     {formatBlogDate(post.date)}
                   </time>
                   <span className="text-text-muted/40">·</span>
-                  <span className="font-mono text-xs text-text-muted">
-                    {post.readingTime}
-                  </span>
+                  <span className="font-mono text-xs text-text-muted">{post.readingTime}</span>
                 </div>
                 <h2 className="text-xl font-semibold text-text-primary mb-2 group-hover:text-accent transition-colors">
                   {post.title}
@@ -70,9 +68,7 @@ export default function BlogPage() {
         </div>
 
         {blogPosts.length === 0 && (
-          <p className="mt-12 text-center text-text-muted">
-            No posts yet. Check back soon!
-          </p>
+          <p className="mt-12 text-center text-text-muted">No posts yet. Check back soon!</p>
         )}
       </div>
     </div>

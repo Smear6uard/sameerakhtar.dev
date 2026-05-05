@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { Link } from "@/components/ui/Link";
 
-export default function NotFound() {
+export function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background gradient */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[250px] bg-gradient-to-r from-accent/20 via-accent/10 to-transparent rounded-full blur-3xl pointer-events-none"
         aria-hidden="true"
@@ -19,14 +18,13 @@ export default function NotFound() {
           transition={{ duration: 0.6 }}
           className="text-center"
         >
-          {/* 404 ASCII art */}
           <motion.pre
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="font-mono text-xs sm:text-sm text-accent/40 mb-8 leading-tight"
           >
-{`
+            {`
     _  _    ___  _  _
    | || |  / _ \\| || |
    | || |_| | | | || |_
@@ -36,7 +34,6 @@ export default function NotFound() {
 `}
           </motion.pre>
 
-          {/* Message */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -55,7 +52,6 @@ export default function NotFound() {
             </p>
           </motion.div>
 
-          {/* Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -77,7 +73,6 @@ export default function NotFound() {
             </button>
           </motion.div>
 
-          {/* Fun fact */}
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -86,7 +81,9 @@ export default function NotFound() {
           >
             Fun fact: HTTP 404 was named after room 404 at CERN where the web was invented.
             <br />
-            <span className="text-text-muted/50">(okay that&apos;s probably not true, but it&apos;s a good story)</span>
+            <span className="text-text-muted/50">
+              (okay that&apos;s probably not true, but it&apos;s a good story)
+            </span>
           </motion.p>
         </motion.div>
       </div>

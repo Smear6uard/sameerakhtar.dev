@@ -21,10 +21,7 @@ export function MagneticWrapper({
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches
-    ) {
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
       setIsTouch(true);
     }
   }, []);
@@ -50,7 +47,7 @@ export function MagneticWrapper({
         setPosition({ x: 0, y: 0 });
       }
     },
-    [radius, maxDistance, isTouch]
+    [radius, maxDistance, isTouch],
   );
 
   useEffect(() => {

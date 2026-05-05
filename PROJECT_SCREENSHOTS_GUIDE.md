@@ -7,10 +7,12 @@ Your portfolio is already set up to display project screenshots! Follow this gui
 ## 🎯 Quick Start
 
 ### What You Need:
+
 - Screenshots of your 4 projects
 - 10-15 minutes of your time
 
 ### Projects to Screenshot:
+
 1. **AI Answer Engine** - https://ai-answer-engine.vercel.app
 2. **AI Chrome Extension** - Your Chrome extension in action
 3. **Mock Stock Exchange Platform** - Dashboard/interface
@@ -23,6 +25,7 @@ Your portfolio is already set up to display project screenshots! Follow this gui
 ### Recommended Approach:
 
 **For Web Projects** (AI Answer Engine):
+
 1. Open the live project in your browser
 2. Use a full-page screenshot tool:
    - **Chrome**: Extensions like "GoFullPage" or "Awesome Screenshot"
@@ -34,6 +37,7 @@ Your portfolio is already set up to display project screenshots! Follow this gui
    - Dashboard with data/metrics
 
 **For Chrome Extension**:
+
 1. Open extension in Chrome
 2. Take a screenshot showing:
    - The extension in action on a website
@@ -41,12 +45,14 @@ Your portfolio is already set up to display project screenshots! Follow this gui
    - The autocomplete feature working
 
 **For Desktop/CLI Projects**:
+
 1. Take a screenshot of:
    - The running application
    - Key interface or terminal output
    - Results or data visualization
 
 ### Tips:
+
 - ✅ Use light theme for better contrast (most users view portfolios on light backgrounds)
 - ✅ Show real data/results, not placeholder text
 - ✅ Capture at least 1200px wide for clarity
@@ -60,6 +66,7 @@ Your portfolio is already set up to display project screenshots! Follow this gui
 ### Option A: Quick Optimization (5 min)
 
 Use an online tool:
+
 1. Go to **https://tinypng.com** or **https://squoosh.app**
 2. Upload your screenshots
 3. Download optimized versions
@@ -76,6 +83,7 @@ sips -Z 1600 -s format jpeg -s formatOptions 85 screenshot.png --out screenshot.
 ```
 
 ### Target Specs:
+
 - **Width**: 1200-1600px (height will auto-adjust)
 - **Format**: JPEG or WebP
 - **File Size**: 100-300KB per image
@@ -128,7 +136,7 @@ const projects = [
     title: "Intelligent LLM Router",
     // ... existing fields ...
     image: "/projects/llm-router.jpg", // ADD THIS LINE
-  }
+  },
 ];
 ```
 
@@ -150,12 +158,14 @@ npm run dev
 ## 🎨 What It Looks Like
 
 **With Screenshots**:
+
 - Images appear at top of project cards
 - Smooth hover effect (zoom on hover)
 - Gradient overlay for better text readability
 - Professional, portfolio-ready appearance
 
 **Without Screenshots** (current):
+
 - Just gradient backgrounds
 - Still looks good, but less impressive
 - Text-only doesn't showcase your work visually
@@ -208,6 +218,7 @@ npm run dev
 ## 📊 Impact
 
 Adding screenshots will:
+
 - ⬆️ Make your projects **10x more impressive**
 - ⬆️ Increase time recruiters spend on your portfolio
 - ⬆️ Show you have **real, working projects**

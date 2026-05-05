@@ -40,7 +40,7 @@ export function useMagneticEffect(options: MagneticOptions = {}) {
         setTransform({ x: 0, y: 0 });
       }
     },
-    [radius, maxDistance]
+    [radius, maxDistance],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -49,10 +49,7 @@ export function useMagneticEffect(options: MagneticOptions = {}) {
 
   useEffect(() => {
     // Check for touch devices
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches
-    ) {
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
       return;
     }
 

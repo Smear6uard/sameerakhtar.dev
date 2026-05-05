@@ -167,18 +167,14 @@ export function ProjectArchitectureVisual({
         <div
           key={node.label}
           className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-md border border-white/12 bg-bg-primary/86 shadow-[0_12px_34px_rgba(0,0,0,0.22)] backdrop-blur ${
-            compact
-              ? "w-[6.75rem] px-2 py-1.5"
-              : "w-[clamp(6.75rem,14vw,10.5rem)] px-3 py-2.5"
+            compact ? "w-[6.75rem] px-2 py-1.5" : "w-[clamp(6.75rem,14vw,10.5rem)] px-3 py-2.5"
           }`}
           style={{ left: `${node.x}%`, top: `${node.y}%` }}
         >
           <p className="truncate text-xs font-semibold text-text-primary md:text-sm">
             {node.label}
           </p>
-          <p className="mt-0.5 truncate font-mono text-[10px] text-text-muted">
-            {node.detail}
-          </p>
+          <p className="mt-0.5 truncate font-mono text-[10px] text-text-muted">{node.detail}</p>
         </div>
       ))}
 

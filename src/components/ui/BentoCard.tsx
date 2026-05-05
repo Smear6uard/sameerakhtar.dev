@@ -76,21 +76,23 @@ export function StatCounter({ value, suffix = "", label, delay = 0 }: StatCounte
         <CountUp target={value} duration={2} delay={delay} />
         {suffix}
       </motion.span>
-      <p className="text-xs text-text-muted mt-1 uppercase tracking-wider font-mono">
-        {label}
-      </p>
+      <p className="text-xs text-text-muted mt-1 uppercase tracking-wider font-mono">{label}</p>
     </motion.div>
   );
 }
 
 // Animated counter hook
-function CountUp({ target, duration = 2, delay = 0 }: { target: number; duration?: number; delay?: number }) {
+function CountUp({
+  target,
+  duration = 2,
+  delay = 0,
+}: {
+  target: number;
+  duration?: number;
+  delay?: number;
+}) {
   return (
-    <motion.span
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-    >
+    <motion.span initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}>
       <motion.span
         initial={{ opacity: 1 }}
         animate={{ opacity: 1 }}

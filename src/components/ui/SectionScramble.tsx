@@ -26,10 +26,8 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
         setDisplayText(
           text
             .split("")
-            .map((char) =>
-              char === " " ? " " : chars[Math.floor(Math.random() * chars.length)]
-            )
-            .join("")
+            .map((char) => (char === " " ? " " : chars[Math.floor(Math.random() * chars.length)]))
+            .join(""),
         );
       }
       // Phase 2: Progressive decode with stagger
@@ -46,7 +44,7 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
               if (decodeProgress > charThreshold + 0.3) return text[i];
               return chars[Math.floor(Math.random() * chars.length)];
             })
-            .join("")
+            .join(""),
         );
       }
 
@@ -68,7 +66,7 @@ export function SectionScramble({ text, className }: SectionScrambleProps) {
           runScramble();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (ref.current) observer.observe(ref.current);

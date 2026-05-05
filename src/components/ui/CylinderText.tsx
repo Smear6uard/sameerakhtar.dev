@@ -21,9 +21,7 @@ export function CylinderText({ text, className = "" }: CylinderTextProps) {
     if (!containerRef.current || !textRef.current) return;
 
     // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion) return;
 
@@ -150,9 +148,7 @@ export function WaveText({ text, className = "" }: CylinderTextProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion) return;
 
@@ -170,7 +166,7 @@ export function WaveText({ text, className = "" }: CylinderTextProps) {
 
           chars.forEach((char, i) => {
             const offset = i * 0.1;
-            const wave = Math.sin((progress * Math.PI * 2) + offset) * 10;
+            const wave = Math.sin(progress * Math.PI * 2 + offset) * 10;
             const spread = progress * i * 3;
 
             gsap.to(char, {
@@ -203,11 +199,7 @@ export function WaveText({ text, className = "" }: CylinderTextProps) {
   const chars = text.split("");
 
   return (
-    <div
-      ref={containerRef}
-      className={`${className}`}
-      style={{ perspective: "1000px" }}
-    >
+    <div ref={containerRef} className={`${className}`} style={{ perspective: "1000px" }}>
       <div className="flex" style={{ transformStyle: "preserve-3d" }}>
         {chars.map((char, index) => (
           <span

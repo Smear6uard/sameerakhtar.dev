@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { Link } from "@/components/ui/Link";
+import { Img as Image } from "@/components/ui/Img";
 import { motion, AnimatePresence } from "framer-motion";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 
@@ -26,9 +26,7 @@ export function Navigation() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? "bg-bg-primary/90 backdrop-blur-md border-b border-white/5"
-          : ""
+        isScrolled ? "bg-bg-primary/90 backdrop-blur-md border-b border-white/5" : ""
       }`}
     >
       <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -36,13 +34,7 @@ export function Navigation() {
           href="/"
           className="flex items-center gap-2 text-text-primary font-medium tracking-tight hover:text-accent transition-colors"
         >
-          <Image
-            src="/logo.png"
-            alt=""
-            width={24}
-            height={24}
-            className="rounded-sm"
-          />
+          <Image src="/logo.png" alt="" width={24} height={24} className="rounded-sm" />
           <span>sameer akhtar</span>
         </Link>
 
@@ -102,7 +94,7 @@ export function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="md:hidden fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 min-h-screen w-full"
-          style={{ backgroundColor: '#0a192f' }}
+            style={{ backgroundColor: "#0a192f" }}
           >
             {/* Close button */}
             <button
@@ -111,7 +103,12 @@ export function Navigation() {
               aria-label="Close menu"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
@@ -125,11 +122,7 @@ export function Navigation() {
                 {link.label}
               </Link>
             ))}
-            <a
-              href="/Sameer_Akhtar_Resume.pdf"
-              target="_blank"
-              className="text-xl text-accent"
-            >
+            <a href="/Sameer_Akhtar_Resume.pdf" target="_blank" className="text-xl text-accent">
               resume
             </a>
           </motion.div>

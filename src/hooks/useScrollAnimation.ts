@@ -31,7 +31,7 @@ export function useScrollAnimation() {
   const createParallax = (
     element: string | Element,
     yPercent: number,
-    options: ScrollAnimationOptions = {}
+    options: ScrollAnimationOptions = {},
   ) => {
     if (!contextRef.current) return;
 
@@ -50,10 +50,7 @@ export function useScrollAnimation() {
     });
   };
 
-  const createFadeOut = (
-    element: string | Element,
-    options: ScrollAnimationOptions = {}
-  ) => {
+  const createFadeOut = (element: string | Element, options: ScrollAnimationOptions = {}) => {
     if (!contextRef.current) return;
 
     contextRef.current.add(() => {
@@ -72,10 +69,7 @@ export function useScrollAnimation() {
     });
   };
 
-  const createReveal = (
-    element: string | Element,
-    options: ScrollAnimationOptions = {}
-  ) => {
+  const createReveal = (element: string | Element, options: ScrollAnimationOptions = {}) => {
     if (!contextRef.current) return;
 
     contextRef.current.add(() => {
@@ -97,7 +91,7 @@ export function useScrollAnimation() {
             toggleActions: "play none none reverse",
             markers: options.markers || false,
           },
-        }
+        },
       );
     });
   };
@@ -105,7 +99,7 @@ export function useScrollAnimation() {
   const createStaggerReveal = (
     container: string | Element,
     childSelector: string,
-    options: ScrollAnimationOptions = {}
+    options: ScrollAnimationOptions = {},
   ) => {
     if (!contextRef.current) return;
 
@@ -128,7 +122,7 @@ export function useScrollAnimation() {
             toggleActions: "play none none reverse",
             markers: options.markers || false,
           },
-        }
+        },
       );
     });
   };
@@ -136,7 +130,7 @@ export function useScrollAnimation() {
   const createCountUp = (
     element: string | Element,
     endValue: number,
-    options: ScrollAnimationOptions = {}
+    options: ScrollAnimationOptions = {},
   ) => {
     if (!contextRef.current) return;
 

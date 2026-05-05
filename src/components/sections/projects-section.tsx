@@ -2,8 +2,8 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
+import { Link } from "@/components/ui/Link";
+import { Img as Image } from "@/components/ui/Img";
 import Tilt from "react-parallax-tilt";
 import { SectionScramble } from "@/components/ui/SectionScramble";
 import { ProjectArchitectureVisual } from "@/components/ui/ProjectArchitectureVisual";
@@ -240,9 +240,7 @@ export function ProjectsSection() {
 
                 <div className="p-6 md:p-8">
                   <div className="flex items-start justify-between mb-3">
-                    <span className="font-mono text-sm text-text-muted">
-                      {project.num}
-                    </span>
+                    <span className="font-mono text-sm text-text-muted">{project.num}</span>
                     <span className="font-mono text-base font-semibold text-accent">
                       {project.metric}
                     </span>
@@ -312,8 +310,7 @@ export function ProjectsSection() {
                 key={i}
                 onClick={() => {
                   if (!scrollRef.current) return;
-                  const cardWidth =
-                    scrollRef.current.firstElementChild?.clientWidth || 0;
+                  const cardWidth = scrollRef.current.firstElementChild?.clientWidth || 0;
                   const gap = 24;
                   scrollRef.current.scrollTo({
                     left: i * (cardWidth + gap),
@@ -321,9 +318,7 @@ export function ProjectsSection() {
                   });
                 }}
                 className={`h-2 rounded-full transition-all duration-300 ${
-                  i === activeIndex
-                    ? "w-6 bg-accent"
-                    : "w-2 bg-white/20 hover:bg-white/40"
+                  i === activeIndex ? "w-6 bg-accent" : "w-2 bg-white/20 hover:bg-white/40"
                 }`}
                 aria-label={`Go to project ${i + 1}`}
               />

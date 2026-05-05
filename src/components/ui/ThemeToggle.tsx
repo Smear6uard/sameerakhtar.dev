@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -18,9 +18,7 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
   }, []);
 
   if (!mounted) {
-    return (
-      <div className={`w-9 h-9 rounded-lg bg-white/5 ${className}`} />
-    );
+    return <div className={`w-9 h-9 rounded-lg bg-white/5 ${className}`} />;
   }
 
   const isDark = resolvedTheme === "dark";
@@ -54,7 +52,10 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
             transition={{ duration: 0.2 }}
           >
             <circle cx="12" cy="12" r="5" />
-            <path strokeLinecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+            <path
+              strokeLinecap="round"
+              d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+            />
           </motion.svg>
         ) : (
           <motion.svg
@@ -69,7 +70,11 @@ export function ThemeToggle({ className = "" }: ThemeToggleProps) {
             exit={{ scale: 0, rotate: -90 }}
             transition={{ duration: 0.2 }}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+            />
           </motion.svg>
         )}
       </AnimatePresence>
@@ -105,13 +110,32 @@ export function ThemeToggleCompact({ className = "" }: ThemeToggleProps) {
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
     >
       {isDark ? (
-        <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+        <svg
+          className="w-4 h-4 text-accent"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
           <circle cx="12" cy="12" r="5" />
-          <path strokeLinecap="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          <path
+            strokeLinecap="round"
+            d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+          />
         </svg>
       ) : (
-        <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        <svg
+          className="w-4 h-4 text-accent"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+          />
         </svg>
       )}
     </button>

@@ -4,13 +4,7 @@ import { useState, useEffect, useRef } from "react";
 const chars =
   "!@#$%^&*()_+-=[]{}|;':\",./<>?ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-export function ScrambleText({
-  text,
-  className,
-}: {
-  text: string;
-  className?: string;
-}) {
+export function ScrambleText({ text, className }: { text: string; className?: string }) {
   const [displayText, setDisplayText] = useState(text);
   const [isHovering, setIsHovering] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -29,7 +23,7 @@ export function ScrambleText({
               if (index < iteration) return text[index];
               return chars[Math.floor(Math.random() * chars.length)];
             })
-            .join("")
+            .join(""),
         );
 
         if (iteration >= text.length) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
+import { Link } from "@/components/ui/Link";
 import {
   AnimatedSection,
   AnimatedMetric,
@@ -64,23 +64,10 @@ function renderContentBlock(block: ContentBlock, index: number) {
       return <AnimatedList key={index} items={block.items} />;
 
     case "callout":
-      return (
-        <AnimatedCallout
-          key={index}
-          content={block.content}
-          variant={block.variant}
-        />
-      );
+      return <AnimatedCallout key={index} content={block.content} variant={block.variant} />;
 
     case "image":
-      return (
-        <AnimatedImage
-          key={index}
-          src={block.src}
-          alt={block.alt}
-          caption={block.caption}
-        />
-      );
+      return <AnimatedImage key={index} src={block.src} alt={block.alt} caption={block.caption} />;
 
     default:
       return null;
@@ -106,10 +93,7 @@ export function CaseStudyClient({
       <ReadingProgress />
 
       {/* Parallax background element */}
-      <motion.div
-        className="fixed inset-0 pointer-events-none z-0"
-        style={{ y: backgroundY }}
-      >
+      <motion.div className="fixed inset-0 pointer-events-none z-0" style={{ y: backgroundY }}>
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-[100px]" />
         <div className="absolute bottom-1/3 left-1/3 w-64 h-64 bg-accent/3 rounded-full blur-[80px]" />
       </motion.div>
@@ -126,7 +110,8 @@ export function CaseStudyClient({
               href="/#work"
               className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1 group"
             >
-              <span className="group-hover:-translate-x-1 transition-transform">←</span> back to projects
+              <span className="group-hover:-translate-x-1 transition-transform">←</span> back to
+              projects
             </Link>
           </motion.div>
         </div>
@@ -212,7 +197,9 @@ export function CaseStudyClient({
                       className="text-accent link-underline inline-flex items-center gap-1 group"
                     >
                       Live Demo{" "}
-                      <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">↗</span>
+                      <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
+                        ↗
+                      </span>
                     </a>
                   )}
                 </div>

@@ -24,9 +24,7 @@ export function KonamiEasterEgg() {
 
     // Gather performance stats
     const loadTime =
-      typeof window !== "undefined" && window.performance
-        ? Math.round(performance.now())
-        : 0;
+      typeof window !== "undefined" && window.performance ? Math.round(performance.now()) : 0;
 
     setStats({
       loadTime,
@@ -97,12 +95,7 @@ export function KonamiEasterEgg() {
                   className="text-text-muted hover:text-accent transition-colors"
                   aria-label="Close developer mode"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -130,10 +123,7 @@ export function KonamiEasterEgg() {
                 transition={{ delay: 0.5 }}
                 className="mt-4 pt-4 border-t border-white/10 text-xs text-text-muted"
               >
-                You found the secret! Type{" "}
-                <span className="text-accent font-mono">
-                  ↑↑↓↓←→←→BA
-                </span>{" "}
+                You found the secret! Type <span className="text-accent font-mono">↑↑↓↓←→←→BA</span>{" "}
                 anytime to toggle this panel.
               </motion.p>
 
@@ -173,7 +163,7 @@ function MatrixColumn({ chars, delay }: { chars: string; delay: number }) {
   useEffect(() => {
     const generateDrops = () => {
       const newDrops = Array.from({ length: 20 }, () =>
-        chars.charAt(Math.floor(Math.random() * chars.length))
+        chars.charAt(Math.floor(Math.random() * chars.length)),
       );
       setDrops(newDrops);
     };

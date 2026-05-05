@@ -5,10 +5,7 @@ export function JsonLd() {
     name: "Sameer Akhtar",
     url: "https://sameerakhtar.dev",
     image: "https://sameerakhtar.dev/profile.jpg",
-    sameAs: [
-      "https://github.com/Smear6uard",
-      "https://linkedin.com/in/sameer-a-akhtar",
-    ],
+    sameAs: ["https://github.com/Smear6uard", "https://linkedin.com/in/sameer-a-akhtar"],
     jobTitle: "Software Engineer & Founder",
     worksFor: {
       "@type": "Organization",
@@ -78,11 +75,7 @@ export function JsonLd() {
   );
 }
 
-export function BreadcrumbJsonLd({
-  items,
-}: {
-  items: { name: string; url: string }[];
-}) {
+export function BreadcrumbJsonLd({ items }: { items: { name: string; url: string }[] }) {
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

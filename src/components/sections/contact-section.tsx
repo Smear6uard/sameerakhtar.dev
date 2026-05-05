@@ -20,8 +20,8 @@ export function ContactSection() {
           </motion.div>
 
           <p className="mt-6 text-text-secondary text-lg">
-            I&apos;m looking for Summer 2026 opportunities in software engineering or AI/ML—somewhere
-            I can learn fast and contribute meaningfully.
+            I&apos;m looking for Summer 2026 opportunities in software engineering or
+            AI/ML—somewhere I can learn fast and contribute meaningfully.
           </p>
 
           <p className="mt-4 text-text-muted">
@@ -30,10 +30,7 @@ export function ContactSection() {
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
             <MagneticWrapper radius={100} maxDistance={6}>
-              <a
-                href="mailto:sameer@sameerakhtar.dev"
-                className="btn-primary"
-              >
+              <a href="mailto:sameer@sameerakhtar.dev" className="btn-primary">
                 Send me an email
                 <span>→</span>
               </a>
@@ -84,9 +81,7 @@ export function ContactSection() {
             </MagneticWrapper>
           </div>
 
-          <p className="mt-8 font-mono text-sm text-text-muted">
-            Greater Chicago Area
-          </p>
+          <p className="mt-8 font-mono text-sm text-text-muted">Greater Chicago Area</p>
         </div>
       </div>
     </section>

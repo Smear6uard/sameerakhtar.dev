@@ -121,9 +121,7 @@ export function AIRoutingDemo() {
 
   // Calculate which stages are active based on complexity
   const activeStages = useMemo(() => {
-    return PIPELINE_STAGES.filter((stage) =>
-      stage.requiredFor.includes(complexityLevel)
-    );
+    return PIPELINE_STAGES.filter((stage) => stage.requiredFor.includes(complexityLevel));
   }, [complexityLevel]);
 
   // Calculate costs
@@ -142,8 +140,7 @@ export function AIRoutingDemo() {
     });
 
     // GPT-4 Vision alternative cost
-    const gpt4Cost =
-      GPT4_VISION_COST_PER_IMAGE * imageCount + GPT4_REASONING_COST;
+    const gpt4Cost = GPT4_VISION_COST_PER_IMAGE * imageCount + GPT4_REASONING_COST;
 
     // Savings
     const savings = gpt4Cost - pipelineCost;
@@ -166,9 +163,7 @@ export function AIRoutingDemo() {
 
     const animateStages = () => {
       if (stageIndex < activeStages.length) {
-        const globalIndex = PIPELINE_STAGES.findIndex(
-          (s) => s.id === activeStages[stageIndex].id
-        );
+        const globalIndex = PIPELINE_STAGES.findIndex((s) => s.id === activeStages[stageIndex].id);
         setProcessingStage(globalIndex);
         stageIndex++;
         setTimeout(animateStages, 200);
@@ -200,9 +195,7 @@ export function AIRoutingDemo() {
             Cost Calculator
           </span>
         </div>
-        <span className="font-mono text-xs text-accent">
-          Interactive
-        </span>
+        <span className="font-mono text-xs text-accent">Interactive</span>
       </div>
 
       {/* Sliders */}
@@ -226,9 +219,7 @@ export function AIRoutingDemo() {
                 max={slider.max}
                 step={slider.step}
                 value={sliderValues[slider.id]}
-                onChange={(e) =>
-                  handleSliderChange(slider.id, Number(e.target.value))
-                }
+                onChange={(e) => handleSliderChange(slider.id, Number(e.target.value))}
                 className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer
                   [&::-webkit-slider-thumb]:appearance-none
                   [&::-webkit-slider-thumb]:w-4
@@ -298,16 +289,10 @@ export function AIRoutingDemo() {
                 {/* Stage indicator */}
                 <div
                   className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-                    isProcessing
-                      ? "bg-accent"
-                      : isActive
-                        ? "bg-white/20"
-                        : "bg-white/5"
+                    isProcessing ? "bg-accent" : isActive ? "bg-white/20" : "bg-white/5"
                   }`}
                   style={{
-                    boxShadow: isProcessing
-                      ? `0 0 20px ${stage.color}40`
-                      : "none",
+                    boxShadow: isProcessing ? `0 0 20px ${stage.color}40` : "none",
                   }}
                 >
                   {isActive ? (
@@ -318,11 +303,7 @@ export function AIRoutingDemo() {
                       viewBox="0 0 24 24"
                       strokeWidth="2"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   ) : (
                     <span className="font-mono text-xs text-text-muted">—</span>
@@ -364,16 +345,11 @@ export function AIRoutingDemo() {
       </div>
 
       {/* Cost Summary */}
-      <motion.div
-        className="mt-6 p-4 rounded-lg border border-white/10 bg-bg-secondary"
-        layout
-      >
+      <motion.div className="mt-6 p-4 rounded-lg border border-white/10 bg-bg-secondary" layout>
         <div className="grid grid-cols-2 gap-4">
           {/* Our Cost */}
           <div>
-            <span className="font-mono text-xs text-text-muted block mb-1">
-              Styleum Cost
-            </span>
+            <span className="font-mono text-xs text-text-muted block mb-1">Styleum Cost</span>
             <motion.span
               key={costs.pipeline}
               className="font-mono text-2xl font-bold text-accent block"
@@ -383,16 +359,12 @@ export function AIRoutingDemo() {
             >
               ${costs.pipeline.toFixed(4)}
             </motion.span>
-            <span className="font-mono text-[10px] text-text-muted">
-              per request
-            </span>
+            <span className="font-mono text-[10px] text-text-muted">per request</span>
           </div>
 
           {/* GPT-4 Cost Comparison */}
           <div className="text-right">
-            <span className="font-mono text-xs text-text-muted block mb-1">
-              GPT-4 Vision
-            </span>
+            <span className="font-mono text-xs text-text-muted block mb-1">GPT-4 Vision</span>
             <span className="font-mono text-xl text-red-400 line-through block">
               ${costs.gpt4.toFixed(2)}
             </span>
@@ -417,16 +389,16 @@ export function AIRoutingDemo() {
               className="mt-4 pt-4 border-t border-white/10"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm text-text-secondary">
-                  Total Savings
-                </span>
+                <span className="text-sm text-text-secondary">Total Savings</span>
                 <span className="font-mono text-lg font-bold text-green-400">
                   ${costs.savings.toFixed(4)}
                 </span>
               </div>
               <p className="mt-2 text-xs text-text-muted">
                 Process {sliderValues.images} image{sliderValues.images > 1 ? "s" : ""} with{" "}
-                <span className="text-accent">{COMPLEXITY_LABELS[sliderValues.complexity].label.toLowerCase()}</span>{" "}
+                <span className="text-accent">
+                  {COMPLEXITY_LABELS[sliderValues.complexity].label.toLowerCase()}
+                </span>{" "}
                 analysis for {costs.savingsPercent}% less than GPT-4 Vision.
               </p>
             </motion.div>
@@ -482,18 +454,12 @@ function StaticPipeline() {
             className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-bg-secondary"
           >
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-              <span className="font-mono text-xs text-text-muted font-bold">
-                {index + 1}
-              </span>
+              <span className="font-mono text-xs text-text-muted font-bold">{index + 1}</span>
             </div>
             <div className="flex-1">
-              <span className="text-sm font-medium text-text-primary">
-                {stage.shortName}
-              </span>
+              <span className="text-sm font-medium text-text-primary">{stage.shortName}</span>
             </div>
-            <span className="font-mono text-xs text-text-muted">
-              ${stage.baseCost.toFixed(4)}
-            </span>
+            <span className="font-mono text-xs text-text-muted">${stage.baseCost.toFixed(4)}</span>
           </div>
         ))}
       </div>

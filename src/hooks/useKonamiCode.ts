@@ -29,9 +29,7 @@ export function useKonamiCode(onActivate: () => void) {
 
       // Check if the sequence matches
       if (newSequence.length === KONAMI_CODE.length) {
-        const isMatch = newSequence.every(
-          (key, index) => key === KONAMI_CODE[index]
-        );
+        const isMatch = newSequence.every((key, index) => key === KONAMI_CODE[index]);
 
         if (isMatch) {
           setIsActivated(true);
@@ -39,7 +37,7 @@ export function useKonamiCode(onActivate: () => void) {
         }
       }
     },
-    [inputSequence, isActivated, onActivate]
+    [inputSequence, isActivated, onActivate],
   );
 
   useEffect(() => {

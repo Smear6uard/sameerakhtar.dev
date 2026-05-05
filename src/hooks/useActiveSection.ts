@@ -25,7 +25,7 @@ export function useActiveSection() {
         {
           threshold: 0.3,
           rootMargin: "-20% 0px -50% 0px",
-        }
+        },
       );
 
       observer.observe(element);

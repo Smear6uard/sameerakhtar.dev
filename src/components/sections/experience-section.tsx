@@ -65,9 +65,7 @@ export function ExperienceSection() {
           {experiences.map((group) => (
             <div key={group.year}>
               <div className="flex items-center gap-4 mb-8">
-                <span className="font-mono text-sm text-text-muted">
-                  {group.year}
-                </span>
+                <span className="font-mono text-sm text-text-muted">{group.year}</span>
                 <div className="flex-1 h-px bg-white/10" />
               </div>
 
@@ -77,25 +75,15 @@ export function ExperienceSection() {
                     <div className="absolute left-0 top-2 w-2 h-2 rounded-full bg-accent -translate-x-[calc(50%+1px)]" />
 
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-2">
-                      <span className="text-accent font-medium">
-                        {role.company}
-                      </span>
-                      <span className="font-mono text-sm text-text-muted">
-                        {role.period}
-                      </span>
+                      <span className="text-accent font-medium">{role.company}</span>
+                      <span className="font-mono text-sm text-text-muted">{role.period}</span>
                     </div>
 
-                    <h3 className="text-xl font-semibold text-text-primary mb-2">
-                      {role.title}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-text-primary mb-2">{role.title}</h3>
 
-                    <p className="text-text-secondary mb-3">
-                      {role.description}
-                    </p>
+                    <p className="text-text-secondary mb-3">{role.description}</p>
 
-                    <span className="font-mono text-xs text-text-muted">
-                      {role.tech}
-                    </span>
+                    <span className="font-mono text-xs text-text-muted">{role.tech}</span>
                   </div>
                 ))}
               </div>

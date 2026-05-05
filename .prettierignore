@@ -1,0 +1,17 @@
+node_modules
+.output
+.vinxi
+.tanstack
+dist
+_legacy_nextjs
+src/routeTree.gen.ts
+package-lock.json
+pnpm-lock.yaml
+*.woff2
+*.png
+*.jpg
+*.JPG
+*.pdf
+*.ico
+*.xml
+public/**/*.json

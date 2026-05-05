@@ -14,9 +14,7 @@ const PROXIMITY_RADIUS = 100;
 
 export function AsciiArt() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(
-    null
-  );
+  const [mousePos, setMousePos] = useState<{ x: number; y: number } | null>(null);
   const [isTouch, setIsTouch] = useState(false);
 
   // Parse ASCII into 2D character grid
@@ -26,10 +24,7 @@ export function AsciiArt() {
   }, []);
 
   useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches
-    ) {
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
       setIsTouch(true);
     }
   }, []);
@@ -44,7 +39,7 @@ export function AsciiArt() {
         y: e.clientY - rect.top,
       });
     },
-    [isTouch]
+    [isTouch],
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -100,15 +95,9 @@ export function AsciiArt() {
             // Interpolate color from accent (#f97316) to white
             const baseColor = { r: 249, g: 115, b: 22 };
             const targetColor = { r: 255, g: 255, b: 255 };
-            const r = Math.round(
-              baseColor.r + (targetColor.r - baseColor.r) * brightness
-            );
-            const g = Math.round(
-              baseColor.g + (targetColor.g - baseColor.g) * brightness
-            );
-            const b = Math.round(
-              baseColor.b + (targetColor.b - baseColor.b) * brightness
-            );
+            const r = Math.round(baseColor.r + (targetColor.r - baseColor.r) * brightness);
+            const g = Math.round(baseColor.g + (targetColor.g - baseColor.g) * brightness);
+            const b = Math.round(baseColor.b + (targetColor.b - baseColor.b) * brightness);
 
             return (
               <span

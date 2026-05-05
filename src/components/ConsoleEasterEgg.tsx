@@ -18,25 +18,22 @@ export function ConsoleEasterEgg() {
   │  $0.002 per AI outfit               │
   └─────────────────────────────────────┘
 `,
-      "color: #f97316; font-family: monospace; font-size: 10px;"
+      "color: #f97316; font-family: monospace; font-size: 10px;",
     );
 
     // The hook
     console.log(
       "%cYou found the console. Most people never look here.",
-      "color: #f97316; font-size: 14px; font-weight: bold;"
+      "color: #f97316; font-size: 14px; font-weight: bold;",
     );
 
     console.log(
       "%cThat probably means you're curious about how things work.",
-      "color: #94a3b8; font-size: 12px;"
+      "color: #94a3b8; font-size: 12px;",
     );
 
     // The technical flex
-    console.log(
-      "%c\nThe AI pipeline you saw on the homepage?",
-      "color: #94a3b8; font-size: 12px;"
-    );
+    console.log("%c\nThe AI pipeline you saw on the homepage?", "color: #94a3b8; font-size: 12px;");
 
     console.log(
       `%c
@@ -48,39 +45,27 @@ export function ConsoleEasterEgg() {
   ──────────────────────────────────────
   Total: ~$0.002/outfit
 `,
-      "color: #64748b; font-size: 11px; font-family: monospace;"
+      "color: #64748b; font-size: 11px; font-family: monospace;",
     );
 
     console.log(
       "%cThat's the actual breakdown. Took a while to get there.",
-      "color: #94a3b8; font-size: 12px;"
+      "color: #94a3b8; font-size: 12px;",
     );
 
     // The invitation
-    console.log(
-      "%c\nIf you're hiring:",
-      "color: #94a3b8; font-size: 12px;"
-    );
+    console.log("%c\nIf you're hiring:", "color: #94a3b8; font-size: 12px;");
 
-    console.log(
-      "%csameer@sameerakhtar.dev",
-      "color: #f97316; font-size: 12px; font-weight: bold;"
-    );
+    console.log("%csameer@sameerakhtar.dev", "color: #f97316; font-size: 12px; font-weight: bold;");
 
-    console.log(
-      "%c\nIf you're building:",
-      "color: #94a3b8; font-size: 12px;"
-    );
+    console.log("%c\nIf you're building:", "color: #94a3b8; font-size: 12px;");
 
-    console.log(
-      "%chttps://github.com/Smear6uard",
-      "color: #f97316; font-size: 12px;"
-    );
+    console.log("%chttps://github.com/Smear6uard", "color: #f97316; font-size: 12px;");
 
     // The closer
     console.log(
       "%c\n// People who read console logs are my kind of people.",
-      "color: #475569; font-size: 11px; font-style: italic;"
+      "color: #475569; font-size: 11px; font-style: italic;",
     );
   }, []);
 
