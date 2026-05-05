@@ -2,6 +2,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { HeroSection } from "@/components/sections/hero-section";
+import { PerceptionSection } from "@/components/sections/perception-section";
 import { ProjectsSection } from "@/components/sections/projects-section";
 import { ExperienceSection } from "@/components/sections/experience-section";
 import { AboutSection } from "@/components/sections/about-section";
@@ -15,6 +16,7 @@ function Home() {
   return (
     <>
       <HeroSection />
+      <PerceptionSection />
       <ProjectsSection />
       <ExperienceSection />
       <AboutSection />
