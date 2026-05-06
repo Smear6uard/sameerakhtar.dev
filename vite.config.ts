@@ -6,9 +6,12 @@ import { nitro } from "nitro/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // `nitro()` is the build engine TanStack Start uses for production output.
-// When the build runs on Vercel, Nitro auto-detects the Vercel environment
-// and emits `.output/` in the format Vercel expects — no vercel.json needed.
-// (Local `vercel build` / Vercel CLI also works without extra config.)
+// On Vercel, Nitro auto-detects the environment via VERCEL=1 and emits
+// `.vercel/output/` in the Build Output API v3 format. The companion
+// `vercel.json` pins the framework preset to `tanstack-start` and the
+// build command to `vite build`, since this project doesn't declare
+// `@tanstack/router-plugin` directly (which is what Vercel's auto-detection
+// keys off) and would otherwise fall through to the plain Nitro preset.
 export default defineConfig({
   server: {
     port: 3000,
