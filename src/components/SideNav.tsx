@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
   { href: "/#perception", label: "perception", icon: "perception", section: "perception" },
-  { href: "/#work", label: "work", icon: "work", section: "work" },
+  { href: "/work", label: "work", icon: "work", section: "work" },
   { href: "/#experience", label: "experience", icon: "experience", section: "experience" },
   { href: "/#about", label: "about", icon: "about", section: "about" },
   { href: "/blog", label: "blog", icon: "blog", section: "blog" },
@@ -163,7 +163,9 @@ export function SideNav() {
           const isActive =
             link.section === "blog"
               ? pathname.startsWith("/blog")
-              : isHome && activeSection === link.section;
+              : link.section === "work"
+                ? pathname.startsWith("/work") || (isHome && activeSection === link.section)
+                : isHome && activeSection === link.section;
 
           return (
             <MagneticWrapper key={link.href} radius={70} maxDistance={6}>

@@ -12,6 +12,8 @@ const MODEL_URL =
 const FPS_WINDOW = 30;
 const LOW_FPS_THRESHOLD = 10;
 const LOW_FPS_PROBE_FRAMES = 60;
+const SMOOTHING_ALPHA = 0.55;
+const TRACK_RESET_DISTANCE = 0.18;
 
 interface LiveDemoProps {
   /** Visible-on-screen state from the parent IntersectionObserver. */
@@ -35,6 +37,7 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
   const probeStartRef = useRef(0);
   const lastVideoTimeRef = useRef(-1);
   const isInViewRef = useRef(isInView);
+  const smoothedHandsRef = useRef<ReadonlyArray<ReadonlyArray<NormalizedPoint>>>([]);
 
   const [hands, setHands] = useState<ReadonlyArray<ReadonlyArray<NormalizedPoint>>>([]);
   const [fps, setFps] = useState(0);
@@ -57,7 +60,12 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
       let stream: MediaStream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } },
+          video: {
+            facingMode: "user",
+            width: { ideal: 960 },
+            height: { ideal: 720 },
+            frameRate: { ideal: 30, max: 30 },
+          },
           audio: false,
         });
       } catch {
@@ -80,11 +88,24 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
         const { FilesetResolver, HandLandmarker: HandLandmarkerClass } =
           await import("@mediapipe/tasks-vision");
         const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
-        landmarker = await HandLandmarkerClass.createFromOptions(fileset, {
-          baseOptions: { modelAssetPath: MODEL_URL, delegate: "GPU" },
-          runningMode: "VIDEO",
+        const options = {
+          runningMode: "VIDEO" as const,
           numHands: 2,
-        });
+          minHandDetectionConfidence: 0.6,
+          minHandPresenceConfidence: 0.6,
+          minTrackingConfidence: 0.75,
+        };
+        try {
+          landmarker = await HandLandmarkerClass.createFromOptions(fileset, {
+            baseOptions: { modelAssetPath: MODEL_URL, delegate: "GPU" },
+            ...options,
+          });
+        } catch {
+          landmarker = await HandLandmarkerClass.createFromOptions(fileset, {
+            baseOptions: { modelAssetPath: MODEL_URL, delegate: "CPU" },
+            ...options,
+          });
+        }
       } catch {
         if (!cancelled) onUnsupported("model failed to load");
         return;
@@ -132,10 +153,12 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
         const now = performance.now();
         try {
           const result = landmarker.detectForVideo(video, now);
-          const detected = (result.landmarks ?? []).map((hand) =>
-            hand.map((p) => [p.x, p.y] as NormalizedPoint),
-          );
-          setHands(detected);
+          const detected = (result.landmarks ?? [])
+            .map((hand) => hand.map((p) => projectVideoPoint(video, p.x, p.y)))
+            .filter((hand) => hand.length === 21);
+          const smoothed = smoothHands(smoothedHandsRef.current, detected);
+          smoothedHandsRef.current = smoothed;
+          setHands(smoothed);
         } catch {
           /* Transient detection errors are non-fatal — drop the frame. */
         }
@@ -220,4 +243,77 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
       </div>
     </div>
   );
+}
+
+function projectVideoPoint(video: HTMLVideoElement, x: number, y: number): NormalizedPoint {
+  const container = video.parentElement;
+  const videoWidth = video.videoWidth || video.clientWidth || 1;
+  const videoHeight = video.videoHeight || video.clientHeight || 1;
+  const containerWidth = container?.clientWidth || video.clientWidth || 1;
+  const containerHeight = container?.clientHeight || video.clientHeight || 1;
+
+  const scale = Math.max(containerWidth / videoWidth, containerHeight / videoHeight);
+  const renderedWidth = videoWidth * scale;
+  const renderedHeight = videoHeight * scale;
+  const offsetX = (containerWidth - renderedWidth) / 2;
+  const offsetY = (containerHeight - renderedHeight) / 2;
+
+  return [
+    clamp01((x * videoWidth * scale + offsetX) / containerWidth),
+    clamp01((y * videoHeight * scale + offsetY) / containerHeight),
+  ];
+}
+
+function smoothHands(
+  previousHands: ReadonlyArray<ReadonlyArray<NormalizedPoint>>,
+  currentHands: ReadonlyArray<ReadonlyArray<NormalizedPoint>>,
+): ReadonlyArray<ReadonlyArray<NormalizedPoint>> {
+  if (currentHands.length === 0) return [];
+
+  const available = [...previousHands];
+  return currentHands.map((current) => {
+    const matchIndex = findNearestHandIndex(available, current);
+    if (matchIndex === -1) return current;
+
+    const previous = available.splice(matchIndex, 1)[0];
+    if (!previous || wristDistance(previous, current) > TRACK_RESET_DISTANCE) return current;
+
+    return current.map((point, index) => {
+      const previousPoint = previous[index];
+      if (!previousPoint) return point;
+      return [
+        previousPoint[0] + (point[0] - previousPoint[0]) * SMOOTHING_ALPHA,
+        previousPoint[1] + (point[1] - previousPoint[1]) * SMOOTHING_ALPHA,
+      ] as NormalizedPoint;
+    });
+  });
+}
+
+function findNearestHandIndex(
+  previousHands: ReadonlyArray<ReadonlyArray<NormalizedPoint>>,
+  current: ReadonlyArray<NormalizedPoint>,
+): number {
+  let bestIndex = -1;
+  let bestDistance = Number.POSITIVE_INFINITY;
+
+  previousHands.forEach((previous, index) => {
+    const distance = wristDistance(previous, current);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestIndex = index;
+    }
+  });
+
+  return bestIndex;
+}
+
+function wristDistance(a: ReadonlyArray<NormalizedPoint>, b: ReadonlyArray<NormalizedPoint>) {
+  const aWrist = a[0];
+  const bWrist = b[0];
+  if (!aWrist || !bWrist) return Number.POSITIVE_INFINITY;
+  return Math.hypot(aWrist[0] - bWrist[0], aWrist[1] - bWrist[1]);
+}
+
+function clamp01(value: number) {
+  return Math.max(0, Math.min(1, value));
 }

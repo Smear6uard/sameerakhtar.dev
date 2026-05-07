@@ -7,7 +7,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { ThemeToggleCompact } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
-  { href: "/#work", label: "work", icon: "work", section: "work" },
+  { href: "/work", label: "work", icon: "work", section: "work" },
   { href: "/#experience", label: "exp", icon: "experience", section: "experience" },
   { href: "/#about", label: "about", icon: "about", section: "about" },
   { href: "/blog", label: "blog", icon: "blog", section: "blog" },
@@ -102,7 +102,9 @@ export function MobileNav() {
           const isActive =
             link.section === "blog"
               ? pathname.startsWith("/blog")
-              : isHome && activeSection === link.section;
+              : link.section === "work"
+                ? pathname.startsWith("/work") || (isHome && activeSection === link.section)
+                : isHome && activeSection === link.section;
 
           return (
             <Link

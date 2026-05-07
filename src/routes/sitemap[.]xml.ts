@@ -35,6 +35,12 @@ export const Route = createFileRoute("/sitemap.xml")({
             changefreq: "weekly",
             priority: "0.8",
           },
+          {
+            url: `${BASE_URL}/work`,
+            lastmod: currentDate,
+            changefreq: "monthly",
+            priority: "0.8",
+          },
           ...blogPosts.map((post) => ({
             url: `${BASE_URL}/blog/${post.slug}`,
             lastmod: post.date,

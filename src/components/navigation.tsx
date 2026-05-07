@@ -8,7 +8,7 @@ import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 
 const navLinks = [
   { href: "/#perception", label: "perception" },
-  { href: "/#work", label: "work" },
+  { href: "/work", label: "work" },
   { href: "/#experience", label: "experience" },
   { href: "/#about", label: "about" },
   { href: "/blog", label: "blog" },

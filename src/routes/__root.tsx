@@ -9,7 +9,6 @@ import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 
 import globalsCss from "@/styles/globals.css?url";
-import { seo } from "@/lib/seo";
 import { ThemeProvider, themeFoucScript } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { GSAPProvider } from "@/components/providers/GSAPProvider";
@@ -39,22 +38,12 @@ export const Route = createRootRoute({
       },
       { name: "apple-mobile-web-app-title", content: "Sameer Akhtar" },
       { name: "author", content: "Sameer Akhtar" },
-      ...seo({
-        title: "Sameer Akhtar | Software Engineer & Founder",
-        description:
-          "Founder of Styleum — AI outfit generation at $0.002/call. Software engineering intern at Brunosoft. Math & CS at DePaul University. Previously Apple.",
-        keywords:
-          "Sameer Akhtar, Software Engineer, Full Stack Developer, Founder, Styleum, Startup Founder, AI Developer, iOS Developer, Swift Developer, React Developer, Next.js Developer, TypeScript, JavaScript, Python, Machine Learning, Computer Vision, DePaul University, Chicago Developer, Tech Entrepreneur",
-        image: "https://sameerakhtar.dev/SameerAkhtar.dev-logo-navybg.jpg",
-        url: "https://sameerakhtar.dev",
-      }),
     ],
     links: [
       { rel: "stylesheet", href: globalsCss },
       { rel: "icon", type: "image/png", href: "/icon.png" },
       { rel: "apple-touch-icon", href: "/apple-icon.png" },
       { rel: "manifest", href: "/manifest.json" },
-      { rel: "canonical", href: "https://sameerakhtar.dev" },
     ],
     scripts: [
       // Inline FOUC-prevention script — runs synchronously before React
@@ -64,11 +53,7 @@ export const Route = createRootRoute({
       { children: themeFoucScript },
     ],
   }),
-  notFoundComponent: () => (
-    <RootDocument>
-      <NotFound />
-    </RootDocument>
-  ),
+  notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
 

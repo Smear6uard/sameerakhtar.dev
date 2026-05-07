@@ -107,7 +107,7 @@ export function CaseStudyClient({
             transition={{ duration: 0.4 }}
           >
             <Link
-              href="/#work"
+              href="/work"
               className="text-sm text-text-muted hover:text-accent transition-colors inline-flex items-center gap-1 group"
             >
               <span className="group-hover:-translate-x-1 transition-transform">←</span> back to
@@ -215,7 +215,7 @@ export function CaseStudyClient({
           {/* Next project navigation */}
           <AnimatedSection className="mt-20 pt-12 border-t border-white/10">
             <Link
-              href="/#work"
+              href="/work"
               className="group flex items-center justify-between p-6 rounded-xl border border-white/10 hover:border-accent/30 hover:bg-accent/5 transition-all duration-300"
             >
               <div>
