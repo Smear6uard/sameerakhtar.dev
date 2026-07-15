@@ -1,45 +1,13 @@
-import { useEffect, useState } from "react";
 import { HandSkeleton } from "./HandSkeleton";
 import { PERCEPTION_SAMPLE_KEYPOINTS } from "./perception-sample";
 
-const SAMPLE_IMAGE = "/perception/sample-hand.jpg";
-
 /**
- * Default state — a stylized hand silhouette plus the 21 pre-computed
- * keypoints. If a real photo is added at /public/perception/sample-hand.jpg
- * it takes priority; otherwise the SVG silhouette renders inline.
+ * Default state — a stylized hand silhouette plus 21 pre-computed keypoints.
  */
 export function SampleOverlay() {
-  const [imageOk, setImageOk] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const probe = new window.Image();
-    probe.onload = () => {
-      if (!cancelled) setImageOk(true);
-    };
-    probe.onerror = () => {
-      if (!cancelled) setImageOk(false);
-    };
-    probe.src = SAMPLE_IMAGE;
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
     <div className="absolute inset-0">
-      {imageOk ? (
-        <img
-          src={SAMPLE_IMAGE}
-          alt="Sample hand for landmark detection"
-          className="absolute inset-0 h-full w-full object-cover"
-          loading="lazy"
-          decoding="async"
-        />
-      ) : (
-        <HandSilhouette />
-      )}
+      <HandSilhouette />
       <HandSkeleton
         hands={[PERCEPTION_SAMPLE_KEYPOINTS]}
         animate

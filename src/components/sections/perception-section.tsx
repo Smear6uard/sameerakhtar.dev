@@ -53,7 +53,7 @@ export function PerceptionSection() {
               <p>
                 Hand tracking via MediaPipe Hand Landmarker, running entirely in your browser.{" "}
                 <span className="text-text-primary">
-                  21 keypoints per hand, 30 frames per second, no data leaves this tab.
+                  21 keypoints per hand, up to 20 frames per second, no data leaves this tab.
                 </span>
               </p>
               <p>

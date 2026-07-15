@@ -5,6 +5,7 @@ export function getRouter() {
   return createRouter({
     routeTree,
     scrollRestoration: true,
+    defaultHashScrollIntoView: { behavior: "smooth", block: "start" },
     defaultPreload: "intent",
   });
 }

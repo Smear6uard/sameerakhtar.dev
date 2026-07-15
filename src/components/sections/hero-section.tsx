@@ -1,83 +1,21 @@
-"use client";
-
-import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AIRoutingDemo } from "@/components/ui/AIRoutingDemo";
 import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
 import { ParallaxBackground } from "@/components/ui/ParallaxBackground";
 import { CopyEmail } from "@/components/ui/CopyEmail";
-import { WaveText } from "@/components/ui/CylinderText";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-// Feature flag for 3D effect - can toggle between simple and advanced
-const USE_3D_TEXT = true;
 
 export function HeroSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-
-    // Check for reduced motion preference
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) return;
-
-    const ctx = gsap.context(() => {
-      // Hero content fades and scales down as you scroll
-      gsap.to(contentRef.current, {
-        opacity: 0,
-        y: -100,
-        scale: 0.95,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      // Name splits and spreads on scroll (subtle effect)
-      if (headingRef.current) {
-        const chars = headingRef.current.querySelectorAll(".char");
-        gsap.to(chars, {
-          letterSpacing: "0.05em",
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "50% top",
-            scrub: 1,
-          },
-        });
-      }
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  // Split name into characters for animation
   const name = "sameer akhtar";
-  const nameChars = name.split("");
 
   return (
     <>
       <ParallaxBackground />
       <section
-        ref={sectionRef}
         id="hero"
         className="min-h-screen flex flex-col justify-center relative overflow-x-hidden"
       >
         <div className="max-w-6xl mx-auto w-full px-4">
-          <div ref={contentRef} className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left column - Text content */}
             <div>
               <motion.div
@@ -96,45 +34,14 @@ export function HeroSection() {
                   building AI that ships to the App Store
                 </motion.p>
 
-                {/* 3D Text effect on desktop, simple animation on mobile */}
-                {USE_3D_TEXT ? (
-                  <>
-                    {/* Desktop: 3D Wave Text */}
-                    <div className="hidden md:block">
-                      <WaveText text={name} />
-                    </div>
-                    {/* Mobile: Simple fade-in (no per-char stagger) */}
-                    <motion.h1
-                      className="md:hidden text-5xl font-bold text-text-primary tracking-tight"
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.1 }}
-                    >
-                      {name}
-                    </motion.h1>
-                  </>
-                ) : (
-                  <h1
-                    ref={headingRef}
-                    className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight"
-                  >
-                    {nameChars.map((char, index) => (
-                      <motion.span
-                        key={index}
-                        className="char inline-block"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: 0.1 + index * 0.03,
-                          ease: [0.25, 0.46, 0.45, 0.94],
-                        }}
-                      >
-                        {char === " " ? "\u00A0" : char}
-                      </motion.span>
-                    ))}
-                  </h1>
-                )}
+                <motion.h1
+                  className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary tracking-tight"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1 }}
+                >
+                  {name}
+                </motion.h1>
                 <motion.p
                   className="text-lg md:text-xl text-text-secondary mt-3"
                   initial={{ opacity: 0 }}

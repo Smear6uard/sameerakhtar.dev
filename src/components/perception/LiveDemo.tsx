@@ -1,19 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { HandLandmarker } from "@mediapipe/tasks-vision";
 import { HandSkeleton } from "./HandSkeleton";
 import type { NormalizedPoint } from "./perception-sample";
-
-const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm";
-const MODEL_URL =
-  "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
 
 const FPS_WINDOW = 30;
 const LOW_FPS_THRESHOLD = 10;
 const LOW_FPS_PROBE_FRAMES = 60;
 const SMOOTHING_ALPHA = 0.55;
 const TRACK_RESET_DISTANCE = 0.18;
+const MIN_INFERENCE_INTERVAL = 1000 / 20;
+const FPS_UPDATE_INTERVAL = 500;
+const CAMERA_TIMEOUT = 10000;
+const MODEL_TIMEOUT = 25000;
 
 interface LiveDemoProps {
   /** Visible-on-screen state from the parent IntersectionObserver. */
@@ -28,7 +27,7 @@ interface LiveDemoProps {
 export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const landmarkerRef = useRef<HandLandmarker | null>(null);
+  const workerRef = useRef<Worker | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef<number | null>(null);
   const vfcRef = useRef<number | null>(null);
@@ -36,7 +35,10 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
   const probeFramesRef = useRef(0);
   const probeStartRef = useRef(0);
   const lastVideoTimeRef = useRef(-1);
+  const lastInferenceTimeRef = useRef(0);
+  const lastFpsUpdateRef = useRef(0);
   const isInViewRef = useRef(isInView);
+  const framePendingRef = useRef(false);
   const smoothedHandsRef = useRef<ReadonlyArray<ReadonlyArray<NormalizedPoint>>>([]);
 
   const [hands, setHands] = useState<ReadonlyArray<ReadonlyArray<NormalizedPoint>>>([]);
@@ -56,24 +58,56 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
     async function start() {
       if (!videoRef.current) return;
 
-      // 1. Camera access
-      let stream: MediaStream;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "user",
-            width: { ideal: 960 },
-            height: { ideal: 720 },
-            frameRate: { ideal: 30, max: 30 },
-          },
-          audio: false,
-        });
-      } catch {
-        if (!cancelled) onUnsupported("camera access unavailable");
+      // Camera permission and model loading can happen concurrently after the
+      // user's click. This removes several seconds from the live-demo startup
+      // path on slower connections.
+      const pendingCamera = navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "user",
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          frameRate: { ideal: 24, max: 24 },
+        },
+        audio: false,
+      });
+      const worker = new Worker(new URL("./hand-landmarker.worker.ts", import.meta.url), {
+        type: "module",
+      });
+      workerRef.current = worker;
+      const pendingModel = initializeWorker(worker);
+      const [cameraResult, modelResult] = await Promise.allSettled([
+        withTimeout(pendingCamera, CAMERA_TIMEOUT, "camera timed out"),
+        withTimeout(pendingModel, MODEL_TIMEOUT, "model timed out"),
+      ]);
+
+      if (cameraResult.status === "rejected" || modelResult.status === "rejected") {
+        if (cameraResult.status === "fulfilled") {
+          cameraResult.value.getTracks().forEach((track) => track.stop());
+        }
+        worker.terminate();
+        workerRef.current = null;
+        // A timeout does not cancel the browser operation. Dispose a late
+        // result so retries never leave a camera stream or model behind.
+        if (cameraResult.status === "rejected") {
+          pendingCamera.then(
+            (lateStream) => lateStream.getTracks().forEach((track) => track.stop()),
+            () => undefined,
+          );
+        }
+        if (!cancelled) {
+          onUnsupported(
+            cameraResult.status === "rejected"
+              ? "camera access unavailable"
+              : "hand-tracking model failed to load",
+          );
+        }
         return;
       }
+
+      const stream = cameraResult.value;
       if (cancelled) {
         stream.getTracks().forEach((t) => t.stop());
+        worker.terminate();
         return;
       }
       streamRef.current = stream;
@@ -82,39 +116,7 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
         /* play() can reject on rapid mount/unmount — ignore. */
       });
 
-      // 2. MediaPipe — lazy import keeps the ~10MB cost off the initial bundle.
-      let landmarker: HandLandmarker;
-      try {
-        const { FilesetResolver, HandLandmarker: HandLandmarkerClass } =
-          await import("@mediapipe/tasks-vision");
-        const fileset = await FilesetResolver.forVisionTasks(WASM_URL);
-        const options = {
-          runningMode: "VIDEO" as const,
-          numHands: 2,
-          minHandDetectionConfidence: 0.6,
-          minHandPresenceConfidence: 0.6,
-          minTrackingConfidence: 0.75,
-        };
-        try {
-          landmarker = await HandLandmarkerClass.createFromOptions(fileset, {
-            baseOptions: { modelAssetPath: MODEL_URL, delegate: "GPU" },
-            ...options,
-          });
-        } catch {
-          landmarker = await HandLandmarkerClass.createFromOptions(fileset, {
-            baseOptions: { modelAssetPath: MODEL_URL, delegate: "CPU" },
-            ...options,
-          });
-        }
-      } catch {
-        if (!cancelled) onUnsupported("model failed to load");
-        return;
-      }
-      if (cancelled) {
-        landmarker.close();
-        return;
-      }
-      landmarkerRef.current = landmarker;
+      worker.onmessage = handleWorkerMessage;
 
       probeStartRef.current = performance.now();
       setStatus("running");
@@ -138,8 +140,8 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
 
     function processFrame() {
       const video = videoRef.current;
-      const landmarker = landmarkerRef.current;
-      if (!video || !landmarker) return;
+      const worker = workerRef.current;
+      if (!video || !worker) return;
 
       // Only run inference while in view. Keep the loop alive (cheap) so we
       // resume instantly when the section scrolls back.
@@ -148,43 +150,57 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
         return;
       }
 
-      if (video.readyState >= 2 && video.currentTime !== lastVideoTimeRef.current) {
+      if (
+        video.readyState >= 2 &&
+        video.currentTime !== lastVideoTimeRef.current &&
+        !framePendingRef.current &&
+        performance.now() - lastInferenceTimeRef.current >= MIN_INFERENCE_INTERVAL
+      ) {
         lastVideoTimeRef.current = video.currentTime;
         const now = performance.now();
-        try {
-          const result = landmarker.detectForVideo(video, now);
-          const detected = (result.landmarks ?? [])
-            .map((hand) => hand.map((p) => projectVideoPoint(video, p.x, p.y)))
-            .filter((hand) => hand.length === 21);
-          const smoothed = smoothHands(smoothedHandsRef.current, detected);
-          smoothedHandsRef.current = smoothed;
-          setHands(smoothed);
-        } catch {
-          /* Transient detection errors are non-fatal — drop the frame. */
-        }
-
-        // FPS rolling average (over the last FPS_WINDOW frames)
-        const times = frameTimesRef.current;
-        times.push(now);
-        if (times.length > FPS_WINDOW) times.shift();
-        if (times.length >= 2) {
-          const elapsed = (times[times.length - 1] - times[0]) / 1000;
-          if (elapsed > 0) setFps((times.length - 1) / elapsed);
-        }
-
-        // Low-performance probe over the first LOW_FPS_PROBE_FRAMES
-        probeFramesRef.current += 1;
-        if (probeFramesRef.current === LOW_FPS_PROBE_FRAMES) {
-          const totalElapsed = (now - probeStartRef.current) / 1000;
-          const avg = totalElapsed > 0 ? LOW_FPS_PROBE_FRAMES / totalElapsed : 0;
-          if (avg < LOW_FPS_THRESHOLD) {
-            onLowPerformance();
-            return; // Stop scheduling — parent will tear us down.
-          }
-        }
+        lastInferenceTimeRef.current = now;
+        framePendingRef.current = true;
+        createImageBitmap(video)
+          .then((bitmap) => worker.postMessage({ type: "frame", bitmap, timestamp: now }, [bitmap]))
+          .catch(() => {
+            framePendingRef.current = false;
+          });
       }
 
       scheduleFrame();
+    }
+
+    function handleWorkerMessage(event: MessageEvent) {
+      if (event.data?.type !== "result") return;
+      framePendingRef.current = false;
+      const video = videoRef.current;
+      if (!video) return;
+
+      const detected = (event.data.landmarks as NormalizedPoint[][])
+        .map((hand) => hand.map(([x, y]) => projectVideoPoint(video, x, y)))
+        .filter((hand) => hand.length === 21);
+      const smoothed = smoothHands(smoothedHandsRef.current, detected);
+      smoothedHandsRef.current = smoothed;
+      setHands(smoothed);
+
+      const now = performance.now();
+      const times = frameTimesRef.current;
+      times.push(now);
+      if (times.length > FPS_WINDOW) times.shift();
+      if (times.length >= 2 && now - lastFpsUpdateRef.current >= FPS_UPDATE_INTERVAL) {
+        const elapsed = (times[times.length - 1] - times[0]) / 1000;
+        if (elapsed > 0) {
+          setFps((times.length - 1) / elapsed);
+          lastFpsUpdateRef.current = now;
+        }
+      }
+
+      probeFramesRef.current += 1;
+      if (probeFramesRef.current === LOW_FPS_PROBE_FRAMES) {
+        const totalElapsed = (now - probeStartRef.current) / 1000;
+        const avg = totalElapsed > 0 ? LOW_FPS_PROBE_FRAMES / totalElapsed : 0;
+        if (avg < LOW_FPS_THRESHOLD) onLowPerformance();
+      }
     }
 
     start().catch(() => {
@@ -209,10 +225,8 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
         streamRef.current.getTracks().forEach((t) => t.stop());
         streamRef.current = null;
       }
-      if (landmarkerRef.current) {
-        landmarkerRef.current.close();
-        landmarkerRef.current = null;
-      }
+      workerRef.current?.terminate();
+      workerRef.current = null;
     };
     // Only run once per mount — the loop is owned by this effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -243,6 +257,33 @@ export function LiveDemo({ isInView, onLowPerformance, onUnsupported }: LiveDemo
       </div>
     </div>
   );
+}
+
+function initializeWorker(worker: Worker): Promise<void> {
+  return new Promise((resolve, reject) => {
+    worker.onmessage = (event) => {
+      if (event.data?.type === "ready") resolve();
+      if (event.data?.type === "error") reject(new Error("model failed to load"));
+    };
+    worker.onerror = () => reject(new Error("worker failed to load"));
+    worker.postMessage({ type: "init" });
+  });
+}
+
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, message: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timeout = window.setTimeout(() => reject(new Error(message)), timeoutMs);
+    promise.then(
+      (value) => {
+        window.clearTimeout(timeout);
+        resolve(value);
+      },
+      (error: unknown) => {
+        window.clearTimeout(timeout);
+        reject(error);
+      },
+    );
+  });
 }
 
 function projectVideoPoint(video: HTMLVideoElement, x: number, y: number): NormalizedPoint {

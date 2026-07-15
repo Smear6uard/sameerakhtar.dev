@@ -10,6 +10,98 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "making-styleum",
+    title: "Making Styleum: From Closet Scan to Daily Outfit",
+    description:
+      "What it took to turn a five-stage fashion ML pipeline into an iOS app people could use every morning.",
+    date: "2026-07-14",
+    readingTime: "7 min read",
+    tags: ["Styleum", "iOS", "AI", "Startups"],
+    content: `
+Styleum started with a simple frustration: getting dressed should not require twenty minutes of scrolling, searching, and second-guessing. Most wardrobe apps made the setup feel like work before they offered anything useful.
+
+I wanted the opposite experience. Scan what you own, learn what works together, and open the app to a useful outfit—not another empty dashboard.
+
+Eight weeks after the first commit, Styleum was on the App Store. Getting there meant building much more than an AI prompt.
+
+## Start With the Time to Value
+
+The first product decision was also the most important: a new user had to see value quickly.
+
+That changed how I thought about onboarding. Instead of asking someone to manually catalog every detail, Styleum uses the camera and a vision pipeline to do the tedious work. The app removes the background, identifies the garment, extracts useful attributes, and turns the result into a representation the recommendation system can search.
+
+The goal was not to collect the most data. It was to collect the smallest amount of data needed to make a good first outfit.
+
+## The Five-Stage Pipeline
+
+No single model was good enough, fast enough, and cheap enough for the entire job. Styleum uses specialized models, with each stage responsible for one narrow task:
+
+- **BiRefNet** isolates each garment from its background
+- **Florence-2** extracts category, color, pattern, and other attributes
+- **FashionSigLIP** creates fashion-specific embeddings for similarity and retrieval
+- **AWS Rekognition** helps model body proportions when a user chooses to provide a photo
+- **Gemini** composes the final outfit and explains why the pieces work together
+
+This architecture took more engineering than sending an image to one general-purpose model, but it produced better fashion results and kept the cost near $0.002 per generated outfit.
+
+\`\`\`typescript
+async function buildDailyOutfit(wardrobe: Garment[]) {
+  const candidates = await retrieveCompatiblePieces(wardrobe);
+  const context = await buildStyleContext(candidates);
+
+  return composeOutfit({
+    candidates,
+    context,
+    constraints: ["weather", "occasion", "recently_worn"],
+  });
+}
+\`\`\`
+
+## Build the Product Around the Pipeline
+
+An ML pipeline is not a product by itself. Models fail, uploads stall, permissions get denied, and people close the app halfway through a scan.
+
+The iOS client is built in SwiftUI, with a Hono and TypeScript backend coordinating the model stages. I treated every pipeline boundary as a recoverable state. A scan can retry without duplicating a garment. A partial wardrobe remains usable. Slow stages report progress instead of freezing the interface.
+
+Those details mattered more to the experience than another percentage point on a benchmark.
+
+## Daily Outfits Need Memory
+
+The first version could generate a plausible outfit, but plausible is not the same as personal. A daily styling product needs to remember what it suggested, what the user wore, and what they skipped.
+
+I added lightweight preference signals and recent-outfit history so the system would not recommend the same combination every day. Weather and occasion act as constraints, while garment embeddings provide the candidate pool. The generative model works near the end of the process instead of deciding everything from scratch.
+
+That made the output more consistent and made each request cheaper.
+
+## Shipping in Eight Weeks
+
+The schedule forced clear choices:
+
+- Native iOS interactions were worth the investment because the camera is central to the product
+- Specialized models were worth the integration cost because fashion retrieval quality was a core feature
+- Observability had to ship with the pipeline so failed stages and per-outfit cost were visible
+- Features that did not improve the first scan or the next morning's outfit waited
+
+I also built notification scheduling, streaks, and XP as supporting systems. They were useful only after the core loop—scan, generate, wear, return—worked reliably.
+
+## What I Would Do Differently
+
+I would instrument onboarding earlier. I initially measured successful outfit generation, but the more useful question was where users stopped before their first outfit. That data changed small pieces of copy, permission timing, and progress feedback.
+
+I would also build the model evaluation set alongside the first pipeline prototype. Fashion quality is subjective, but a consistent set of wardrobes and occasions makes regressions much easier to spot.
+
+## What Making Styleum Taught Me
+
+The biggest lesson was that good AI products hide model complexity without hiding system state. Users do not need to know which vision model is running, but they do need to know that their scan is progressing, that a retry is safe, and why an outfit was suggested.
+
+Styleum became real when the pipeline stopped feeling like a demo and started behaving like dependable software. The model choices mattered. The recovery paths, cost controls, and product constraints are what made it shippable.
+
+---
+
+*Styleum is available on the [App Store](https://apps.apple.com/us/app/styleum-daily-fits/id6757777880).*
+    `.trim(),
+  },
+  {
     slug: "building-ai-pipeline-002-per-call",
     title: "Building an AI Pipeline at $0.002/Call",
     description:

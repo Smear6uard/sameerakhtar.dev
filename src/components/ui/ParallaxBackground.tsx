@@ -1,20 +1,9 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
 interface FloatingOrb {
   size: number;
   x: string;
   y: string;
   color: string;
   blur: number;
-  speed: number;
 }
 
 const orbs: FloatingOrb[] = [
@@ -25,7 +14,6 @@ const orbs: FloatingOrb[] = [
     y: "30%",
     color: "rgba(249, 115, 22, 0.15)",
     blur: 100,
-    speed: -30,
   },
   // Secondary accent orb
   {
@@ -34,7 +22,6 @@ const orbs: FloatingOrb[] = [
     y: "60%",
     color: "rgba(249, 115, 22, 0.08)",
     blur: 120,
-    speed: -50,
   },
   // Subtle blue accent
   {
@@ -43,7 +30,6 @@ const orbs: FloatingOrb[] = [
     y: "20%",
     color: "rgba(96, 165, 250, 0.06)",
     blur: 80,
-    speed: -20,
   },
   // Deep purple hint
   {
@@ -52,71 +38,16 @@ const orbs: FloatingOrb[] = [
     y: "70%",
     color: "rgba(168, 85, 247, 0.05)",
     blur: 100,
-    speed: -40,
   },
 ];
 
 export function ParallaxBackground() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const orbRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const isMobileRef = useRef(false);
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) return;
-
-    isMobileRef.current = window.innerWidth < 768;
-
-    // On mobile, skip GSAP animations entirely — just show static orbs
-    if (isMobileRef.current) return;
-
-    const ctx = gsap.context(() => {
-      orbRefs.current.forEach((orb, index) => {
-        if (!orb) return;
-
-        // Parallax scroll effect
-        gsap.to(orb, {
-          yPercent: orbs[index].speed,
-          ease: "none",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-
-        // Subtle floating animation
-        gsap.to(orb, {
-          y: "+=20",
-          x: "+=10",
-          duration: 4 + index,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0"
-      aria-hidden="true"
-    >
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
       {orbs.map((orb, index) => (
         <div
           key={index}
-          ref={(el) => {
-            orbRefs.current[index] = el;
-          }}
-          className="absolute rounded-full will-change-transform"
+          className="absolute rounded-full"
           style={{
             width: orb.size,
             height: orb.size,

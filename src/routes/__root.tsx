@@ -11,9 +11,6 @@ import { Analytics } from "@vercel/analytics/react";
 import globalsCss from "@/styles/globals.css?url";
 import { ThemeProvider, themeFoucScript } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { GSAPProvider } from "@/components/providers/GSAPProvider";
-import { PageTransition } from "@/components/providers/PageTransition";
-import { SmoothScroll } from "@/components/SmoothScroll";
 import { Cursor } from "@/components/Cursor";
 import { SideNav } from "@/components/SideNav";
 import { MobileNav } from "@/components/MobileNav";
@@ -77,18 +74,12 @@ function RootDocument({ children }: { children: ReactNode }) {
           <ToastProvider>
             <ConsoleEasterEgg />
             <KonamiEasterEgg />
-            <GSAPProvider>
-              <SmoothScroll>
-                <Cursor />
-                <SideNav />
-                <MobileNav />
-                <main className="md:pl-[72px] pb-20 md:pb-0">
-                  <PageTransition>{children}</PageTransition>
-                </main>
-                <Footer />
-                <Analytics />
-              </SmoothScroll>
-            </GSAPProvider>
+            <Cursor />
+            <SideNav />
+            <MobileNav />
+            <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
+            <Footer />
+            <Analytics />
           </ToastProvider>
         </ThemeProvider>
         <Scripts />

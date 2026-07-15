@@ -13,6 +13,7 @@ export function PerceptionDemo() {
   const [isMobilePortrait, setIsMobilePortrait] = useState(false);
   const [showMobileTip, setShowMobileTip] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const mobileTipTimerRef = useRef<number | null>(null);
 
   // Pause the inference loop when scrolled out of view. The LiveDemo loop
   // reads `isInView` via ref and skips inference while false, so resume is
@@ -43,16 +44,24 @@ export function PerceptionDemo() {
     }
     if (isMobilePortrait) {
       setShowMobileTip(true);
-      // Auto-hide the tip after 4s — it's a guidance hint, not blocking.
-      window.setTimeout(() => setShowMobileTip(false), 4000);
+      if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
+      mobileTipTimerRef.current = window.setTimeout(() => setShowMobileTip(false), 4000);
     }
     setMode({ kind: "live" });
   }, [isMobilePortrait]);
 
   const handleStop = useCallback(() => {
+    if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
     setMode({ kind: "sample" });
     setShowMobileTip(false);
   }, []);
+
+  useEffect(
+    () => () => {
+      if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
+    },
+    [],
+  );
 
   const handleUnsupported = useCallback((reason: string) => {
     setMode({ kind: "unsupported", reason });

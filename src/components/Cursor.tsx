@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export function Cursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const pointerX = useMotionValue(-100);
+  const pointerY = useMotionValue(-100);
+  const ringX = useSpring(pointerX, { damping: 30, stiffness: 300 });
+  const ringY = useSpring(pointerY, { damping: 30, stiffness: 300 });
 
   useEffect(() => {
     // Check for touch devices
@@ -17,7 +20,8 @@ export function Cursor() {
     setIsVisible(true);
 
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      pointerX.set(e.clientX);
+      pointerY.set(e.clientY);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -41,7 +45,7 @@ export function Cursor() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, []);
+  }, [pointerX, pointerY]);
 
   if (!isVisible) {
     return null;
@@ -49,32 +53,19 @@ export function Cursor() {
 
   return (
     <>
-      {/* Gradient spotlight - larger, more prominent */}
-      <motion.div
-        className="pointer-events-none fixed inset-0 z-10 transition-opacity duration-300"
-        animate={{ x: position.x - 300, y: position.y - 300 }}
-        transition={{ type: "spring", damping: 25, stiffness: 150, mass: 0.5 }}
-      >
-        <div className="h-[600px] w-[600px] rounded-full bg-accent/[0.05] blur-[100px]" />
-      </motion.div>
-
-      {/* Cursor dot */}
       <motion.div
         className="pointer-events-none fixed z-50 h-2 w-2 rounded-full bg-accent mix-blend-difference"
-        animate={{ x: position.x - 4, y: position.y - 4 }}
-        transition={{ type: "spring", damping: 50, stiffness: 500 }}
+        style={{ x: pointerX, y: pointerY, translateX: "-50%", translateY: "-50%" }}
       />
 
-      {/* Cursor ring */}
       <motion.div
         className="pointer-events-none fixed z-50 rounded-full border border-accent/50 mix-blend-difference"
+        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
         animate={{
-          x: position.x - (isHovering ? 24 : 16),
-          y: position.y - (isHovering ? 24 : 16),
           width: isHovering ? 48 : 32,
           height: isHovering ? 48 : 32,
         }}
-        transition={{ type: "spring", damping: 30, stiffness: 200 }}
+        transition={{ duration: 0.15 }}
       />
     </>
   );
