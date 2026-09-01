@@ -1,80 +1,279 @@
-// Project case study data + syntax highlighting.
-// Extracted from src/app/work/[slug]/page.tsx so the route file can stay
-// lean and the data is reusable from sitemap generation.
+// Case-study data. Static and developer-controlled; the code highlighter
+// below escapes HTML before wrapping tokens, so its output is safe to render.
+
+import { links } from "./site";
 
 export type ContentBlock =
   | { type: "text"; content: string }
   | { type: "heading"; level: 2 | 3; content: string }
   | { type: "code"; language: string; content: string; filename?: string }
-  | { type: "image"; src: string; alt: string; caption?: string }
   | { type: "list"; items: string[] }
-  | { type: "callout"; content: string; variant?: "info" | "warning" | "success" };
+  | { type: "callout"; content: string };
+
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
+export interface Highlight {
+  value: string;
+  label: string;
+}
 
 export interface Project {
+  slug: string;
   title: string;
+  /** One line for lists and meta descriptions. */
   subtitle: string;
+  /** Two or three sentences for the home-page row. */
+  summary: string;
   timeline: string;
+  year: string;
   role: string;
   stack: string[];
-  github?: string;
-  live?: string;
-  heroImage?: string;
-  metrics: { label: string; value: string }[];
+  links: ProjectLink[];
+  highlights: Highlight[];
+  featured: boolean;
+  /** ISO date used for structured data. */
+  datePublished: string;
   content: ContentBlock[];
 }
 
 export const projects: Record<string, Project> = {
-  styleum: {
-    title: "Styleum",
+  renaro: {
+    slug: "renaro",
+    title: "Renaro",
+    subtitle: "Multi-tenant dispatch software for taxi and limo fleets that shows its work",
+    summary:
+      "Dispatch, payments, driver operations, messaging, and analytics for fleet operators, built and shipped solo. Every dispatch decision exposes its factors, every state change leaves an audit record, and the money paths are idempotent by construction.",
+    timeline: "Mar 2026 – Present",
+    year: "2026",
+    role: "Founder & sole engineer",
+    stack: [
+      "TypeScript",
+      "Fastify",
+      "PostgreSQL",
+      "Drizzle",
+      "pg-boss",
+      "Redis",
+      "WebSockets",
+      "Stripe Connect",
+      "WorkOS",
+    ],
+    links: [{ label: "renaroapp.com", href: links.renaro }],
+    highlights: [
+      { value: "4,543", label: "connections held under a 10K reconnect storm, up from 124" },
+      { value: "97%", label: "event delivery at simulated 3K-tenant load" },
+      { value: "$3K+", label: "pre-launch revenue, operator pilot prepared" },
+    ],
+    featured: true,
+    datePublished: "2026-03-01",
+    content: [
+      { type: "heading", level: 2, content: "The problem" },
+      {
+        type: "text",
+        content:
+          "Taxi, limo, and chauffeur operators run on dispatch systems that make decisions nobody can explain. A driver gets assigned, a price gets quoted, a payout gets held, and the operator has no record of why. I spent two years integrating one of those systems at a limo company, which is where the idea for Renaro came from.",
+      },
+      { type: "heading", level: 2, content: "What I built" },
+      {
+        type: "text",
+        content:
+          "Renaro is a multi-tenant platform covering the whole operation: a live dispatch console with driver scoring, bookings from phone, web, app, and corporate portals, driver and passenger mobile apps, GPS telemetry, a double-entry ledger for payments and settlements, reporting, and an audit trail on every state change. The positioning is auditable automation: dispatch decisions expose their factors and weights, and pricing changes can be simulated against history before they go live.",
+      },
+      { type: "heading", level: 2, content: "The reconnect storm" },
+      {
+        type: "text",
+        content:
+          "Real-time dispatch lives or dies on WebSockets, so I load-tested the worst case: 10,000 clients reconnecting at once, the way they would after a deploy or a network blip. The first run held 124 authenticated connections. Hardening the handshake and the connection lifecycle brought that to 4,543.",
+      },
+      {
+        type: "text",
+        content:
+          "The second bottleneck was event fan-out. Polling the outbox per tenant collapsed as tenant count grew. Replacing it with a single SKIP LOCKED batch claim let a pool of workers drain the outbox without contending on rows, and restored 97% event delivery at a simulated 3,000-tenant load.",
+      },
+      {
+        type: "code",
+        language: "sql",
+        filename: "claim_batch.sql",
+        content: `-- Workers claim a batch without blocking each other.
+-- Rows locked by another worker are skipped, not waited on.
+UPDATE outbox_events
+SET    claimed_by = $1, claimed_at = now()
+WHERE  id IN (
+  SELECT id
+  FROM   outbox_events
+  WHERE  claimed_at IS NULL
+  ORDER  BY created_at
+  FOR UPDATE SKIP LOCKED
+  LIMIT  $2
+)
+RETURNING id, tenant_id, payload;`,
+      },
+      { type: "heading", level: 2, content: "Money paths" },
+      {
+        type: "text",
+        content:
+          "Payments run on Stripe Connect: ACH, disputes, refunds, payout holds, and metered billing. Every path is idempotent, webhooks are deduplicated before they touch state, and balance updates use compare-and-swap so a retried webhook or a double-click can never move money twice.",
+      },
+      { type: "heading", level: 2, content: "Tenant isolation" },
+      {
+        type: "list",
+        items: [
+          "Forced PostgreSQL row-level security on every tenant table, so isolation does not depend on remembering a WHERE clause.",
+          "CI schema gates that fail the build if a tenant table ships without a policy.",
+          "An adversarial test suite that attempts cross-tenant reads, writes, and payment IDOR against the live API.",
+        ],
+      },
+      { type: "heading", level: 2, content: "Where it stands" },
+      {
+        type: "callout",
+        content:
+          "$3K+ in pre-launch revenue and an operator pilot prepared, with import pipelines from FastTrak and Limo Anywhere so a fleet can run both systems in parallel for a week or two before switching.",
+      },
+      { type: "heading", level: 2, content: "What I learned" },
+      {
+        type: "text",
+        content:
+          "The features that sold were not the clever ones. Operators wanted to see why a driver was chosen and to trust that a payout would not be lost. Most of the engineering effort went into making the boring paths boring: retries, dedup, locks, and policies that hold without anyone remembering them.",
+      },
+    ],
+  },
+
+  "brand-discovery": {
+    slug: "brand-discovery",
+    title: "AI Brand Discovery",
     subtitle:
-      "AI-powered iOS styling app generating outfits at $0.002 each — shipped to the App Store in 8 weeks",
+      "A GenAI feature at Quantum Metric that derives survey branding from PDFs and websites",
+    summary:
+      "Owned end to end as an intern: a React/TypeScript frontend, a Go backend, and a new browser-rendering service that turns a customer's website or PDF into an on-brand survey theme. Taken from pre-GA design to production launch.",
+    timeline: "Jun 2026 – Present",
+    year: "2026",
+    role: "Software engineering intern, feature owner · Quantum Metric",
+    stack: [
+      "Go",
+      "Gemini 2.5 Flash",
+      "Vertex AI",
+      "Cloud Run",
+      "Playwright",
+      "Terraform",
+      "Redis",
+      "React",
+      "TypeScript",
+    ],
+    links: [],
+    highlights: [
+      { value: "Pre-GA → GA", label: "designed and launched to production" },
+      { value: "~2–3 s", label: "warm end-to-end renders" },
+      { value: "SSRF-hardened", label: "rendering service for untrusted URLs" },
+    ],
+    featured: true,
+    datePublished: "2026-06-01",
+    content: [
+      {
+        type: "callout",
+        content:
+          "This is internal product work. The details here are limited to what appears on my public résumé.",
+      },
+      { type: "heading", level: 2, content: "What it does" },
+      {
+        type: "text",
+        content:
+          "Customers building surveys want them to look like their brand without hand-picking colors and fonts. AI Brand Discovery takes a website URL or a PDF, renders it, measures what is actually on the page, and proposes a survey theme grounded in those measurements.",
+      },
+      { type: "heading", level: 2, content: "Ownership" },
+      {
+        type: "text",
+        content:
+          "I owned the feature from pre-GA design through production launch across three surfaces: the React/TypeScript frontend, the Go backend, and a new browser-rendering service that did not exist before.",
+      },
+      { type: "heading", level: 2, content: "Keeping the model honest" },
+      {
+        type: "text",
+        content:
+          "The pipeline runs on Go with Gemini 2.5 Flash through Vertex AI. Output is schema-constrained so the frontend never parses free text, and the prompts carry injection defenses because the input is whatever a customer's website says. Colors are not taken from the model at all: they are grounded in palettes measured from the render and checked for WCAG contrast, which removed the model's habit of inventing brand colors.",
+      },
+      { type: "heading", level: 2, content: "Rendering untrusted URLs" },
+      {
+        type: "list",
+        items: [
+          "Cloud Run + Playwright service that renders arbitrary customer URLs.",
+          "Terraform for Direct VPC egress, Cloud NAT, OIDC auth between services, and a deny-private-range firewall.",
+          "SSRF hardening through DNS pinning and redirect revalidation, so a redirect cannot reach internal ranges after the initial check.",
+        ],
+      },
+      { type: "heading", level: 2, content: "Workers that fail well" },
+      {
+        type: "text",
+        content:
+          "Go workers with Redis-backed async orchestration handle the long-running renders: rate limiting, stale-job recovery, failure-aware retries, graceful shutdown draining, and cold-start egress validation so a fresh instance proves it can reach the internet before it accepts work. Warm end-to-end renders complete in about two to three seconds.",
+      },
+      { type: "heading", level: 2, content: "What I learned" },
+      {
+        type: "text",
+        content:
+          "The interesting engineering was around the model, not inside it. Grounding, constraints, and a rendering service that cannot be turned against the network mattered more to shipping than any prompt.",
+      },
+    ],
+  },
+
+  styleum: {
+    slug: "styleum",
+    title: "Styleum",
+    subtitle: "An iOS wardrobe app that builds four outfits from your closet every morning",
+    summary:
+      "Photograph your clothes once and wake up to four weather-aware outfits on your lock screen at 9 AM. A five-stage vision and LLM pipeline runs each outfit for about $0.002. Built solo and shipped to the App Store in eight weeks; now past 100 users.",
     timeline: "Dec 2025 – Present",
-    role: "Founder & Engineer",
+    year: "2025",
+    role: "Founder & sole engineer",
     stack: [
       "Swift",
       "SwiftUI",
-      "Hono",
       "TypeScript",
-      "AWS Rekognition",
+      "Hono",
       "BiRefNet",
       "Florence-2",
       "FashionSigLIP",
       "Gemini",
     ],
-    live: "https://apps.apple.com/us/app/styleum-daily-fits/id6757777880",
-    metrics: [
-      { label: "Cost per Outfit", value: "$0.002" },
-      { label: "vs. Competitors", value: "40% cheaper" },
-      { label: "Time to App Store", value: "8 weeks" },
-      { label: "Status", value: "Live" },
+    links: [
+      { label: "styleum.xyz", href: links.styleum },
+      { label: "App Store", href: links.styleumAppStore },
     ],
+    highlights: [
+      { value: "100+", label: "users on the App Store" },
+      { value: "$0.002", label: "per generated outfit" },
+      { value: "8 weeks", label: "from first commit to launch" },
+    ],
+    featured: true,
+    datePublished: "2025-12-01",
     content: [
-      { type: "heading", level: 2, content: "The Problem" },
+      { type: "heading", level: 2, content: "The problem" },
       {
         type: "text",
         content:
-          "Existing wardrobe apps demand 20+ minutes of setup before delivering any value. The AI recommendations are either too expensive to scale ($0.02+ per call) or too generic to be useful. Users churn before they ever see a styled outfit.",
+          "Wardrobe apps ask for twenty minutes of setup before they show anything useful, and the AI behind them is either too expensive to run per user or too generic to be worth opening. People churn before they ever see an outfit.",
       },
-      { type: "heading", level: 2, content: "The Insight" },
+      { type: "heading", level: 2, content: "The product" },
       {
         type: "text",
         content:
-          "Fashion-specific vision models outperform general-purpose ones by a wide margin. FashionSigLIP achieves 74% fashion retrieval accuracy vs. CLIP's 47%. By chaining specialized models instead of throwing everything at one expensive API, the pipeline costs drop dramatically.",
+          "Styleum digitises a wardrobe from one photo per garment, removes the background, identifies colour, fabric, and cut, then delivers four outfit combinations to the lock screen each morning. Selections are weather-aware, and the ranking learns from what you wear and what you skip. A Style Me mode handles occasions. Photos stay private and are never used to train models.",
       },
-      { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "5-Stage ML Pipeline" },
+      { type: "heading", level: 2, content: "Five stages instead of one model" },
       {
         type: "text",
-        content: "Each stage handles one responsibility, optimized for cost and accuracy:",
+        content:
+          "Fashion-specific models beat general-purpose vision by a wide margin: FashionSigLIP retrieves fashion items far more accurately than CLIP. Chaining narrow models, each responsible for one job, made the pipeline both better and cheaper than a single large multimodal call.",
       },
       {
         type: "list",
         items: [
-          "BiRefNet: Background removal and garment segmentation",
-          "Florence-2: Fine-grained garment attribute extraction (color, pattern, category)",
-          "FashionSigLIP: 768-dim fashion-specific embeddings for style matching",
-          "AWS Rekognition: Body type and proportion analysis",
-          "Gemini: Final outfit composition and natural language styling rationale",
+          "BiRefNet for background removal and garment segmentation",
+          "Florence-2 for garment attributes: category, colour, pattern",
+          "FashionSigLIP for 768-dimensional fashion embeddings used in retrieval",
+          "Body and proportion analysis when a user chooses to provide a photo",
+          "Gemini for final outfit composition and the styling rationale",
         ],
       },
       {
@@ -82,84 +281,77 @@ export const projects: Record<string, Project> = {
         language: "typescript",
         filename: "pipeline.ts",
         content: `async function generateOutfit(wardrobe: GarmentImage[]) {
-  // Stage 1: Segment garments ($0.0003)
-  const segments = await birefnet.segment(wardrobe);
+  const segments = await birefnet.segment(wardrobe);        // ~$0.0003
+  const attributes = await florence2.analyze(segments);      // ~$0.001
+  const embeddings = await fashionSigLIP.encode(attributes); // ~$0.00002
+  const candidates = retrieveCompatible(embeddings, history);
 
-  // Stage 2: Extract attributes ($0.001)
-  const attributes = await florence2.analyze(segments);
-
-  // Stage 3: Style embeddings ($0.00002)
-  const embeddings = await fashionSigLIP.encode(attributes);
-
-  // Stage 4: Body analysis ($0.001)
-  const bodyProfile = await rekognition.analyze(userPhoto);
-
-  // Stage 5: Compose outfit ($0.002)
-  return gemini.compose({ embeddings, bodyProfile, attributes });
-  // Total: ~$0.002/outfit
+  return gemini.compose({ candidates, attributes, weather, occasion });
+  // total: ~$0.002 per outfit
 }`,
       },
-      { type: "heading", level: 3, content: "Native iOS App" },
+      { type: "heading", level: 2, content: "Shipping it" },
       {
         type: "text",
         content:
-          "Built the full-stack iOS app in Swift/SwiftUI with a Hono/TypeScript backend. Engineered push notification scheduling with streak tracking and XP rewards using APNs and local persistence, supporting daily delivery to all users. Shipped from first commit to App Store in 8 weeks as sole engineer.",
+          "The client is SwiftUI with a Hono and TypeScript backend coordinating the stages. Every pipeline boundary is a recoverable state: a scan can retry without duplicating a garment, a partial wardrobe stays usable, and slow stages report progress instead of freezing the interface. Notifications, streaks, and outfit history shipped after the core loop worked.",
       },
-      { type: "heading", level: 2, content: "Results" },
       {
         type: "callout",
-        variant: "success",
         content:
-          "Achieved $0.002/outfit — 40% below competitor costs. Full pipeline processes wardrobe scans to styled outfits end-to-end.",
+          "Live on the App Store with a free tier and a Pro subscription. Past 100 users, at about $0.002 per generated outfit.",
       },
-      { type: "heading", level: 2, content: "Reflections" },
+      { type: "heading", level: 2, content: "What I learned" },
       {
         type: "text",
         content:
-          "The hardest part was finding the right model for each stage. General-purpose vision APIs are easy to integrate but expensive and inaccurate for fashion. Specialized models like FashionSigLIP require more pipeline engineering but deliver dramatically better results at a fraction of the cost.",
+          "Good AI products hide model complexity without hiding system state. Users never need to know which vision model ran, but they do need to know a scan is progressing, a retry is safe, and why an outfit was suggested.",
       },
     ],
   },
+
   hazardlens: {
+    slug: "hazardlens",
     title: "HazardLens",
-    subtitle: "Real-time construction safety detection pipeline using YOLO26 at 15+ FPS",
+    subtitle: "Real-time construction-site safety monitoring with YOLO26 at 15+ FPS",
+    summary:
+      "A video pipeline that detects missing PPE, hazard-zone violations, worker-vehicle proximity, and near-miss incidents, tracks workers across frames, and streams severity-scored alerts to a live dashboard.",
     timeline: "Feb 2026",
-    role: "Solo Developer",
-    stack: ["Python", "YOLO26", "OpenCV", "FastAPI", "React"],
-    github: "https://github.com/Smear6uard/HazardLens",
-    metrics: [
-      { label: "Inference Speed", value: "15+ FPS" },
-      { label: "Detection Model", value: "YOLO26" },
-      { label: "Event Types", value: "Multi-class" },
-      { label: "Alerting", value: "Real-time" },
+    year: "2026",
+    role: "Solo build",
+    stack: ["Python", "YOLO26", "OpenCV", "FastAPI", "Shapely", "React", "Docker Compose"],
+    links: [
+      { label: "GitHub", href: links.hazardlens },
+      { label: "Video demo", href: links.hazardlensDemo },
     ],
+    highlights: [
+      { value: "15+ FPS", label: "on CPU, 25–30 with a GPU" },
+      { value: "<2 ms", label: "per frame for tracking and zone checks" },
+      { value: "4 event types", label: "PPE, zones, proximity, falls" },
+    ],
+    featured: true,
+    datePublished: "2026-02-01",
     content: [
-      { type: "heading", level: 2, content: "The Problem" },
+      { type: "heading", level: 2, content: "The problem" },
       {
         type: "text",
         content:
-          "Construction sites are among the most dangerous work environments. PPE compliance monitoring is typically manual, intermittent, and reactive — violations are caught after incidents, not before them.",
+          "PPE compliance on construction sites is checked by people, occasionally, and after the fact. Violations get noticed when something has already gone wrong.",
       },
-      { type: "heading", level: 2, content: "The Insight" },
+      { type: "heading", level: 2, content: "The pipeline" },
       {
         type: "text",
         content:
-          "YOLO26's NMS-free inference architecture eliminates the post-processing bottleneck that limits real-time detection pipelines. Combined with centroid-based object tracking, you can monitor compliance continuously without sacrificing frame rate.",
-      },
-      { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Detection Pipeline" },
-      {
-        type: "text",
-        content:
-          "Built a real-time video processing pipeline that handles multi-class PPE compliance classification with centroid object tracking across frames:",
+          "Frames are decoded with OpenCV and run through YOLO26, whose NMS-free architecture removes the post-processing step that usually caps real-time throughput. Detections then pass through PPE classification, polygon zone checks, centroid tracking, and temporal event detection before annotated frames stream to the dashboard.",
       },
       {
         type: "list",
         items: [
-          "YOLO26 NMS-free inference for hard hats, safety vests, gloves, and goggles at 15+ FPS",
-          "Centroid-based object tracking maintains identity across frames without re-identification overhead",
-          "Temporal event detection identifies zone violations, PPE removal mid-shift, and near-miss incidents",
-          "Severity-based alerting with risk scoring triggers appropriate response levels",
+          "Hard-hat and vest classification from detections, with HSV colour analysis for PPE state",
+          "Customisable hazard zones as polygons, checked with Shapely",
+          "Centroid tracking that keeps worker identity across frames without re-identification overhead",
+          "Temporal rules for PPE removed mid-shift, zone entry, worker-vehicle proximity, and fallen-worker detection",
+          "Composite risk scoring that routes events to the right alert level",
         ],
       },
       {
@@ -168,80 +360,114 @@ export const projects: Record<string, Project> = {
         filename: "detector.py",
         content: `class SafetyDetector:
     def process_frame(self, frame: np.ndarray) -> DetectionResult:
-        # YOLO26 NMS-free inference
-        detections = self.model.predict(frame, conf=0.5)
+        detections = self.model.predict(frame, conf=0.5)   # YOLO26, NMS-free
+        tracked = self.tracker.update(detections)           # centroid tracking
 
-        # Update centroid tracker
-        tracked = self.tracker.update(detections)
-
-        # Temporal event analysis
         events = self.event_detector.analyze(
             tracked,
-            zone_boundaries=self.zones,
-            ppe_history=self.compliance_log
+            zones=self.zones,
+            ppe_history=self.compliance_log,
         )
-
-        # Risk scoring and alerting
         for event in events:
             severity = self.risk_scorer.evaluate(event)
             if severity >= AlertLevel.WARNING:
-                self.alert_system.trigger(event, severity)
+                self.alerts.trigger(event, severity)
 
         return DetectionResult(tracked, events)`,
       },
-      { type: "heading", level: 3, content: "Live Dashboard" },
+      { type: "heading", level: 2, content: "Dashboard" },
       {
         type: "text",
         content:
-          "React-based compliance analytics dashboard with real-time metrics, violation heatmaps, and shift-level safety scoring. FastAPI backend streams detection events via WebSocket for instant updates.",
+          "A React dashboard shows the annotated feed, live metrics, and a violation log. The FastAPI backend streams events over server-sent events and WebSockets. A demo mode runs without a GPU, and the whole stack starts with one docker compose command.",
       },
-      { type: "heading", level: 2, content: "Results" },
       {
         type: "callout",
-        variant: "success",
         content:
-          "Processing video at 15+ FPS with multi-class PPE detection, temporal event tracking, and real-time severity-based alerting across an entire construction site feed.",
+          "10–15 FPS on CPU and 25–30 FPS with a GPU, with tracking and zone checks under 2 ms per frame.",
       },
-      { type: "heading", level: 2, content: "Reflections" },
+      { type: "heading", level: 2, content: "What I learned" },
       {
         type: "text",
         content:
-          "The biggest challenge was temporal event detection — distinguishing between a worker briefly adjusting their hard hat vs. actually removing PPE. Sliding window analysis over tracked object states solved most false positives, but edge cases around occlusion required careful tuning of the tracker's confidence decay.",
+          "The hard part was temporal: telling a worker adjusting a hard hat apart from a worker removing it. Sliding-window analysis over tracked state solved most false positives; occlusion needed careful tuning of confidence decay in the tracker.",
       },
     ],
   },
-  "llm-router": {
-    title: "Intelligent LLM Router",
-    subtitle: "Smart routing layer that cuts LLM API costs by up to 40% with under 50ms overhead",
-    timeline: "Feb 2026",
-    role: "Solo Developer",
-    stack: ["Python", "FastAPI", "React", "OpenRouter"],
-    github: "https://github.com/Smear6uard/Intelligent-LLM-Router",
-    metrics: [
-      { label: "Cost Reduction", value: "Up to 40%" },
-      { label: "Routing Overhead", value: "<50ms" },
-      { label: "Task Types", value: "7" },
-      { label: "Models Supported", value: "4+" },
+
+  windwalk: {
+    slug: "windwalk",
+    title: "WindWalk",
+    subtitle: "Weather-aware walking routes through Chicago's Pedway, 1st place at DemonHacks 2026",
+    summary:
+      "Chicago's Loop has a five-mile underground Pedway that nobody can navigate. WindWalk models it as a graph, pulls live wind from OpenWeatherMap, and routes pedestrians through a mix of tunnels and streets that minimises wind exposure.",
+    timeline: "Mar 2026",
+    year: "2026",
+    role: "Six-person team, 36 hours",
+    stack: ["Python", "FastAPI", "React Native", "Expo", "Mapbox", "OpenWeatherMap"],
+    links: [{ label: "Devpost", href: links.windwalk }],
+    highlights: [
+      { value: "1st place", label: "DemonHacks 2026" },
+      { value: "40+ nodes", label: "Pedway graph reverse-engineered from static maps" },
+      { value: "Live wind", label: "weighted into Dijkstra edge costs" },
     ],
+    featured: true,
+    datePublished: "2026-03-01",
     content: [
-      { type: "heading", level: 2, content: "The Problem" },
+      { type: "heading", level: 2, content: "The idea" },
       {
         type: "text",
         content:
-          "Most applications send every prompt to the same expensive model. A simple greeting gets the same GPT-4o treatment as a complex multi-step reasoning task. This wastes money and adds unnecessary latency.",
+          "Chicago winters are brutal at street level, and the Loop has five miles of heated underground walkways that most people never use because there is no good map. We built the map and the router in one weekend.",
       },
-      { type: "heading", level: 2, content: "The Insight" },
+      { type: "heading", level: 2, content: "How it works" },
       {
-        type: "text",
-        content:
-          "Prompt complexity is predictable. By analyzing 6 weighted signals — token count, vocabulary diversity, question depth, domain specificity, reasoning requirements, and output format — you can classify tasks into 7 types and route each to the cheapest model that handles it well.",
+        type: "list",
+        items: [
+          "The Pedway is modelled as a graph of 40+ nodes and 50+ edges, reverse-engineered from static maps because no public dataset exists.",
+          "Street-level edges are weighted by live wind speed and direction from OpenWeatherMap; underground edges carry no wind penalty.",
+          "Dijkstra runs over the merged graph, so a route can dip underground for a block and resurface where the wind is calmer.",
+          "Python and FastAPI serve routes to a React Native and Expo client rendering on Mapbox.",
+        ],
       },
-      { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Routing Engine" },
+      {
+        type: "callout",
+        content:
+          "First hackathon for all six of us. We pivoted mid-event, refocused, and took first place.",
+      },
+    ],
+  },
+
+  "llm-router": {
+    slug: "llm-router",
+    title: "Intelligent LLM Router",
+    subtitle: "A routing layer that cuts LLM API costs by up to 40% with under 50 ms overhead",
+    summary:
+      "Classifies prompt complexity across seven task types from six weighted signals and routes each request to the cheapest capable model.",
+    timeline: "Feb 2026",
+    year: "2026",
+    role: "Solo build",
+    stack: ["Python", "FastAPI", "React", "OpenRouter"],
+    links: [{ label: "GitHub", href: links.llmRouter }],
+    highlights: [
+      { value: "40%", label: "cost reduction on typical traffic" },
+      { value: "<50 ms", label: "routing overhead" },
+      { value: "7", label: "task types" },
+    ],
+    featured: false,
+    datePublished: "2026-02-01",
+    content: [
+      { type: "heading", level: 2, content: "The problem" },
       {
         type: "text",
         content:
-          "The router classifies incoming prompts and selects the optimal model from GPT-4o, Claude, Gemini, or DeepSeek based on task type and cost efficiency:",
+          "Most applications send every prompt to the same expensive model. A greeting costs as much as a multi-step reasoning task.",
+      },
+      { type: "heading", level: 2, content: "The approach" },
+      {
+        type: "text",
+        content:
+          "Prompt complexity is predictable. Six signals — token count, vocabulary diversity, question depth, domain specificity, reasoning requirements, and output format — classify each prompt into one of seven task types, and each type maps to the cheapest model that handles it well. An A/B arena compares latency, accuracy, and cost across models to keep the routing table honest.",
       },
       {
         type: "code",
@@ -249,207 +475,156 @@ export const projects: Record<string, Project> = {
         filename: "router.py",
         content: `class LLMRouter:
     def route(self, prompt: str) -> ModelSelection:
-        # Extract 6 weighted signals
         signals = self.analyzer.extract_signals(prompt)
-
-        # Classify into 7 task types
         task_type = self.classifier.predict(signals)
-
-        # Select optimal model for task
-        model = self.model_selector.select(
-            task_type=task_type,
-            budget=self.cost_constraints,
-            latency_target=self.latency_sla
-        )
-
-        return ModelSelection(
-            model=model,
-            confidence=signals.confidence,
-            estimated_cost=model.estimate_cost(prompt)
-        )`,
+        model = self.selector.select(task_type, budget=self.budget)
+        return ModelSelection(model, confidence=signals.confidence)`,
       },
-      { type: "heading", level: 3, content: "A/B Testing Arena" },
+      { type: "heading", level: 2, content: "What I learned" },
       {
         type: "text",
         content:
-          "Built a real-time analytics dashboard with an A/B testing arena that compares latency, accuracy, and cost across 3+ LLMs simultaneously. The dashboard surfaces which model performs best for each task type, enabling continuous routing optimization.",
-      },
-      { type: "heading", level: 2, content: "Results" },
-      {
-        type: "callout",
-        variant: "success",
-        content:
-          "Cuts API costs by up to 40% by routing simple tasks to cheaper models, with under 50ms routing overhead. The A/B testing arena validated that cheaper models match expensive ones on 60%+ of typical prompts.",
-      },
-      { type: "heading", level: 2, content: "Reflections" },
-      {
-        type: "text",
-        content:
-          "The hardest part was calibrating the complexity classifier. Early versions over-routed to expensive models because they weighted token count too heavily. Vocabulary diversity and reasoning chain depth turned out to be much stronger signals for actual task difficulty.",
+          "Early versions over-routed to expensive models because token count was weighted too heavily. Vocabulary diversity and reasoning depth turned out to be much better predictors of difficulty.",
       },
     ],
   },
+
   deepcite: {
+    slug: "deepcite",
     title: "DeepCite",
-    subtitle:
-      "AI research engine with dual-mode retrieval processing 100+ URLs/hr with inline citations",
+    subtitle: "An AI research engine with dual-mode retrieval and inline citations",
+    summary:
+      "Fast static scraping that falls back to headless rendering only when needed, Redis caching across queries, and streamed answers with inline source citations.",
     timeline: "Oct 2025 – Jan 2026",
-    role: "Solo Developer",
+    year: "2025",
+    role: "Solo build",
     stack: ["Next.js", "TypeScript", "Groq", "Redis", "Puppeteer"],
-    github: "https://github.com/Smear6uard/DeepCite",
-    live: "https://deep-cite-git-main-sameer-akhtars-projects.vercel.app/",
-    metrics: [
-      { label: "URLs/Hour", value: "100+" },
-      { label: "Perceived Latency", value: "<100ms" },
-      { label: "Retrieval Modes", value: "Dual" },
-      { label: "Components", value: "10+" },
+    links: [
+      { label: "GitHub", href: links.deepcite },
+      { label: "Live", href: links.deepciteLive },
     ],
+    highlights: [
+      { value: "100+", label: "URLs per hour" },
+      { value: "<100 ms", label: "perceived latency via streaming" },
+      { value: "2 modes", label: "static parse with headless fallback" },
+    ],
+    featured: false,
+    datePublished: "2025-10-01",
     content: [
-      { type: "heading", level: 2, content: "The Problem" },
+      { type: "heading", level: 2, content: "The problem" },
       {
         type: "text",
         content:
-          "AI search tools either scrape poorly or synthesize poorly. Most fail to handle JavaScript-rendered pages, rate-limit themselves on parallel requests, or generate answers without verifiable citations. Research still requires dozens of open tabs.",
+          "AI search tools either scrape poorly or synthesise poorly: they miss JavaScript-rendered pages, rate-limit themselves on parallel requests, or answer without verifiable sources.",
       },
-      { type: "heading", level: 2, content: "The Insight" },
-      {
-        type: "text",
-        content:
-          "A dual-mode retrieval strategy — fast static scraping that falls back to headless rendering only when needed — handles 90%+ of pages via the cheap path while still capturing JS-heavy content. Redis caching eliminates redundant fetches across queries.",
-      },
-      { type: "heading", level: 2, content: "The Solution" },
-      { type: "heading", level: 3, content: "Retrieval Pipeline" },
-      {
-        type: "text",
-        content:
-          "Engineered a dual-mode pipeline that maximizes throughput while maintaining content quality:",
-      },
+      { type: "heading", level: 2, content: "The approach" },
       {
         type: "list",
         items: [
-          "Cheerio for fast static HTML parsing (primary path, <50ms per page)",
-          "Puppeteer fallback for JavaScript-rendered content (triggered on empty content detection)",
-          "Serper web search API for real-time source discovery",
-          "Redis caching layer for deduplication across queries",
-          "Promise.allSettled for parallel scraping with graceful failure handling",
+          "Cheerio for fast static parsing on the primary path",
+          "Puppeteer fallback triggered only when static extraction returns too little content",
+          "Serper for source discovery and Redis for deduplication across queries",
+          "Promise.allSettled for parallel scraping with graceful failure",
+          "Server-sent events streaming the answer with inline citations as it is written",
         ],
       },
-      {
-        type: "code",
-        language: "typescript",
-        filename: "retrieval.ts",
-        content: `async function retrieveSources(query: string): Promise<Source[]> {
-  // Check Redis cache first
-  const cached = await redis.get(\`query:\${hash(query)}\`);
-  if (cached) return JSON.parse(cached);
-
-  // Discover sources via Serper
-  const urls = await serper.search(query, { num: 10 });
-
-  // Parallel dual-mode scraping
-  const results = await Promise.allSettled(
-    urls.map(async (url) => {
-      const static_ = await cheerio.extract(url);
-      if (static_.contentLength < MIN_THRESHOLD) {
-        return puppeteer.render(url);
-      }
-      return static_;
-    })
-  );
-
-  const sources = results
-    .filter(r => r.status === 'fulfilled')
-    .map(r => r.value);
-
-  await redis.set(\`query:\${hash(query)}\`, JSON.stringify(sources));
-  return sources;
-}`,
-      },
-      { type: "heading", level: 3, content: "Streaming UI" },
+      { type: "heading", level: 2, content: "What I learned" },
       {
         type: "text",
         content:
-          "Built LLM streaming with pipeline status updates via server-sent events, achieving sub-100ms perceived latency. The frontend renders inline source citations across 10+ modular React components, with real-time pipeline progress indicators.",
-      },
-      { type: "heading", level: 2, content: "Results" },
-      {
-        type: "callout",
-        variant: "success",
-        content:
-          "Processes 100+ URLs/hr via parallel scraping with sub-100ms perceived latency through SSE streaming. Redis caching eliminates redundant fetches, and the dual-mode pipeline handles both static and JS-rendered pages reliably.",
-      },
-      { type: "heading", level: 2, content: "Reflections" },
-      {
-        type: "text",
-        content:
-          "The biggest challenge was handling unreliable external URLs — timeouts, rate limits, malformed HTML, and anti-bot detection. Promise.allSettled was critical for graceful degradation, but tuning timeout thresholds and retry logic for the Puppeteer fallback path required extensive real-world testing.",
+          "Unreliable external URLs were the real work: timeouts, malformed HTML, and anti-bot detection. Tuning the fallback thresholds took more real-world testing than anything in the model layer.",
       },
     ],
   },
 };
 
+export const FEATURED_ORDER = ["renaro", "brand-discovery", "styleum", "hazardlens", "windwalk"];
+export const ARCHIVE_ORDER = ["llm-router", "deepcite"];
+
 export function getProject(slug: string): Project | undefined {
   return projects[slug];
+}
+
+export function getFeaturedProjects(): Project[] {
+  return FEATURED_ORDER.map((slug) => projects[slug]);
+}
+
+export function getArchivedProjects(): Project[] {
+  return ARCHIVE_ORDER.map((slug) => projects[slug]);
 }
 
 export function getAllProjectSlugs(): string[] {
   return Object.keys(projects);
 }
 
-// Pre-renders code blocks to colored HTML. Inputs come exclusively from the
-// static `projects` object above (developer-controlled, never user input).
-// HTML entities are escaped before tokens are wrapped, so the resulting
-// string is safe to render as HTML inside <pre><code>.
+const KEYWORDS: Record<string, string[]> = {
+  typescript: [
+    "async",
+    "await",
+    "const",
+    "let",
+    "function",
+    "return",
+    "if",
+    "else",
+    "try",
+    "catch",
+    "import",
+    "export",
+    "type",
+    "interface",
+  ],
+  python: [
+    "class",
+    "def",
+    "return",
+    "if",
+    "for",
+    "in",
+    "self",
+    "import",
+    "from",
+    "not",
+    "and",
+    "or",
+  ],
+  sql: [
+    "UPDATE",
+    "SET",
+    "WHERE",
+    "IN",
+    "SELECT",
+    "FROM",
+    "IS",
+    "NULL",
+    "ORDER",
+    "BY",
+    "FOR",
+    "SKIP",
+    "LOCKED",
+    "LIMIT",
+    "RETURNING",
+    "now",
+  ],
+};
+
+/** Escapes HTML, then wraps strings, comments, and keywords in token spans. */
 export function highlightCode(code: string, language: string): string {
-  const keywords: Record<string, string[]> = {
-    typescript: [
-      "async",
-      "await",
-      "const",
-      "let",
-      "function",
-      "return",
-      "if",
-      "else",
-      "try",
-      "catch",
-      "import",
-      "export",
-      "type",
-      "interface",
-    ],
-    java: [
-      "public",
-      "private",
-      "class",
-      "void",
-      "int",
-      "boolean",
-      "return",
-      "if",
-      "else",
-      "while",
-      "new",
-      "List",
-    ],
-  };
+  let out = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-  let highlighted = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  out = out.replace(/(["'`])(?:(?!\1)[^\\]|\\.)*\1/g, '<span class="tok-str">$&</span>');
 
-  highlighted = highlighted.replace(
-    /(["'`])(?:(?!\1)[^\\]|\\.)*\1/g,
-    '<span class="text-green-400">$&</span>',
-  );
+  const commentPattern =
+    language === "python" || language === "sql" ? /(#.*$|--.*$)/gm : /(\/\/.*$)/gm;
+  out = out.replace(commentPattern, '<span class="tok-cm">$1</span>');
 
-  highlighted = highlighted.replace(/(\/\/.*$)/gm, '<span class="text-text-muted">$1</span>');
-
-  const langKeywords = keywords[language] || keywords.typescript;
-  langKeywords.forEach((keyword) => {
+  const keywords = KEYWORDS[language] ?? KEYWORDS.typescript;
+  keywords.forEach((keyword) => {
     const regex = new RegExp(`\\b(${keyword})\\b`, "g");
-    highlighted = highlighted.replace(regex, '<span class="text-purple-400">$1</span>');
+    out = out.replace(regex, '<span class="tok-kw">$1</span>');
   });
 
-  return highlighted;
+  return out;
 }
 
 export type ProcessedContentBlock =
@@ -457,13 +632,9 @@ export type ProcessedContentBlock =
   | (Extract<ContentBlock, { type: "code" }> & { highlightedCode: string });
 
 export function processContentBlocks(content: ContentBlock[]): ProcessedContentBlock[] {
-  return content.map((block) => {
-    if (block.type === "code") {
-      return {
-        ...block,
-        highlightedCode: highlightCode(block.content, block.language),
-      };
-    }
-    return block;
-  });
+  return content.map((block) =>
+    block.type === "code"
+      ? { ...block, highlightedCode: highlightCode(block.content, block.language) }
+      : block,
+  );
 }

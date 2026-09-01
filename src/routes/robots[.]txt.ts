@@ -10,7 +10,6 @@ export const Route = createFileRoute("/robots.txt")({
         const body = `User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /_next/
 
 Sitemap: https://sameerakhtar.dev/sitemap.xml
 Host: https://sameerakhtar.dev

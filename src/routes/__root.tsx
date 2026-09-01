@@ -1,6 +1,4 @@
-// Root route — equivalent of `src/app/layout.tsx` in the old Next.js app.
-// Wires up providers, persistent chrome (sidebar/mobile nav/footer), and
-// renders matched child routes through `<Outlet />`.
+// Root route: document shell, providers, persistent chrome.
 
 /// <reference types="vite/client" />
 
@@ -11,30 +9,24 @@ import { Analytics } from "@vercel/analytics/react";
 import globalsCss from "@/styles/globals.css?url";
 import { ThemeProvider, themeFoucScript } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
-import { Cursor } from "@/components/Cursor";
-import { SideNav } from "@/components/SideNav";
-import { MobileNav } from "@/components/MobileNav";
+import { TopNav } from "@/components/TopNav";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/JsonLd";
 import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
-import { KonamiEasterEgg } from "@/components/KonamiEasterEgg";
 import { NotFound } from "@/components/NotFound";
+import { site } from "@/lib/site";
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { name: "theme-color", content: "#0a192f" },
-      { name: "color-scheme", content: "dark" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "color-scheme", content: "dark light" },
+      { name: "theme-color", content: "#111417", media: "(prefers-color-scheme: dark)" },
+      { name: "theme-color", content: "#f4f3ef", media: "(prefers-color-scheme: light)" },
       { name: "format-detection", content: "telephone=no" },
-      { name: "apple-mobile-web-app-capable", content: "yes" },
-      {
-        name: "apple-mobile-web-app-status-bar-style",
-        content: "black-translucent",
-      },
-      { name: "apple-mobile-web-app-title", content: "Sameer Akhtar" },
-      { name: "author", content: "Sameer Akhtar" },
+      { name: "apple-mobile-web-app-title", content: site.name },
+      { name: "author", content: site.name },
     ],
     links: [
       { rel: "stylesheet", href: globalsCss },
@@ -43,10 +35,8 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/manifest.json" },
     ],
     scripts: [
-      // Inline FOUC-prevention script — runs synchronously before React
-      // hydrates so the `data-theme` attribute is set from localStorage or
-      // `prefers-color-scheme` and we never flash the wrong theme. Built
-      // from constants in ThemeProvider; no runtime user input is interpolated.
+      // Sets `data-theme` before hydration so the first paint is correct.
+      // Built from constants only; no runtime input is interpolated.
       { children: themeFoucScript },
     ],
   }),
@@ -73,11 +63,14 @@ function RootDocument({ children }: { children: ReactNode }) {
         <ThemeProvider>
           <ToastProvider>
             <ConsoleEasterEgg />
-            <KonamiEasterEgg />
-            <Cursor />
-            <SideNav />
-            <MobileNav />
-            <main className="md:pl-[72px] pb-20 md:pb-0">{children}</main>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-elev focus:px-4 focus:py-2 focus:text-ink"
+            >
+              Skip to content
+            </a>
+            <TopNav />
+            <main id="main">{children}</main>
             <Footer />
             <Analytics />
           </ToastProvider>

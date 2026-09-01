@@ -1,72 +1,24 @@
-"use client";
-
 import { useEffect } from "react";
+import { site } from "@/lib/site";
 
 export function ConsoleEasterEgg() {
   useEffect(() => {
-    // Only run in browser
     if (typeof window === "undefined") return;
+    const heading = "color:#f2593f;font-weight:600;font-size:13px";
+    const body = "color:#b3ada2;font-size:12px";
+    const mono = "color:#7c776f;font-family:monospace;font-size:11px";
 
-    // Clear any previous messages
-    console.clear();
-
-    // ASCII art header - minimalist, not emoji-filled
+    console.log("%cYou found the console.", heading);
     console.log(
-      `%c
-  ┌─────────────────────────────────────┐
-  │  SAMEER AKHTAR                      │
-  │  $0.002 per AI outfit               │
-  └─────────────────────────────────────┘
-`,
-      "color: #f97316; font-family: monospace; font-size: 10px;",
+      "%cThe hand tracking on the homepage is MediaPipe Hand Landmarker running on WebAssembly + WebGL in this tab. No frames leave your browser.",
+      body,
     );
-
-    // The hook
     console.log(
-      "%cYou found the console. Most people never look here.",
-      "color: #f97316; font-size: 14px; font-weight: bold;",
+      `%c\nquantum metric   AI Brand Discovery · Go · Gemini · Cloud Run\nrenaro           dispatch SaaS · 4,543 conns held in a 10K reconnect storm\nstyleum          iOS wardrobe app · 100+ users · $0.002/outfit\nhazardlens       YOLO26 site-safety pipeline · 15+ FPS\n`,
+      mono,
     );
-
-    console.log(
-      "%cThat probably means you're curious about how things work.",
-      "color: #94a3b8; font-size: 12px;",
-    );
-
-    // The technical flex
-    console.log("%c\nThe AI pipeline you saw on the homepage?", "color: #94a3b8; font-size: 12px;");
-
-    console.log(
-      `%c
-  Stage 1: BiRefNet ────────────── $0.0003
-  Stage 2: Florence-2 ──────────── $0.001
-  Stage 3: FashionSigLIP (768d) ── $0.00002
-  Stage 4: AWS Rekognition ─────── $0.001
-  Stage 5: Gemini ─────────────── $0.002
-  ──────────────────────────────────────
-  Total: ~$0.002/outfit
-`,
-      "color: #64748b; font-size: 11px; font-family: monospace;",
-    );
-
-    console.log(
-      "%cThat's the actual breakdown. Took a while to get there.",
-      "color: #94a3b8; font-size: 12px;",
-    );
-
-    // The invitation
-    console.log("%c\nIf you're hiring:", "color: #94a3b8; font-size: 12px;");
-
-    console.log("%csameer@sameerakhtar.dev", "color: #f97316; font-size: 12px; font-weight: bold;");
-
-    console.log("%c\nIf you're building:", "color: #94a3b8; font-size: 12px;");
-
-    console.log("%chttps://github.com/Smear6uard", "color: #f97316; font-size: 12px;");
-
-    // The closer
-    console.log(
-      "%c\n// People who read console logs are my kind of people.",
-      "color: #475569; font-size: 11px; font-style: italic;",
-    );
+    console.log(`%cHiring for 2027? ${site.email}`, heading);
+    console.log(`%c${site.sourceRepo}`, body);
   }, []);
 
   return null;

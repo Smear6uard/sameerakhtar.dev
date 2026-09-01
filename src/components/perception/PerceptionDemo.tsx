@@ -1,25 +1,41 @@
-"use client";
-
 import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
 import { SampleOverlay } from "./SampleOverlay";
-import { LiveDemo } from "./LiveDemo";
+import { LiveDemo, type LiveStats } from "./LiveDemo";
+import type { Delegate } from "./landmarker";
 
-type Mode = { kind: "sample" } | { kind: "live" } | { kind: "unsupported"; reason: string };
+type Mode =
+  | { kind: "sample" }
+  | { kind: "starting" }
+  | { kind: "live"; delegate: Delegate }
+  | { kind: "error"; reason: string };
+
+const DEFAULT_SIZE = { width: 800, height: 600 };
 
 export function PerceptionDemo() {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState(DEFAULT_SIZE);
   const [mode, setMode] = useState<Mode>({ kind: "sample" });
   const [isInView, setIsInView] = useState(true);
-  const [isMobilePortrait, setIsMobilePortrait] = useState(false);
-  const [showMobileTip, setShowMobileTip] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mobileTipTimerRef = useRef<number | null>(null);
+  const [stats, setStats] = useState<LiveStats>({ fps: 0, inferenceMs: 0, hands: 0 });
 
-  // Pause the inference loop when scrolled out of view. The LiveDemo loop
-  // reads `isInView` via ref and skips inference while false, so resume is
-  // instant when the section scrolls back.
+  // Real pixel size drives the SVG viewBox so keypoints stay circular.
   useEffect(() => {
-    const el = containerRef.current;
+    const el = panelRef.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        setSize({ width: Math.round(rect.width), height: Math.round(rect.height) });
+      }
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = panelRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(([entry]) => setIsInView(entry.isIntersecting), {
       threshold: 0.05,
@@ -28,126 +44,116 @@ export function PerceptionDemo() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 768px) and (orientation: portrait)");
-    const update = () => setIsMobilePortrait(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  const handleActivate = useCallback(() => {
+  const start = useCallback(() => {
     if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
-      setMode({ kind: "unsupported", reason: "camera access unavailable" });
+      setMode({ kind: "error", reason: "This browser doesn't expose a camera." });
       return;
     }
-    if (isMobilePortrait) {
-      setShowMobileTip(true);
-      if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
-      mobileTipTimerRef.current = window.setTimeout(() => setShowMobileTip(false), 4000);
-    }
-    setMode({ kind: "live" });
-  }, [isMobilePortrait]);
-
-  const handleStop = useCallback(() => {
-    if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
-    setMode({ kind: "sample" });
-    setShowMobileTip(false);
+    setStats({ fps: 0, inferenceMs: 0, hands: 0 });
+    setMode({ kind: "starting" });
   }, []);
 
-  useEffect(
-    () => () => {
-      if (mobileTipTimerRef.current !== null) window.clearTimeout(mobileTipTimerRef.current);
-    },
-    [],
-  );
-
-  const handleUnsupported = useCallback((reason: string) => {
-    setMode({ kind: "unsupported", reason });
-  }, []);
-
-  const handleLowPerformance = useCallback(() => {
-    setMode({
-      kind: "unsupported",
-      reason: "live demo unavailable on this device · showing sample",
-    });
-  }, []);
+  const stop = useCallback(() => setMode({ kind: "sample" }), []);
+  const handleReady = useCallback((delegate: Delegate) => setMode({ kind: "live", delegate }), []);
+  const handleError = useCallback((reason: string) => setMode({ kind: "error", reason }), []);
+  const handleStats = useCallback((next: LiveStats) => setStats(next), []);
 
   const isLive = mode.kind === "live";
+  const isStarting = mode.kind === "starting";
+  const cameraMounted = isLive || isStarting;
+
+  const readout = isLive
+    ? `live · ${stats.fps.toFixed(0)} fps · ${stats.inferenceMs.toFixed(0)} ms · ${mode.delegate.toLowerCase()}`
+    : isStarting
+      ? "starting"
+      : "sample";
 
   return (
-    <div className="flex flex-col gap-4">
+    <figure className="m-0">
       <div
-        ref={containerRef}
-        className="relative aspect-square w-full overflow-hidden rounded-lg border border-white/[0.06] bg-bg-secondary"
+        ref={panelRef}
+        className="ticks relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-panel"
+        style={{
+          backgroundImage:
+            "radial-gradient(120% 90% at 50% 60%, rgba(247,201,168,0.06), transparent 60%), linear-gradient(rgba(237,232,223,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(237,232,223,0.045) 1px, transparent 1px)",
+          backgroundSize: "100% 100%, 40px 40px, 40px 40px",
+          backgroundPosition: "center, center, center",
+        }}
       >
-        {/* Sample is always mounted as the visual fallback. Live overlays it. */}
-        <SampleOverlay />
+        <span className="tick" aria-hidden="true" />
 
-        {isLive && (
+        {!isLive && <SampleOverlay width={size.width} height={size.height} dim={isStarting} />}
+
+        {cameraMounted && (
           <LiveDemo
+            width={size.width}
+            height={size.height}
             isInView={isInView}
-            onUnsupported={handleUnsupported}
-            onLowPerformance={handleLowPerformance}
+            onReady={handleReady}
+            onStats={handleStats}
+            onError={handleError}
           />
         )}
 
-        {!isLive && (
-          <div className="absolute bottom-3 left-3 z-10">
-            <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-accent bg-black/50 backdrop-blur-sm px-2 py-1 rounded">
-              sample · hand_landmarks · 21 keypoints
-            </span>
+        {/* Readout */}
+        <div
+          className="pointer-events-none absolute inset-x-8 top-3.5 flex items-center justify-between gap-3 font-mono text-[10.5px] tracking-[0.14em] uppercase"
+          style={{ color: "rgba(237,232,223,0.62)" }}
+        >
+          <span className="truncate">
+            hand_landmarker<span className="hidden sm:inline"> · 21 keypoints</span>
+          </span>
+          <span className="flex shrink-0 items-center gap-2">
+            {isLive && (
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full"
+                style={{ background: "#f2593f" }}
+                aria-hidden="true"
+              />
+            )}
+            {readout}
+          </span>
+        </div>
+
+        {/* Error */}
+        {mode.kind === "error" && (
+          <div
+            role="status"
+            className="absolute inset-x-6 bottom-20 rounded-xl border px-4 py-3 text-sm backdrop-blur-md"
+            style={{
+              background: "rgba(11,13,15,0.82)",
+              borderColor: "rgba(237,232,223,0.15)",
+              color: "#ede8df",
+            }}
+          >
+            {mode.reason}
           </div>
         )}
 
-        {showMobileTip && isLive && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="absolute top-3 left-3 right-3 z-10"
-          >
-            <span className="block font-mono text-[10px] uppercase tracking-widest text-white/80 bg-black/50 backdrop-blur-sm px-2 py-1 rounded">
-              tip: hold your phone steady, palm facing camera
-            </span>
-          </motion.div>
-        )}
-      </div>
-
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        {mode.kind === "unsupported" ? (
-          <>
-            <p className="font-mono text-xs text-text-muted">{mode.reason}</p>
-            <button
-              type="button"
-              onClick={handleActivate}
-              className="btn-secondary text-sm"
-              aria-label="Retry activating camera for hand tracking"
-            >
-              try again ↩
+        {/* Controls */}
+        <div className="absolute inset-x-5 bottom-5 flex flex-wrap items-center justify-between gap-3">
+          {cameraMounted ? (
+            <button type="button" onClick={stop} className="btn btn-sm btn-ghost text-[#ede8df]">
+              Stop camera
             </button>
-          </>
-        ) : isLive ? (
-          <button
-            type="button"
-            onClick={handleStop}
-            className="btn-secondary text-sm"
-            aria-label="Stop camera and return to the sample state"
+          ) : (
+            <button type="button" onClick={start} className="btn btn-sm btn-primary">
+              {mode.kind === "error" ? "Try again" : "Try it with your camera"}
+              <span aria-hidden="true">→</span>
+            </button>
+          )}
+          <span
+            className="font-mono text-[10.5px] tracking-[0.1em] uppercase"
+            style={{ color: "rgba(237,232,223,0.5)" }}
           >
-            stop camera ↩
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleActivate}
-            className="btn-primary text-sm"
-            aria-label="Activate camera and run hand-landmark detection live"
-          >
-            use my camera →
-          </button>
-        )}
+            <span className="hidden sm:inline">Runs in your browser · </span>nothing uploaded
+          </span>
+        </div>
       </div>
-    </div>
+      <figcaption className="mt-3 text-sm text-ink-3">
+        Hand tracking with MediaPipe Hand Landmarker on WebAssembly and WebGL, entirely in this tab.
+        Two hands, 21 keypoints each, inference paused when scrolled away.
+      </figcaption>
+    </figure>
   );
 }

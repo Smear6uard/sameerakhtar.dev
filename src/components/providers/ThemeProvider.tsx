@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 
 type Theme = "light" | "dark" | "system";
@@ -22,10 +20,14 @@ function getSystemTheme(): ResolvedTheme {
 }
 
 function readStoredTheme(): Theme {
-  if (typeof window === "undefined") return "dark";
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark" || stored === "system") return stored;
-  return "dark";
+  if (typeof window === "undefined") return "system";
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    /* storage unavailable */
+  }
+  return "system";
 }
 
 function applyTheme(theme: Theme): ResolvedTheme {
@@ -37,7 +39,7 @@ function applyTheme(theme: Theme): ResolvedTheme {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("system");
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("dark");
 
   useEffect(() => {
@@ -57,8 +59,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setTheme = useCallback((next: Theme) => {
     setThemeState(next);
     setResolvedTheme(applyTheme(next));
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, next);
+    try {
+      if (next === "system") window.localStorage.removeItem(STORAGE_KEY);
+      else window.localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* storage unavailable */
     }
   }, []);
 
@@ -73,7 +78,7 @@ export function useTheme() {
   const ctx = useContext(ThemeContext);
   if (!ctx) {
     return {
-      theme: "dark" as Theme,
+      theme: "system" as Theme,
       resolvedTheme: "dark" as ResolvedTheme,
       setTheme: () => {},
     };
@@ -81,4 +86,6 @@ export function useTheme() {
   return ctx;
 }
 
-export const themeFoucScript = `(function(){try{var t=localStorage.getItem("${STORAGE_KEY}");var d=document.documentElement;if(t==="light"||t==="dark"){d.setAttribute("${ATTRIBUTE}",t)}else if(t==="system"){d.setAttribute("${ATTRIBUTE}",window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else{d.setAttribute("${ATTRIBUTE}","dark")}}catch(e){document.documentElement.setAttribute("${ATTRIBUTE}","dark")}})();`;
+// Runs inline before hydration so the first paint already has the right
+// theme. Falls back to the OS preference when nothing is stored.
+export const themeFoucScript = `(function(){try{var t=localStorage.getItem("${STORAGE_KEY}");var d=document.documentElement;if(t==="light"||t==="dark"){d.setAttribute("${ATTRIBUTE}",t)}else{d.setAttribute("${ATTRIBUTE}",window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}}catch(e){document.documentElement.setAttribute("${ATTRIBUTE}","dark")}})();`;

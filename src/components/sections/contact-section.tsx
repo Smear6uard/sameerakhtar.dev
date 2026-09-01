@@ -1,89 +1,62 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { MagneticWrapper } from "@/components/ui/MagneticWrapper";
-import { SectionScramble } from "@/components/ui/SectionScramble";
+import { Reveal } from "@/components/ui/Reveal";
+import { useToast } from "@/components/ui/Toast";
+import { site } from "@/lib/site";
 
 export function ContactSection() {
+  const { showToast } = useToast();
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(site.email);
+      showToast("Email copied");
+    } catch {
+      showToast(site.email);
+    }
+  };
+
   return (
-    <section id="contact" className="py-20">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="max-w-xl">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.3 }}
-          >
-            <SectionScramble text="contact" className="section-heading" />
-            <h2 className="heading-lg mt-2">I&apos;m always up to chat.</h2>
-          </motion.div>
+    <section id="contact" className="wrap pt-20 md:pt-28">
+      <Reveal>
+        <p className="eyebrow">Contact</p>
+        <h2 className="display-xl mt-5 max-w-[14ch]">Let&apos;s talk about 2027.</h2>
+        <p className="lede mt-6 max-w-[56ch]">
+          I graduate in {site.graduation} and I&apos;m looking for new-grad software engineering
+          roles, remote or in Chicago. If you&apos;re hiring for product engineering,
+          infrastructure, or AI features, my inbox is open.
+        </p>
 
-          <p className="mt-6 text-text-secondary text-lg">
-            I&apos;m looking for Summer 2026 opportunities in software engineering or
-            AI/ML—somewhere I can learn fast and contribute meaningfully.
-          </p>
-
-          <p className="mt-4 text-text-muted">
-            Open to full-time internships, contract work, or interesting collaborations.
-          </p>
-
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <MagneticWrapper radius={100} maxDistance={6}>
-              <a href="mailto:sameer@sameerakhtar.dev" className="btn-primary">
-                Send me an email
-                <span>→</span>
-              </a>
-            </MagneticWrapper>
-            <MagneticWrapper radius={100} maxDistance={6}>
-              <a
-                href="/Sameer_Akhtar_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary"
-              >
-                View my resume
-                <span>↗</span>
-              </a>
-            </MagneticWrapper>
-          </div>
-
-          <div className="mt-8 flex items-center gap-6">
-            <MagneticWrapper radius={60} maxDistance={6}>
-              <a
-                href="https://github.com/Smear6uard"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-muted hover:text-accent link-underline transition-colors"
-              >
-                github
-              </a>
-            </MagneticWrapper>
-            <MagneticWrapper radius={60} maxDistance={6}>
-              <a
-                href="https://linkedin.com/in/sameer-a-akhtar"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-muted hover:text-accent link-underline transition-colors"
-              >
-                linkedin
-              </a>
-            </MagneticWrapper>
-            <MagneticWrapper radius={60} maxDistance={6}>
-              <a
-                href="https://sameerakhtar.substack.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-text-muted hover:text-accent link-underline transition-colors"
-              >
-                newsletter
-              </a>
-            </MagneticWrapper>
-          </div>
-
-          <p className="mt-8 font-mono text-sm text-text-muted">Greater Chicago Area</p>
+        <div className="mt-9 flex flex-wrap items-center gap-x-4 gap-y-3">
+          <a href={`mailto:${site.email}`} className="display-md link">
+            {site.email}
+          </a>
+          <button type="button" onClick={copyEmail} className="btn btn-ghost btn-sm">
+            Copy
+          </button>
         </div>
-      </div>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <a
+            href={site.resume}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+          >
+            Resume
+            <span aria-hidden="true">↗</span>
+          </a>
+          <a
+            href={site.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-ghost"
+          >
+            LinkedIn
+          </a>
+          <a href={site.github} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
+            GitHub
+          </a>
+        </div>
+      </Reveal>
     </section>
   );
 }

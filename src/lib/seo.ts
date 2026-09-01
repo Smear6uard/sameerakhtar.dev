@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 interface SeoOptions {
   title: string;
   description?: string;
@@ -7,15 +9,20 @@ interface SeoOptions {
   type?: "website" | "article";
 }
 
-export function seo({ title, description, keywords, image, url, type = "website" }: SeoOptions) {
+export function seo({
+  title,
+  description = site.description,
+  keywords,
+  image = site.ogImage,
+  url = site.url,
+  type = "website",
+}: SeoOptions) {
   const tags = [
     { title },
     { name: "description", content: description },
     { name: "keywords", content: keywords },
     { name: "twitter:title", content: title },
     { name: "twitter:description", content: description },
-    { name: "twitter:creator", content: "@sameerakhtar" },
-    { name: "twitter:site", content: "@sameerakhtar" },
     { name: "twitter:card", content: "summary_large_image" },
     { name: "twitter:image", content: image },
     { property: "og:type", content: type },
@@ -23,7 +30,9 @@ export function seo({ title, description, keywords, image, url, type = "website"
     { property: "og:description", content: description },
     { property: "og:url", content: url },
     { property: "og:image", content: image },
-    { property: "og:site_name", content: "Sameer Akhtar" },
+    { property: "og:image:width", content: "1200" },
+    { property: "og:image:height", content: "630" },
+    { property: "og:site_name", content: site.name },
     { property: "og:locale", content: "en_US" },
   ].filter((t) => {
     if ("content" in t) {

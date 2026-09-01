@@ -1,91 +1,55 @@
-// Project case study — equivalent of `src/app/work/[slug]/page.tsx` in Next.js.
-// Next dynamic segment `[slug]` becomes `$slug` in TanStack Router conventions.
-
 import { createFileRoute, notFound } from "@tanstack/react-router";
-import { BreadcrumbJsonLd, ProjectJsonLd } from "@/components/JsonLd";
-import { HeroImage } from "@/components/ui/HeroImage";
-import { CaseStudyClient } from "@/components/case-study/CaseStudyClient";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
+import { CaseStudy } from "@/components/case-study/CaseStudy";
 import { getProject, processContentBlocks } from "@/lib/projects";
 import { seo } from "@/lib/seo";
+import { site } from "@/lib/site";
 
 export const Route = createFileRoute("/work/$slug")({
   loader: ({ params }) => {
     const project = getProject(params.slug);
     if (!project) throw notFound();
-    return {
-      project,
-      processedContent: processContentBlocks(project.content),
-    };
+    return { project, content: processContentBlocks(project.content) };
   },
   head: ({ params }) => {
     const project = getProject(params.slug);
-    if (!project) return { meta: [{ title: "Project Not Found" }] };
-
+    if (!project) return { meta: [{ title: "Not found — Sameer Akhtar" }] };
     return {
       meta: [
         ...seo({
-          title: `${project.title} | Sameer Akhtar`,
+          title: `${project.title} — Sameer Akhtar`,
           description: project.subtitle,
           type: "article",
-          url: `https://sameerakhtar.dev/work/${params.slug}`,
+          url: `${site.url}/work/${params.slug}`,
         }),
       ],
-      links: [
-        {
-          rel: "canonical",
-          href: `https://sameerakhtar.dev/work/${params.slug}`,
-        },
-      ],
+      links: [{ rel: "canonical", href: `${site.url}/work/${params.slug}` }],
     };
   },
-  component: CaseStudy,
+  component: CaseStudyPage,
 });
 
-function CaseStudy() {
+function CaseStudyPage() {
   const { slug } = Route.useParams();
-  const { project, processedContent } = Route.useLoaderData();
-
-  const datePublished = project.timeline.includes("Dec 2025")
-    ? "2025-12-01"
-    : project.timeline.includes("Feb 2026")
-      ? "2026-02-01"
-      : "2025-10-01";
+  const { project, content } = Route.useLoaderData();
+  const url = `${site.url}/work/${slug}`;
 
   return (
     <>
       <BreadcrumbJsonLd
         items={[
-          { name: "Home", url: "https://sameerakhtar.dev" },
-          { name: "Projects", url: "https://sameerakhtar.dev/#work" },
-          {
-            name: project.title,
-            url: `https://sameerakhtar.dev/work/${slug}`,
-          },
+          { name: "Home", url: site.url },
+          { name: "Work", url: `${site.url}/work` },
+          { name: project.title, url },
         ]}
       />
-      <ProjectJsonLd
+      <ArticleJsonLd
         title={project.title}
         description={project.subtitle}
-        url={`https://sameerakhtar.dev/work/${slug}`}
-        datePublished={datePublished}
-        author="Sameer Akhtar"
+        url={url}
+        datePublished={project.datePublished}
       />
-
-      <div className="pt-32">
-        <HeroImage src={project.heroImage} alt={project.title} />
-      </div>
-
-      <CaseStudyClient
-        title={project.title}
-        subtitle={project.subtitle}
-        timeline={project.timeline}
-        role={project.role}
-        stack={project.stack}
-        github={project.github}
-        live={project.live}
-        metrics={project.metrics}
-        content={processedContent}
-      />
+      <CaseStudy project={project} content={content} />
     </>
   );
 }

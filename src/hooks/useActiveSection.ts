@@ -1,41 +1,36 @@
-"use client";
+import { useEffect, useState } from "react";
 
-import { useState, useEffect } from "react";
+const SECTION_IDS = ["work", "experience", "about", "contact"] as const;
 
-const sectionIds = ["perception", "work", "experience", "about"];
-
+/** Tracks which home-page section is closest to the top of the viewport. */
 export function useActiveSection() {
-  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+    if (elements.length === 0) return;
 
-    sectionIds.forEach((id) => {
-      const element = document.getElementById(id);
-      if (!element) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        }
+      },
+      { rootMargin: "-35% 0px -55% 0px", threshold: 0 },
+    );
+    elements.forEach((el) => observer.observe(el));
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveSection(id);
-            }
-          });
-        },
-        {
-          threshold: 0.3,
-          rootMargin: "-20% 0px -50% 0px",
-        },
-      );
-
-      observer.observe(element);
-      observers.push(observer);
-    });
-
+    const onTop = () => {
+      if (window.scrollY < 200) setActive(null);
+    };
+    window.addEventListener("scroll", onTop, { passive: true });
     return () => {
-      observers.forEach((observer) => observer.disconnect());
+      observer.disconnect();
+      window.removeEventListener("scroll", onTop);
     };
   }, []);
 
-  return activeSection;
+  return active;
 }

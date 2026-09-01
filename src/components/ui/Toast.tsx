@@ -1,80 +1,53 @@
-"use client";
-
-import { createContext, useContext, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Toast {
   id: string;
   message: string;
-  type?: "success" | "info" | "error";
 }
 
 interface ToastContextType {
-  showToast: (message: string, type?: Toast["type"]) => void;
+  showToast: (message: string) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export function useToast() {
   const context = useContext(ToastContext);
-  if (!context) {
-    throw new Error("useToast must be used within ToastProvider");
-  }
+  if (!context) throw new Error("useToast must be used within ToastProvider");
   return context;
 }
 
-export function ToastProvider({ children }: { children: React.ReactNode }) {
+export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const showToast = useCallback((message: string, type: Toast["type"] = "success") => {
-    const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev, { id, message, type }]);
-
-    // Auto-dismiss after 3 seconds
-    setTimeout(() => {
+  const showToast = useCallback((message: string) => {
+    const id = Math.random().toString(36).slice(2, 9);
+    setToasts((prev) => [...prev, { id, message }]);
+    window.setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
+    }, 2600);
   }, []);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
-
-      {/* Toast container */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none">
+      <div
+        className="pointer-events-none fixed inset-x-0 bottom-6 z-[100] flex flex-col items-center gap-2 px-4"
+        role="status"
+        aria-live="polite"
+      >
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              initial={{ opacity: 0, y: 12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="mb-2 pointer-events-auto"
+              exit={{ opacity: 0, y: 6, scale: 0.98 }}
+              transition={{ type: "spring", damping: 26, stiffness: 320 }}
+              className="pointer-events-auto rounded-full border border-line bg-elev px-4 py-2 text-sm text-ink shadow-[var(--shadow)]"
             >
-              <div
-                className={`px-4 py-3 rounded-lg backdrop-blur-xl border shadow-lg ${
-                  toast.type === "error"
-                    ? "bg-red-500/10 border-red-500/30 text-red-400"
-                    : toast.type === "info"
-                      ? "bg-blue-500/10 border-blue-500/30 text-blue-400"
-                      : "bg-accent/10 border-accent/30 text-accent"
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  {toast.type === "success" && (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
-                  )}
-                  <span className="text-sm font-medium">{toast.message}</span>
-                </div>
-              </div>
+              {toast.message}
             </motion.div>
           ))}
         </AnimatePresence>

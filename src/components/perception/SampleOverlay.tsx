@@ -1,79 +1,93 @@
 import { HandSkeleton } from "./HandSkeleton";
-import { PERCEPTION_SAMPLE_KEYPOINTS } from "./perception-sample";
+import { PERCEPTION_SAMPLE_KEYPOINTS, type NormalizedPoint } from "./perception-sample";
+
+// Landmark names from the MediaPipe hand topology, shown on the sample so
+// the diagram reads as a real keypoint set rather than decoration.
+const LABELS: ReadonlyArray<{
+  index: number;
+  name: string;
+  dx: number;
+  dy: number;
+  compact: boolean;
+}> = [
+  { index: 0, name: "wrist", dx: 14, dy: 4, compact: true },
+  { index: 4, name: "thumb_tip", dx: -12, dy: -18, compact: false },
+  { index: 8, name: "index_tip", dx: -12, dy: -22, compact: true },
+  { index: 12, name: "middle_tip", dx: 12, dy: -20, compact: false },
+  { index: 20, name: "pinky_tip", dx: 12, dy: -8, compact: true },
+];
+
+// Bounding box of the sample hand in its own normalized space.
+const HAND_BOX = { minX: 0.17, maxX: 0.76, minY: 0.14, maxY: 0.86 };
 
 /**
- * Default state — a stylized hand silhouette plus 21 pre-computed keypoints.
+ * Fit the sample hand into the panel with a uniform pixel scale, leaving
+ * room for the readout above and the controls below. Keeps the hand's
+ * proportions identical across panel sizes.
  */
-export function SampleOverlay() {
-  return (
-    <div className="absolute inset-0">
-      <HandSilhouette />
-      <HandSkeleton
-        hands={[PERCEPTION_SAMPLE_KEYPOINTS]}
-        animate
-        className="absolute inset-0 h-full w-full"
-      />
-    </div>
-  );
+function fitSample(width: number, height: number, compact: boolean): NormalizedPoint[] {
+  const left = width * 0.08;
+  const right = width * 0.92;
+  const top = height * (compact ? 0.17 : 0.15);
+  const bottom = height * (compact ? 0.7 : 0.8);
+
+  const handW = HAND_BOX.maxX - HAND_BOX.minX;
+  const handH = HAND_BOX.maxY - HAND_BOX.minY;
+  const scale = Math.min((right - left) / handW, (bottom - top) / handH);
+  const cx = (left + right) / 2;
+  const cy = (top + bottom) / 2;
+  const handCx = (HAND_BOX.minX + HAND_BOX.maxX) / 2;
+  const handCy = (HAND_BOX.minY + HAND_BOX.maxY) / 2;
+
+  return PERCEPTION_SAMPLE_KEYPOINTS.map(([x, y]) => [
+    (cx + (x - handCx) * scale) / width,
+    (cy + (y - handCy) * scale) / height,
+  ]);
 }
 
-/**
- * Inline SVG hand silhouette used when no photo asset is present.
- * Drawn loosely from the sample keypoints so the overlay reads cleanly.
- */
-function HandSilhouette() {
+interface SampleOverlayProps {
+  width: number;
+  height: number;
+  /** Fade the labels out while a live session is starting. */
+  dim?: boolean;
+}
+
+export function SampleOverlay({ width, height, dim = false }: SampleOverlayProps) {
+  const compact = width < 480;
+  const points = fitSample(width, height, compact);
+
   return (
-    <svg
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className="absolute inset-0 h-full w-full"
-      aria-hidden="true"
+    <div
+      className="absolute inset-0 transition-opacity duration-500"
+      style={{ opacity: dim ? 0.35 : 1 }}
     >
-      <defs>
-        <radialGradient id="perception-bg" cx="50%" cy="60%" r="70%">
-          <stop offset="0%" stopColor="var(--color-bg-tertiary)" stopOpacity="0.55" />
-          <stop offset="100%" stopColor="var(--color-bg-primary)" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="perception-hand" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="var(--color-text-primary)" stopOpacity="0.06" />
-          <stop offset="100%" stopColor="var(--color-text-primary)" stopOpacity="0.12" />
-        </linearGradient>
-      </defs>
-      <rect x="0" y="0" width="100" height="100" fill="url(#perception-bg)" />
-      <path
-        // Rough palm + fingers contour aligned to the sample keypoints.
-        d="M 38 88
-           C 28 84, 22 78, 18 70
-           L 14 56
-           C 12 50, 14 46, 18 46
-           C 22 46, 26 50, 30 56
-           L 32 56
-           L 30 26
-           C 30 20, 33 17, 36 17
-           C 39 17, 42 20, 42 26
-           L 43 50
-           L 45 50
-           L 45 14
-           C 45 9, 48 6, 51 6
-           C 54 6, 57 9, 57 14
-           L 56 50
-           L 58 50
-           L 60 18
-           C 60 13, 63 11, 65 11
-           C 68 11, 70 13, 70 18
-           L 68 52
-           L 70 52
-           L 73 30
-           C 74 26, 76 24, 78 24
-           C 81 24, 82 27, 81 31
-           L 78 60
-           C 78 72, 72 84, 62 89
-           Z"
-        fill="url(#perception-hand)"
-        stroke="var(--color-accent)"
-        strokeOpacity="0.08"
-        strokeWidth="0.5"
+      <HandSkeleton
+        hands={[points]}
+        width={width}
+        height={height}
+        draw
+        sway
+        className="absolute inset-0"
       />
-    </svg>
+      {LABELS.filter((label) => !compact || label.compact).map(({ index, name, dx, dy }) => {
+        const [x, y] = points[index];
+        const alignRight = dx < 0;
+        return (
+          <span
+            key={name}
+            className="animate-fade-in pointer-events-none absolute font-mono text-[10px] tracking-[0.08em] whitespace-nowrap"
+            style={{
+              left: `calc(${x * 100}% + ${dx}px)`,
+              top: `calc(${y * 100}% + ${dy}px)`,
+              transform: alignRight ? "translateX(-100%)" : undefined,
+              color: "rgba(237, 232, 223, 0.55)",
+              animationDelay: `${900 + index * 30}ms`,
+            }}
+          >
+            {name}
+          </span>
+        );
+      })}
+    </div>
   );
 }
