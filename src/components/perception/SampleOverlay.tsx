@@ -29,7 +29,7 @@ function fitSample(width: number, height: number, compact: boolean): NormalizedP
   const left = width * 0.08;
   const right = width * 0.92;
   const top = height * (compact ? 0.17 : 0.15);
-  const bottom = height * (compact ? 0.7 : 0.8);
+  const bottom = height * (compact ? 0.63 : 0.8);
 
   const handW = HAND_BOX.maxX - HAND_BOX.minX;
   const handH = HAND_BOX.maxY - HAND_BOX.minY;
