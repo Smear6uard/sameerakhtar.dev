@@ -1,10 +1,10 @@
-// Small architecture diagrams for each project. Coordinates are percentages
-// of the panel; edges are index pairs into `nodes`.
+// Architecture diagrams for each project, drawn on a tinted grid.
 
 type VisualNode = { label: string; detail: string; x: number; y: number };
 
 type Visual = {
   eyebrow: string;
+  tint: [string, string];
   nodes: VisualNode[];
   edges: [number, number][];
 };
@@ -12,6 +12,7 @@ type Visual = {
 const visuals: Record<string, Visual> = {
   renaro: {
     eyebrow: "Dispatch platform",
+    tint: ["rgba(249,115,22,0.22)", "rgba(251,191,36,0.06)"],
     nodes: [
       { label: "Bookings", detail: "phone · web · app", x: 12, y: 50 },
       { label: "Dispatch", detail: "driver scoring", x: 37, y: 28 },
@@ -31,6 +32,7 @@ const visuals: Record<string, Visual> = {
   },
   "brand-discovery": {
     eyebrow: "GenAI pipeline",
+    tint: ["rgba(167,139,250,0.22)", "rgba(96,165,250,0.08)"],
     nodes: [
       { label: "Source", detail: "URL or PDF", x: 12, y: 50 },
       { label: "Render", detail: "Cloud Run", x: 37, y: 28 },
@@ -50,6 +52,7 @@ const visuals: Record<string, Visual> = {
   },
   styleum: {
     eyebrow: "Vision + LLM pipeline",
+    tint: ["rgba(244,114,182,0.2)", "rgba(249,115,22,0.08)"],
     nodes: [
       { label: "Wardrobe", detail: "one photo each", x: 12, y: 50 },
       { label: "Segment", detail: "BiRefNet", x: 37, y: 28 },
@@ -68,6 +71,7 @@ const visuals: Record<string, Visual> = {
   },
   hazardlens: {
     eyebrow: "Detection pipeline",
+    tint: ["rgba(248,113,113,0.22)", "rgba(249,115,22,0.08)"],
     nodes: [
       { label: "Video", detail: "OpenCV decode", x: 12, y: 50 },
       { label: "YOLO26", detail: "NMS-free", x: 37, y: 28 },
@@ -87,6 +91,7 @@ const visuals: Record<string, Visual> = {
   },
   windwalk: {
     eyebrow: "Routing",
+    tint: ["rgba(34,211,238,0.2)", "rgba(96,165,250,0.08)"],
     nodes: [
       { label: "Pedway", detail: "40+ nodes", x: 12, y: 30 },
       { label: "Streets", detail: "surface edges", x: 12, y: 70 },
@@ -105,6 +110,7 @@ const visuals: Record<string, Visual> = {
   },
   "llm-router": {
     eyebrow: "Routing layer",
+    tint: ["rgba(96,165,250,0.2)", "rgba(34,211,238,0.06)"],
     nodes: [
       { label: "Prompt", detail: "request", x: 12, y: 50 },
       { label: "Signals", detail: "6 features", x: 37, y: 28 },
@@ -124,6 +130,7 @@ const visuals: Record<string, Visual> = {
   },
   deepcite: {
     eyebrow: "Retrieval engine",
+    tint: ["rgba(74,222,128,0.18)", "rgba(52,211,153,0.06)"],
     nodes: [
       { label: "Query", detail: "research", x: 12, y: 50 },
       { label: "Search", detail: "Serper", x: 37, y: 28 },
@@ -143,19 +150,28 @@ const visuals: Record<string, Visual> = {
   },
 };
 
-export function WorkVisual({ slug, compact = false }: { slug: string; compact?: boolean }) {
+export function WorkVisual({
+  slug,
+  className = "aspect-[16/10]",
+}: {
+  slug: string;
+  className?: string;
+}) {
   const visual = visuals[slug] ?? visuals["llm-router"];
 
   return (
     <div
-      className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-line bg-elev"
+      className={`relative w-full overflow-hidden ${className}`}
+      style={{
+        background: `linear-gradient(135deg, ${visual.tint[0]}, ${visual.tint[1]} 70%)`,
+      }}
       aria-hidden="true"
     >
       <div
-        className="absolute inset-0 opacity-70"
+        className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "linear-gradient(color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--ink) 6%, transparent) 1px, transparent 1px)",
+            "linear-gradient(rgba(230,241,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(230,241,255,0.07) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />
@@ -176,7 +192,7 @@ export function WorkVisual({ slug, compact = false }: { slug: string; compact?: 
               y2={b.y}
               vectorEffect="non-scaling-stroke"
               stroke="var(--accent)"
-              strokeOpacity={0.55}
+              strokeOpacity={0.6}
               strokeWidth={1.25}
               strokeDasharray="3 4"
               strokeLinecap="round"
@@ -185,14 +201,12 @@ export function WorkVisual({ slug, compact = false }: { slug: string; compact?: 
         })}
       </svg>
 
-      <p className="eyebrow absolute top-4 left-4">{visual.eyebrow}</p>
+      <p className="eyebrow absolute top-4 left-4 !text-accent/80">{visual.eyebrow}</p>
 
       {visual.nodes.map((node) => (
         <div
           key={node.label}
-          className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-md border border-line bg-bg shadow-[var(--shadow)] ${
-            compact ? "w-[5.5rem] px-2 py-1" : "w-[clamp(5.25rem,9.5vw,6.5rem)] px-2 py-1.5"
-          }`}
+          className="absolute w-[clamp(5.25rem,9.5vw,6.5rem)] -translate-x-1/2 -translate-y-1/2 rounded-md border border-line-strong bg-bg/85 px-2 py-1.5 shadow-[var(--shadow)] backdrop-blur"
           style={{ left: `${node.x}%`, top: `${node.y}%` }}
         >
           <p className="truncate text-[11px] font-medium text-ink md:text-xs">{node.label}</p>

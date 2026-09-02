@@ -8,6 +8,7 @@ export interface Role {
   location: string;
   href?: string;
   bullets: string[];
+  tech: string;
 }
 
 export const experience: Role[] = [
@@ -22,6 +23,7 @@ export const experience: Role[] = [
       "Built a Cloud Run + Playwright service for untrusted URLs; wrote Terraform for Direct VPC egress, Cloud NAT, OIDC auth, and a deny-private-range firewall; SSRF-hardened with DNS pinning and redirect revalidation.",
       "Built Go workers with Redis-backed async orchestration, rate limiting, stale-job recovery, failure-aware retries, graceful shutdown draining, and cold-start egress validation. Warm end-to-end renders complete in about 2–3 seconds.",
     ],
+    tech: "Go · Gemini 2.5 Flash · Vertex AI · Cloud Run · Playwright · Terraform · Redis · React · TypeScript",
   },
   {
     company: "Renaro",
@@ -35,6 +37,7 @@ export const experience: Role[] = [
       "Built Stripe Connect payments (ACH, disputes, refunds, payout holds, metered billing) on idempotent, webhook-deduplicated, compare-and-swap money paths.",
       "Enforced tenant isolation with forced PostgreSQL row-level security on every tenant table and CI schema gates; validated with an adversarial suite covering cross-tenant access and payment IDOR.",
     ],
+    tech: "TypeScript · Fastify · PostgreSQL · Drizzle · pg-boss · Redis · WebSockets · Stripe Connect · WorkOS",
   },
   {
     company: "BrunoSoft",
@@ -45,6 +48,7 @@ export const experience: Role[] = [
       "Migrated 100+ AngularJS components to modern Angular with lazy-loaded routing and modular state management, cutting production bundle size 30% and build time 40%; added unit and integration tests.",
       "Containerized dev and prod environments with Docker Compose, cutting setup from 2+ hours to 15 minutes.",
     ],
+    tech: "Angular · TypeScript · Docker Compose · CI/CD",
   },
   {
     company: "American Coach Limousine",
@@ -54,30 +58,68 @@ export const experience: Role[] = [
     bullets: [
       "Integrated the FastTrak booking API with internal dispatch via REST: 50+ affiliates and 3,000+ weekly bookings.",
     ],
+    tech: "REST APIs · FastTrak · Dispatch operations",
   },
 ];
 
-export const skills: { label: string; items: string }[] = [
-  { label: "Languages", items: "TypeScript, JavaScript, Python, Go, SQL, Java, Swift, C++" },
+export const skills: { label: string; items: string[] }[] = [
+  {
+    label: "Languages",
+    items: ["TypeScript", "JavaScript", "Python", "Go", "SQL", "Java", "Swift", "C++"],
+  },
   {
     label: "Backend & data",
-    items:
-      "Node.js, Fastify, PostgreSQL, Drizzle, pg-boss, Redis, REST, WebSockets, Stripe Connect, WorkOS",
+    items: [
+      "Node.js",
+      "Fastify",
+      "PostgreSQL",
+      "Drizzle",
+      "pg-boss",
+      "Redis",
+      "REST",
+      "WebSockets",
+      "Stripe Connect",
+      "WorkOS",
+    ],
   },
   {
     label: "Frontend & mobile",
-    items: "React, Next.js, Angular, React Native, Expo, SwiftUI, Playwright",
+    items: ["React", "Next.js", "Angular", "React Native", "Expo", "SwiftUI", "Playwright"],
   },
   {
     label: "Cloud & infra",
-    items:
-      "GCP (Cloud Run, Vertex AI), AWS, Terraform, Docker, Cloudflare, Vercel, CI/CD, GitHub Actions",
+    items: [
+      "GCP (Cloud Run, Vertex AI)",
+      "AWS",
+      "Terraform",
+      "Docker",
+      "Cloudflare",
+      "Vercel",
+      "CI/CD",
+      "GitHub Actions",
+    ],
   },
   {
     label: "AI & CV",
-    items:
-      "Gemini, LLM APIs (OpenAI, Anthropic), PyTorch, OpenCV, YOLO, BiRefNet, Florence-2, FashionSigLIP",
+    items: [
+      "Gemini",
+      "OpenAI & Anthropic APIs",
+      "PyTorch",
+      "OpenCV",
+      "YOLO",
+      "BiRefNet",
+      "Florence-2",
+      "FashionSigLIP",
+    ],
   },
+];
+
+/** Bento stat tiles. Numbers count up on scroll; strings render as-is. */
+export const stats: { value: number | string; suffix?: string; label: string }[] = [
+  { value: 4, suffix: "+", label: "years coding" },
+  { value: 5, label: "products shipped" },
+  { value: 100, suffix: "+", label: "app users" },
+  { value: "1st", label: "DemonHacks 2026" },
 ];
 
 export const education = {
@@ -106,8 +148,8 @@ export const honors = [
 
 /** Numbers that changed something, shown as a readout under the hero. */
 export const proof = [
-  { value: "4,543", label: "authenticated connections held under a 10K-client reconnect storm" },
-  { value: "~2–3 s", label: "warm end-to-end renders, Cloud Run + Playwright at Quantum Metric" },
-  { value: "$0.002", label: "per generated outfit for 100+ Styleum users" },
-  { value: "1st", label: "place at DemonHacks 2026 with a six-person team" },
+  { value: "4,543", label: "WebSocket connections held under a 10K-client reconnect storm" },
+  { value: "~2–3 s", label: "warm end-to-end renders at Quantum Metric" },
+  { value: "$0.002", label: "per generated outfit on Styleum" },
+  { value: "1st", label: "place at DemonHacks 2026" },
 ];

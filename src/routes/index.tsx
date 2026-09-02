@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       ...seo({
-        title: "Sameer Akhtar — Software Engineer in Chicago",
+        title: "Sameer Akhtar | Software Engineer & Founder",
         description: site.description,
         keywords:
           "Sameer Akhtar, software engineer, Chicago, Quantum Metric, Renaro, Styleum, HazardLens, DePaul University, new grad software engineer 2027, TypeScript, Go, React, PostgreSQL, computer vision",

@@ -71,83 +71,92 @@ export function PerceptionDemo() {
   return (
     <figure className="m-0">
       <div
-        ref={panelRef}
-        className="ticks relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-panel"
+        className="rounded-2xl p-px"
         style={{
-          backgroundImage:
-            "radial-gradient(120% 90% at 50% 60%, rgba(247,201,168,0.06), transparent 60%), linear-gradient(rgba(237,232,223,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(237,232,223,0.045) 1px, transparent 1px)",
-          backgroundSize: "100% 100%, 40px 40px, 40px 40px",
-          backgroundPosition: "center, center, center",
+          background:
+            "linear-gradient(135deg, rgba(249,115,22,0.55), rgba(230,241,255,0.08) 45%, rgba(96,165,250,0.35))",
+          boxShadow: "0 0 70px -18px var(--glow), var(--shadow)",
         }}
       >
-        <span className="tick" aria-hidden="true" />
-
-        {!isLive && <SampleOverlay width={size.width} height={size.height} dim={isStarting} />}
-
-        {cameraMounted && (
-          <LiveDemo
-            width={size.width}
-            height={size.height}
-            isInView={isInView}
-            onReady={handleReady}
-            onStats={handleStats}
-            onError={handleError}
-          />
-        )}
-
-        {/* Readout */}
         <div
-          className="pointer-events-none absolute inset-x-8 top-3.5 flex items-center justify-between gap-3 font-mono text-[10.5px] tracking-[0.14em] uppercase"
-          style={{ color: "rgba(237,232,223,0.62)" }}
+          ref={panelRef}
+          className="ticks relative aspect-[4/3] w-full overflow-hidden rounded-[15px] bg-panel"
+          style={{
+            backgroundImage:
+              "radial-gradient(120% 90% at 50% 60%, rgba(249,115,22,0.08), transparent 60%), linear-gradient(rgba(230,241,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(230,241,255,0.05) 1px, transparent 1px)",
+            backgroundSize: "100% 100%, 40px 40px, 40px 40px",
+            backgroundPosition: "center, center, center",
+          }}
         >
-          <span className="truncate">
-            hand_landmarker<span className="hidden sm:inline"> · 21 keypoints</span>
-          </span>
-          <span className="flex shrink-0 items-center gap-2">
-            {isLive && (
-              <span
-                className="inline-block h-1.5 w-1.5 rounded-full"
-                style={{ background: "#f2593f" }}
-                aria-hidden="true"
-              />
-            )}
-            {readout}
-          </span>
-        </div>
+          <span className="tick" aria-hidden="true" />
 
-        {/* Error */}
-        {mode.kind === "error" && (
-          <div
-            role="status"
-            className="absolute inset-x-6 bottom-20 rounded-xl border px-4 py-3 text-sm backdrop-blur-md"
-            style={{
-              background: "rgba(11,13,15,0.82)",
-              borderColor: "rgba(237,232,223,0.15)",
-              color: "#ede8df",
-            }}
-          >
-            {mode.reason}
-          </div>
-        )}
+          {!isLive && <SampleOverlay width={size.width} height={size.height} dim={isStarting} />}
 
-        {/* Controls */}
-        <div className="absolute inset-x-5 bottom-5 flex flex-wrap items-center justify-between gap-3">
-          {cameraMounted ? (
-            <button type="button" onClick={stop} className="btn btn-sm btn-ghost text-[#ede8df]">
-              Stop camera
-            </button>
-          ) : (
-            <button type="button" onClick={start} className="btn btn-sm btn-primary">
-              {mode.kind === "error" ? "Try again" : "Try it with your camera"}
-              <span aria-hidden="true">→</span>
-            </button>
+          {cameraMounted && (
+            <LiveDemo
+              width={size.width}
+              height={size.height}
+              isInView={isInView}
+              onReady={handleReady}
+              onStats={handleStats}
+              onError={handleError}
+            />
           )}
-          <span
-            className="font-mono text-[10.5px] tracking-[0.1em] uppercase"
-            style={{ color: "rgba(237,232,223,0.5)" }}
+
+          {/* Readout */}
+          <div
+            className="pointer-events-none absolute inset-x-8 top-3.5 flex items-center justify-between gap-3 font-mono text-[10.5px] tracking-[0.14em] uppercase"
+            style={{ color: "rgba(230,241,255,0.62)" }}
           >
-            <span className="hidden sm:inline">Runs in your browser · </span>nothing uploaded
-          </span>
+            <span className="truncate">
+              hand_landmarker<span className="hidden sm:inline"> · 21 keypoints</span>
+            </span>
+            <span className="flex shrink-0 items-center gap-2">
+              {isLive && (
+                <span
+                  className="inline-block h-1.5 w-1.5 rounded-full"
+                  style={{ background: "#f97316" }}
+                  aria-hidden="true"
+                />
+              )}
+              {readout}
+            </span>
+          </div>
+
+          {/* Error */}
+          {mode.kind === "error" && (
+            <div
+              role="status"
+              className="absolute inset-x-6 bottom-20 rounded-xl border px-4 py-3 text-sm backdrop-blur-md"
+              style={{
+                background: "rgba(6,16,31,0.85)",
+                borderColor: "rgba(230,241,255,0.15)",
+                color: "#e6f1ff",
+              }}
+            >
+              {mode.reason}
+            </div>
+          )}
+
+          {/* Controls */}
+          <div className="absolute inset-x-5 bottom-5 flex flex-wrap items-center justify-between gap-3">
+            {cameraMounted ? (
+              <button type="button" onClick={stop} className="btn btn-sm btn-ghost !text-[#e6f1ff]">
+                Stop camera
+              </button>
+            ) : (
+              <button type="button" onClick={start} className="btn btn-sm btn-primary">
+                {mode.kind === "error" ? "Try again" : "Try it with your camera"}
+                <span aria-hidden="true">→</span>
+              </button>
+            )}
+            <span
+              className="font-mono text-[10.5px] tracking-[0.1em] uppercase"
+              style={{ color: "rgba(230,241,255,0.5)" }}
+            >
+              <span className="hidden sm:inline">Runs in your browser · </span>nothing uploaded
+            </span>
+          </div>
         </div>
       </div>
       <figcaption className="mt-3 text-sm text-ink-3">

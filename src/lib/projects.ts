@@ -135,7 +135,7 @@ RETURNING id, tenant_id, payload;`,
       {
         type: "text",
         content:
-          "The features that sold were not the clever ones. Operators wanted to see why a driver was chosen and to trust that a payout would not be lost. Most of the engineering effort went into making the boring paths boring: retries, dedup, locks, and policies that hold without anyone remembering them.",
+          "The features that sold were not the clever ones. Operators wanted to see why a driver was chosen and to trust that a payout would not be lost. Most of the engineering effort went into retries, deduplication, locks, and policies that hold without anyone having to remember them.",
       },
     ],
   },
@@ -187,7 +187,7 @@ RETURNING id, tenant_id, payload;`,
         content:
           "I owned the feature from pre-GA design through production launch across three surfaces: the React/TypeScript frontend, the Go backend, and a new browser-rendering service that did not exist before.",
       },
-      { type: "heading", level: 2, content: "Keeping the model honest" },
+      { type: "heading", level: 2, content: "Grounding the model" },
       {
         type: "text",
         content:
@@ -202,7 +202,7 @@ RETURNING id, tenant_id, payload;`,
           "SSRF hardening through DNS pinning and redirect revalidation, so a redirect cannot reach internal ranges after the initial check.",
         ],
       },
-      { type: "heading", level: 2, content: "Workers that fail well" },
+      { type: "heading", level: 2, content: "Async workers" },
       {
         type: "text",
         content:
@@ -212,7 +212,7 @@ RETURNING id, tenant_id, payload;`,
       {
         type: "text",
         content:
-          "The interesting engineering was around the model, not inside it. Grounding, constraints, and a rendering service that cannot be turned against the network mattered more to shipping than any prompt.",
+          "Most of the engineering was around the model, not inside it. Grounding, output constraints, and a rendering service that cannot be turned against the network mattered more to shipping than any prompt.",
       },
     ],
   },

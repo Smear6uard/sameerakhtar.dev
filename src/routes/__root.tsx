@@ -10,6 +10,8 @@ import globalsCss from "@/styles/globals.css?url";
 import { ThemeProvider, themeFoucScript } from "@/components/providers/ThemeProvider";
 import { ToastProvider } from "@/components/ui/Toast";
 import { TopNav } from "@/components/TopNav";
+import { Atmosphere } from "@/components/fx/Atmosphere";
+import { Cursor } from "@/components/fx/Cursor";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/JsonLd";
 import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
@@ -22,8 +24,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "color-scheme", content: "dark light" },
-      { name: "theme-color", content: "#111417", media: "(prefers-color-scheme: dark)" },
-      { name: "theme-color", content: "#f4f3ef", media: "(prefers-color-scheme: light)" },
+      { name: "theme-color", content: "#0a192f" },
       { name: "format-detection", content: "telephone=no" },
       { name: "apple-mobile-web-app-title", content: site.name },
       { name: "author", content: site.name },
@@ -63,6 +64,8 @@ function RootDocument({ children }: { children: ReactNode }) {
         <ThemeProvider>
           <ToastProvider>
             <ConsoleEasterEgg />
+            <Atmosphere />
+            <Cursor />
             <a
               href="#main"
               className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-elev focus:px-4 focus:py-2 focus:text-ink"
@@ -70,7 +73,9 @@ function RootDocument({ children }: { children: ReactNode }) {
               Skip to content
             </a>
             <TopNav />
-            <main id="main">{children}</main>
+            <main id="main" className="relative">
+              {children}
+            </main>
             <Footer />
             <Analytics />
           </ToastProvider>

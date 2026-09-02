@@ -7,9 +7,9 @@ hand-tracking demo (MediaPipe Hand Landmarker on WebAssembly + WebGL) entirely i
 
 - **Framework**: [TanStack Start](https://tanstack.com/start) (React 19 + Vite 7), file-based routing
 - **Build / SSR**: [Nitro](https://nitro.build), deployed on [Vercel](https://vercel.com)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) with CSS-variable tokens (dark and light)
-- **Type**: Bricolage Grotesque (display), Satoshi (body, self-hosted), JetBrains Mono (labels)
-- **Motion**: Framer Motion, kept to load and scroll reveals; reduced motion is respected
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) with CSS-variable tokens; navy + orange theme, dark by default with a light variant
+- **Type**: Satoshi (self-hosted) with JetBrains Mono for labels and code
+- **Motion**: CSS reveals plus Framer Motion for the cursor, magnetic buttons, and nav; reduced motion is respected
 - **Perception demo**: `@mediapipe/tasks-vision` on the main thread with GPU delegate and CPU fallback
 
 ## Develop
@@ -36,7 +36,8 @@ src/
 ├── components/
 │   ├── sections/           # Home page: hero, work, experience, about, contact
 │   ├── perception/         # Hand-tracking demo (landmarker loader, live loop, skeleton)
-│   ├── work/               # Work rows and architecture diagrams
+│   ├── work/               # Work cards and architecture diagrams
+│   ├── fx/                 # Atmosphere, cursor, magnetic, spotlight, scramble, count-up
 │   ├── case-study/         # Case-study page layout
 │   └── ui/                 # Theme toggle, toast, reveal, link
 ├── lib/
@@ -51,5 +52,5 @@ Content changes usually mean editing `src/lib/*.ts` and replacing `public/Sameer
 
 ## Theme
 
-`data-theme="dark" | "light"` on `<html>`, set before hydration by an inline script. Follows the
-OS preference unless the visitor picks one; the choice is stored in `localStorage` under `theme`.
+`data-theme="dark" | "light"` on `<html>`, set before hydration by an inline script. Dark by
+default; a visitor's choice is stored in `localStorage` under `theme`.

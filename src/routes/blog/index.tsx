@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@/components/ui/Link";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionTitle } from "@/components/fx/SectionTitle";
+import { Spotlight } from "@/components/fx/Spotlight";
 import { blogPosts, formatBlogDate } from "@/lib/blog-posts";
 import { seo } from "@/lib/seo";
 import { site } from "@/lib/site";
@@ -9,9 +11,9 @@ export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
       ...seo({
-        title: "Writing — Sameer Akhtar",
+        title: "Blog | Sameer Akhtar",
         description:
-          "Notes from Sameer Akhtar on shipping AI products, cost engineering, and building systems that hold up.",
+          "Thoughts on software engineering, AI development, startups, and building products, by Sameer Akhtar.",
         url: `${site.url}/blog`,
       }),
     ],
@@ -22,34 +24,36 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogPage() {
   return (
-    <div className="wrap pt-10 pb-8 md:pt-16">
+    <div className="wrap relative z-10 pt-12 pb-8 md:pt-20">
       <Reveal>
-        <p className="eyebrow">Writing</p>
-        <h1 className="display-xl mt-5 max-w-[16ch]">Notes from building things.</h1>
-        <p className="lede mt-6 max-w-[54ch]">
-          Longer write-ups on decisions that were not obvious at the time: model choice, cost, and
-          the parts of a product nobody sees.
+        <SectionTitle text="blog" />
+        <h1 className="display-lg mt-4">Writing</h1>
+        <p className="lede mt-4 max-w-[52ch]">
+          Thoughts on software engineering, AI, and building products.
         </p>
       </Reveal>
 
-      <ul className="mt-12">
-        {blogPosts.map((post) => (
-          <Reveal as="li" key={post.slug} className="hairline">
-            <Link
-              href={`/blog/${post.slug}`}
-              className="group grid gap-3 py-8 md:grid-cols-12 md:gap-10"
-            >
-              <p className="font-mono text-xs tracking-[0.08em] text-ink-3 uppercase md:col-span-3">
-                {formatBlogDate(post.date)} · {post.readingTime}
-              </p>
-              <div className="md:col-span-9">
-                <h2 className="display-md transition-colors group-hover:text-accent">
+      <ul className="mt-10 grid gap-5">
+        {blogPosts.map((post, i) => (
+          <Reveal as="li" key={post.slug} delay={i * 0.06}>
+            <Spotlight className="group">
+              <Link href={`/blog/${post.slug}`} className="block p-6 md:p-7">
+                <p className="font-mono text-xs text-ink-3">
+                  {formatBlogDate(post.date)} · {post.readingTime}
+                </p>
+                <h2 className="mt-3 text-xl font-bold text-ink transition-colors group-hover:text-accent md:text-2xl">
                   {post.title}
                 </h2>
                 <p className="mt-2 max-w-[60ch] text-ink-2">{post.description}</p>
-                <p className="mt-3 font-mono text-xs text-ink-3">{post.tags.join(" · ")}</p>
-              </div>
-            </Link>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <span key={tag} className="pill pill-accent font-mono text-[11px]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            </Spotlight>
           </Reveal>
         ))}
       </ul>

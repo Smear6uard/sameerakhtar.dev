@@ -202,12 +202,12 @@ export function LiveDemo({ width, height, isInView, onReady, onStats, onError }:
       )}
       {!ready && (
         <div className="absolute inset-x-0 bottom-16 flex flex-col items-center gap-2 px-6">
-          <span className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-[rgba(237,232,223,0.7)]">
+          <span className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-[rgba(230,241,255,0.7)]">
             Starting camera · loading model (~7 MB)
           </span>
-          <span className="relative block h-px w-40 overflow-hidden bg-[rgba(237,232,223,0.15)]">
+          <span className="relative block h-px w-40 overflow-hidden bg-[rgba(230,241,255,0.15)]">
             <span
-              className="absolute inset-y-0 left-0 w-1/3 bg-[#f7c9a8]"
+              className="absolute inset-y-0 left-0 w-1/3 bg-[#fdba74]"
               style={{ animation: "shimmer 1.4s ease-in-out infinite" }}
             />
           </span>

@@ -31,7 +31,7 @@ export const Route = createFileRoute("/blog/$slug")({
     return {
       meta: [
         ...seo({
-          title: `${post.title} — Sameer Akhtar`,
+          title: `${post.title} | Sameer Akhtar`,
           description: post.description,
           type: "article",
           url: `${site.url}/blog/${params.slug}`,
@@ -55,26 +55,37 @@ function BlogPostPage() {
         url={`${site.url}/blog/${post.slug}`}
         datePublished={post.date}
       />
-      <article className="wrap pt-10 pb-8 md:pt-14">
+      <article className="wrap relative z-10 pt-12 pb-8 md:pt-16">
         <Reveal>
-          <Link href="/blog" className="link-quiet text-sm">
-            ← Writing
+          <Link href="/blog" className="link-quiet group inline-flex items-center gap-1 text-sm">
+            <span className="transition-transform group-hover:-translate-x-1">←</span> back to blog
           </Link>
           <p className="eyebrow mt-8">
             {formatBlogDate(post.date, "long")} · {post.readingTime}
           </p>
-          <h1 className="display-xl mt-4 max-w-[18ch]">{post.title}</h1>
-          <p className="lede mt-6 max-w-[58ch]">{post.description}</p>
-          <p className="mt-4 font-mono text-xs text-ink-3">{post.tags.join(" · ")}</p>
+          <h1 className="display-lg mt-4 max-w-[22ch]">{post.title}</h1>
+          <p className="lede mt-5 max-w-[58ch]">{post.description}</p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <span key={tag} className="pill pill-accent font-mono text-[11px]">
+                {tag}
+              </span>
+            ))}
+          </div>
         </Reveal>
 
         <div className="prose-site mt-14 max-w-[68ch]">
           <BlogContent content={post.content} />
         </div>
 
-        <Reveal className="hairline mt-16 pt-8">
-          <p className="text-ink">Sameer Akhtar</p>
-          <p className="text-sm text-ink-3">Software engineer, Chicago</p>
+        <Reveal className="hairline mt-16 flex items-center gap-4 pt-8">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 text-lg font-bold text-accent">
+            S
+          </span>
+          <span>
+            <span className="block font-medium text-ink">Sameer Akhtar</span>
+            <span className="block text-sm text-ink-3">Software Engineer &amp; Founder</span>
+          </span>
         </Reveal>
 
         {(prevPost || nextPost) && (
@@ -125,11 +136,11 @@ function BlogContent({ content }: { content: string }) {
       elements.push(
         <figure key={key++} className="my-6 overflow-hidden rounded-xl border border-line bg-panel">
           {language && (
-            <figcaption className="border-b border-[rgba(237,232,223,0.1)] px-4 py-2 font-mono text-[11px] text-[rgba(237,232,223,0.55)]">
+            <figcaption className="border-b border-white/10 px-4 py-2 font-mono text-[11px] text-white/55">
               {language}
             </figcaption>
           )}
-          <pre className="!my-0 !rounded-none !border-0">
+          <pre>
             <code>{codeLines.join("\n")}</code>
           </pre>
         </figure>,

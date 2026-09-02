@@ -17,7 +17,6 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@mediapipe/tasks-vision": "^0.10.35",
     "@tanstack/react-router": "1.169.1",

@@ -10,7 +10,7 @@ const LABELS: ReadonlyArray<{
   dy: number;
   compact: boolean;
 }> = [
-  { index: 0, name: "wrist", dx: 14, dy: 4, compact: true },
+  { index: 0, name: "wrist", dx: 14, dy: 4, compact: false },
   { index: 4, name: "thumb_tip", dx: -12, dy: -18, compact: false },
   { index: 8, name: "index_tip", dx: -12, dy: -22, compact: true },
   { index: 12, name: "middle_tip", dx: 12, dy: -20, compact: false },
@@ -80,7 +80,7 @@ export function SampleOverlay({ width, height, dim = false }: SampleOverlayProps
               left: `calc(${x * 100}% + ${dx}px)`,
               top: `calc(${y * 100}% + ${dy}px)`,
               transform: alignRight ? "translateX(-100%)" : undefined,
-              color: "rgba(237, 232, 223, 0.55)",
+              color: "rgba(230, 241, 255, 0.55)",
               animationDelay: `${900 + index * 30}ms`,
             }}
           >

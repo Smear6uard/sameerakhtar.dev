@@ -1,5 +1,6 @@
 import { Link } from "@/components/ui/Link";
 import { Reveal } from "@/components/ui/Reveal";
+import { Spotlight } from "@/components/fx/Spotlight";
 import { WorkVisual } from "@/components/work/WorkVisual";
 import type { ProcessedContentBlock, Project } from "@/lib/projects";
 import { ReadingProgress } from "./ReadingProgress";
@@ -13,68 +14,71 @@ export function CaseStudy({ project, content }: CaseStudyProps) {
   return (
     <>
       <ReadingProgress />
-      <article className="wrap pt-10 pb-8 md:pt-14">
+      <article className="wrap relative z-10 pt-12 pb-8 md:pt-16">
         <Reveal>
-          <Link href="/work" className="link-quiet text-sm">
-            ← All work
+          <Link href="/work" className="link-quiet group inline-flex items-center gap-1 text-sm">
+            <span className="transition-transform group-hover:-translate-x-1">←</span> back to work
           </Link>
           <p className="eyebrow mt-8">
             {project.timeline} · {project.role}
           </p>
-          <h1 className="display-xl mt-4 max-w-[16ch]">{project.title}</h1>
-          <p className="lede mt-6 max-w-[58ch]">{project.subtitle}</p>
-        </Reveal>
+          <h1 className="display-xl mt-4">{project.title}</h1>
+          <p className="lede mt-5 max-w-[58ch]">{project.subtitle}</p>
 
-        <Reveal className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="lg:col-span-7">
-            <WorkVisual slug={project.slug} />
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.stack.map((tech) => (
+              <span key={tech} className="pill pill-accent font-mono text-xs">
+                {tech}
+              </span>
+            ))}
           </div>
-          <div className="lg:col-span-5">
-            <dl className="grid gap-5">
-              {project.highlights.map((h) => (
-                <div key={h.label} className="hairline pt-4 first:border-0 first:pt-0">
-                  <dt className="font-display text-2xl font-semibold tracking-tight text-ink">
-                    {h.value}
-                  </dt>
-                  <dd className="mt-1 text-sm text-ink-3">{h.label}</dd>
-                </div>
+
+          {project.links.length > 0 && (
+            <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              {project.links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link"
+                >
+                  {link.label} ↗
+                </a>
               ))}
-            </dl>
-            <p className="mt-8 font-mono text-xs leading-relaxed text-ink-3">
-              {project.stack.join(" · ")}
-            </p>
-            {project.links.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                {project.links.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="link"
-                  >
-                    {link.label} ↗
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </Reveal>
 
-        <div className="prose-site mt-16 max-w-[68ch]">
+        <Reveal className="glass mt-10 overflow-hidden" delay={0.05}>
+          <WorkVisual slug={project.slug} className="aspect-[16/9] md:aspect-[21/9]" />
+        </Reveal>
+
+        <Reveal className="mt-6 grid gap-4 sm:grid-cols-3" delay={0.1}>
+          {project.highlights.map((h) => (
+            <Spotlight key={h.label} className="p-5" lift={false}>
+              <p className="font-mono text-2xl font-bold text-accent">{h.value}</p>
+              <p className="mt-1 text-sm text-ink-3">{h.label}</p>
+            </Spotlight>
+          ))}
+        </Reveal>
+
+        <div className="prose-site mt-14 max-w-[68ch]">
           {content.map((block, index) => (
             <Block key={index} block={block} />
           ))}
         </div>
 
-        <Reveal className="hairline mt-20 pt-10">
+        <Reveal className="mt-20">
           <Link
             href="/work"
-            className="group flex items-center justify-between rounded-2xl border border-line p-6 transition-colors hover:border-line-strong"
+            className="glass group flex items-center justify-between p-6 transition-colors"
           >
             <span>
-              <span className="eyebrow">Next</span>
-              <span className="mt-1 block text-lg text-ink">All work</span>
+              <span className="eyebrow">Back to</span>
+              <span className="mt-1 block text-lg text-ink transition-colors group-hover:text-accent">
+                All work
+              </span>
             </span>
             <span className="text-2xl text-accent transition-transform group-hover:translate-x-1">
               →
@@ -105,13 +109,15 @@ function Block({ block }: { block: ProcessedContentBlock }) {
     case "code":
       return (
         <figure className="my-6 overflow-hidden rounded-xl border border-line bg-panel">
-          {block.filename && (
-            <figcaption className="flex items-center justify-between border-b border-[rgba(237,232,223,0.1)] px-4 py-2 font-mono text-[11px] text-[rgba(237,232,223,0.55)]">
-              <span>{block.filename}</span>
-              <span>{block.language}</span>
-            </figcaption>
-          )}
-          <pre className="!my-0 !rounded-none !border-0">
+          <figcaption className="flex items-center gap-3 border-b border-white/10 px-4 py-2.5 font-mono text-[11px] text-white/55">
+            <span className="flex gap-1.5" aria-hidden="true">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+            </span>
+            <span>{block.filename ?? block.language}</span>
+          </figcaption>
+          <pre>
             {/* Safe: pre-highlighted from static developer-controlled content. */}
             <code dangerouslySetInnerHTML={{ __html: block.highlightedCode }} />
           </pre>

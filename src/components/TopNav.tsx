@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
 import { Link } from "@/components/ui/Link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { Magnetic } from "@/components/fx/Magnetic";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/#work", label: "Work", section: "work" },
-  { href: "/#experience", label: "Experience", section: "experience" },
-  { href: "/blog", label: "Writing", section: "blog" },
-  { href: "/#about", label: "About", section: "about" },
+  { href: "/#work", label: "work", section: "work" },
+  { href: "/#experience", label: "experience", section: "experience" },
+  { href: "/#about", label: "about", section: "about" },
+  { href: "/blog", label: "blog", section: "blog" },
 ] as const;
 
 export function TopNav() {
@@ -20,6 +21,8 @@ export function TopNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const active = useActiveSection();
   const isHome = pathname === "/";
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -43,17 +46,29 @@ export function TopNav() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
-        scrolled || open ? "border-line bg-bg/85 backdrop-blur-md" : "border-transparent",
+        "sticky top-0 z-40 border-b transition-[background-color,border-color] duration-300",
+        scrolled || open ? "border-line bg-bg/80 backdrop-blur-md" : "border-transparent",
       )}
     >
+      <motion.div
+        className="absolute inset-x-0 top-0 h-[2px] origin-left bg-accent"
+        style={{ scaleX: progress, boxShadow: "0 0 10px var(--glow)" }}
+        aria-hidden="true"
+      />
       <nav className="wrap flex h-16 items-center justify-between gap-6" aria-label="Primary">
         <Link
           href="/"
-          className="font-medium tracking-[-0.01em] text-ink"
+          className="flex items-center gap-2.5 font-medium tracking-tight text-ink transition-colors hover:text-accent"
           onClick={() => setOpen(false)}
         >
-          {site.name}
+          <img
+            src="/SameerAkhtar.dev-logo-navybg.jpg"
+            alt=""
+            width={26}
+            height={26}
+            className="rounded-md"
+          />
+          <span>sameer akhtar</span>
         </Link>
 
         <div className="hidden items-center gap-7 md:flex">
@@ -63,22 +78,23 @@ export function TopNav() {
               href={item.href}
               className={cn(
                 "text-[0.9375rem] transition-colors",
-                isActive(item) ? "text-ink" : "text-ink-2 hover:text-ink",
+                isActive(item) ? "text-accent" : "text-ink-2 hover:text-accent",
               )}
               aria-current={isActive(item) ? "location" : undefined}
             >
               {item.label}
             </Link>
           ))}
-          <a
-            href={site.resume}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost btn-sm"
-          >
-            Resume
-            <span aria-hidden="true">↗</span>
-          </a>
+          <Magnetic radius={70} strength={6}>
+            <a
+              href={site.resume}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-sm border border-accent/50 text-accent hover:bg-accent/10 hover:shadow-[0_0_20px_var(--glow-soft)]"
+            >
+              resume
+            </a>
+          </Magnetic>
           <ThemeToggle />
         </div>
 
@@ -89,9 +105,9 @@ export function TopNav() {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            className="inline-flex h-9 items-center rounded-full border border-line px-3.5 text-sm text-ink transition-colors hover:border-line-strong"
+            className="inline-flex h-9 items-center rounded-lg border border-line px-3.5 text-sm text-ink transition-colors hover:border-accent hover:text-accent"
           >
-            {open ? "Close" : "Menu"}
+            {open ? "close" : "menu"}
           </button>
         </div>
       </nav>
@@ -123,8 +139,7 @@ export function TopNav() {
                 rel="noopener noreferrer"
                 className="btn btn-primary mt-3 mb-3 self-start"
               >
-                Resume
-                <span aria-hidden="true">↗</span>
+                resume <span aria-hidden="true">↗</span>
               </a>
             </div>
           </motion.div>
