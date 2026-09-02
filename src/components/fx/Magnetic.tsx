@@ -15,7 +15,7 @@ interface MagneticProps {
  * already over the element. Listens on the window (rAF-throttled) so the
  * effect starts from a distance. No-op on touch and under reduced motion.
  */
-export function Magnetic({ children, className = "", radius = 110, strength = 14 }: MagneticProps) {
+export function Magnetic({ children, className = "", radius = 80, strength = 7 }: MagneticProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -42,8 +42,8 @@ export function Magnetic({ children, className = "", radius = 110, strength = 14
       const reach = radius + Math.max(rect.width, rect.height) / 2;
       if (d < reach) {
         const s = 1 - d / reach;
-        x.set(clamp(dx * 0.35 * s, strength));
-        y.set(clamp(dy * 0.35 * s, strength));
+        x.set(clamp(dx * 0.2 * s, strength));
+        y.set(clamp(dy * 0.2 * s, strength));
       } else {
         x.set(0);
         y.set(0);
