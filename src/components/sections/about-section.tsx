@@ -23,8 +23,8 @@ export function AboutSection() {
       <div className="mt-8 grid auto-rows-[minmax(150px,auto)] grid-cols-1 gap-4 md:grid-cols-4">
         {/* Bio */}
         <Reveal className="md:col-span-2 md:row-span-2">
-          <Spotlight className="flex h-full flex-col" lift={false}>
-            <div className="relative h-64 overflow-hidden md:h-[22rem]">
+          <Spotlight className="flex h-full flex-col md:flex-row" lift={false}>
+            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden md:aspect-auto md:w-[42%]">
               <img
                 src="/profile.jpg"
                 alt="Sameer Akhtar"
@@ -32,11 +32,10 @@ export function AboutSection() {
                 height={800}
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-cover object-[center_22%]"
+                className="absolute inset-0 h-full w-full object-cover object-top"
               />
-              <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-elev to-transparent" />
             </div>
-            <div className="flex-1 p-6">
+            <div className="flex flex-1 flex-col justify-center p-6 md:p-7">
               <p className="text-ink-2">
                 Math &amp; CS at DePaul, graduating July 2027. Over the last year I&apos;ve shipped
                 a GenAI feature at Quantum Metric, built Renaro on my own, and launched Styleum to
