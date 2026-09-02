@@ -12,6 +12,7 @@ import { ToastProvider } from "@/components/ui/Toast";
 import { TopNav } from "@/components/TopNav";
 import { Atmosphere } from "@/components/fx/Atmosphere";
 import { Cursor } from "@/components/fx/Cursor";
+import { Konami } from "@/components/fx/Konami";
 import { Footer } from "@/components/footer";
 import { JsonLd } from "@/components/JsonLd";
 import { ConsoleEasterEgg } from "@/components/ConsoleEasterEgg";
@@ -66,6 +67,7 @@ function RootDocument({ children }: { children: ReactNode }) {
             <ConsoleEasterEgg />
             <Atmosphere />
             <Cursor />
+            <Konami />
             <a
               href="#main"
               className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-elev focus:px-4 focus:py-2 focus:text-ink"

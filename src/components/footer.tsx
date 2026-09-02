@@ -13,7 +13,7 @@ export function Footer() {
       <div className="wrap flex flex-col gap-4 py-8 text-sm text-ink-3 md:flex-row md:items-center md:justify-between">
         <p>
           © {new Date().getFullYear()} Sameer Akhtar · Built with TanStack Start, React 19, and
-          Tailwind v4
+          Tailwind v4 · Last shipped {lastShipped()}
         </p>
         <ul className="flex flex-wrap gap-x-6 gap-y-2">
           {FOOTER_LINKS.map((link) => (
@@ -32,4 +32,17 @@ export function Footer() {
       </div>
     </footer>
   );
+}
+
+function lastShipped() {
+  try {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "America/Chicago",
+    }).format(new Date(__BUILD_TIME__));
+  } catch {
+    return "recently";
+  }
 }

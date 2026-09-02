@@ -1,20 +1,14 @@
-import { HandSkeleton } from "./HandSkeleton";
+import { HandSkeleton, type KeypointLabel } from "./HandSkeleton";
 import { PERCEPTION_SAMPLE_KEYPOINTS, type NormalizedPoint } from "./perception-sample";
 
 // Landmark names from the MediaPipe hand topology, shown on the sample so
 // the diagram reads as a real keypoint set rather than decoration.
-const LABELS: ReadonlyArray<{
-  index: number;
-  name: string;
-  dx: number;
-  dy: number;
-  compact: boolean;
-}> = [
+const LABELS: ReadonlyArray<KeypointLabel & { compact: boolean }> = [
   { index: 0, name: "wrist", dx: 14, dy: 4, compact: false },
-  { index: 4, name: "thumb_tip", dx: -12, dy: -18, compact: false },
-  { index: 8, name: "index_tip", dx: -12, dy: -22, compact: true },
-  { index: 12, name: "middle_tip", dx: 12, dy: -20, compact: false },
-  { index: 20, name: "pinky_tip", dx: 12, dy: -8, compact: true },
+  { index: 4, name: "thumb_tip", dx: -12, dy: -14, compact: false },
+  { index: 8, name: "index_tip", dx: -12, dy: -16, compact: true },
+  { index: 12, name: "middle_tip", dx: 12, dy: -14, compact: false },
+  { index: 20, name: "pinky_tip", dx: 12, dy: -4, compact: true },
 ];
 
 // Bounding box of the sample hand in its own normalized space.
@@ -48,13 +42,16 @@ function fitSample(width: number, height: number, compact: boolean): NormalizedP
 interface SampleOverlayProps {
   width: number;
   height: number;
-  /** Fade the labels out while a live session is starting. */
+  /** Pointer-relative tilt in [-0.5, 0.5]; the hand turns toward it. */
+  tilt: { x: number; y: number };
+  /** Fade while a live session is starting. */
   dim?: boolean;
 }
 
-export function SampleOverlay({ width, height, dim = false }: SampleOverlayProps) {
+export function SampleOverlay({ width, height, tilt, dim = false }: SampleOverlayProps) {
   const compact = width < 480;
   const points = fitSample(width, height, compact);
+  const labels = LABELS.filter((label) => !compact || label.compact);
 
   return (
     <div
@@ -67,27 +64,10 @@ export function SampleOverlay({ width, height, dim = false }: SampleOverlayProps
         height={height}
         draw
         sway
+        tilt={tilt}
+        labels={labels}
         className="absolute inset-0"
       />
-      {LABELS.filter((label) => !compact || label.compact).map(({ index, name, dx, dy }) => {
-        const [x, y] = points[index];
-        const alignRight = dx < 0;
-        return (
-          <span
-            key={name}
-            className="animate-fade-in pointer-events-none absolute font-mono text-[10px] tracking-[0.08em] whitespace-nowrap"
-            style={{
-              left: `calc(${x * 100}% + ${dx}px)`,
-              top: `calc(${y * 100}% + ${dy}px)`,
-              transform: alignRight ? "translateX(-100%)" : undefined,
-              color: "rgba(244, 239, 230, 0.55)",
-              animationDelay: `${900 + index * 30}ms`,
-            }}
-          >
-            {name}
-          </span>
-        );
-      })}
     </div>
   );
 }

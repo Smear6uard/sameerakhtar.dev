@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { PerceptionDemo } from "@/components/perception/PerceptionDemo";
 import { Magnetic } from "@/components/fx/Magnetic";
+import { ChicagoTime } from "@/components/fx/ChicagoTime";
 import { useToast } from "@/components/ui/Toast";
 import { proof } from "@/lib/resume";
 import { links, site } from "@/lib/site";
@@ -30,11 +31,13 @@ export function HeroSection() {
             style={rise(0)}
           >
             <span className="pulse-dot inline-block h-2 w-2 rounded-full bg-accent" aria-hidden />
-            open to 2027 new-grad roles · chicago / remote
+            <span>
+              open to 2027 new-grad roles · <ChicagoTime />
+            </span>
           </p>
 
-          <h1 className="display-xl rise mt-5" style={rise(0.06)}>
-            sameer akhtar
+          <h1 className="display-xl rise wave mt-5" style={rise(0.06)} aria-label="sameer akhtar">
+            <WaveText text="sameer akhtar" />
           </h1>
           <p className="rise mt-3 text-xl text-ink-2 md:text-2xl" style={rise(0.12)}>
             Software Engineer &amp; Founder
@@ -162,5 +165,29 @@ function MailIcon() {
       <rect x="2" y="4" width="20" height="16" rx="2" />
       <path d="M22 6L12 13L2 6" />
     </svg>
+  );
+}
+
+/** Splits text into letters so the name can ripple on hover (see .wave in globals.css). */
+function WaveText({ text }: { text: string }) {
+  let index = 0;
+  return (
+    <span aria-hidden="true">
+      {text.split(" ").map((word, w) => (
+        <span key={w}>
+          {w > 0 && " "}
+          <span className="whitespace-nowrap">
+            {word.split("").map((ch) => {
+              const i = index++;
+              return (
+                <span key={i} className="wave-ch" style={{ "--i": i } as CSSProperties}>
+                  {ch}
+                </span>
+              );
+            })}
+          </span>
+        </span>
+      ))}
+    </span>
   );
 }

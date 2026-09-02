@@ -17,6 +17,7 @@ export function PerceptionDemo() {
   const [mode, setMode] = useState<Mode>({ kind: "sample" });
   const [isInView, setIsInView] = useState(true);
   const [stats, setStats] = useState<LiveStats>({ fps: 0, inferenceMs: 0, hands: 0 });
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   // Real pixel size drives the SVG viewBox so keypoints stay circular.
   useEffect(() => {
@@ -62,6 +63,20 @@ export function PerceptionDemo() {
   const isStarting = mode.kind === "starting";
   const cameraMounted = isLive || isStarting;
 
+  // The sample hand turns toward the pointer; touch and live mode leave it still.
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (cameraMounted || e.pointerType === "touch") return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      setTilt({
+        x: (e.clientX - rect.left) / rect.width - 0.5,
+        y: (e.clientY - rect.top) / rect.height - 0.5,
+      });
+    },
+    [cameraMounted],
+  );
+  const handlePointerLeave = useCallback(() => setTilt({ x: 0, y: 0 }), []);
+
   const readout = isLive
     ? `live · ${stats.fps.toFixed(0)} fps · ${stats.inferenceMs.toFixed(0)} ms · ${mode.delegate.toLowerCase()}`
     : isStarting
@@ -80,6 +95,8 @@ export function PerceptionDemo() {
       >
         <div
           ref={panelRef}
+          onPointerMove={handlePointerMove}
+          onPointerLeave={handlePointerLeave}
           className="ticks relative aspect-[4/3] w-full overflow-hidden rounded-[15px] bg-panel"
           style={{
             backgroundImage:
@@ -90,7 +107,9 @@ export function PerceptionDemo() {
         >
           <span className="tick" aria-hidden="true" />
 
-          {!isLive && <SampleOverlay width={size.width} height={size.height} dim={isStarting} />}
+          {!isLive && (
+            <SampleOverlay width={size.width} height={size.height} tilt={tilt} dim={isStarting} />
+          )}
 
           {cameraMounted && (
             <LiveDemo

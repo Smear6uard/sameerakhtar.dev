@@ -660,6 +660,42 @@
   animation-delay: var(--reveal-delay, 0s);
 }
 
+/* Name ripple on hover */
+.wave .wave-ch {
+  display: inline-block;
+  transition:
+    transform 380ms var(--ease-out-quart),
+    color 380ms var(--ease-out-quart);
+  transition-delay: calc(var(--i, 0) * 22ms);
+}
+.wave:hover .wave-ch {
+  transform: translateY(-0.12em) rotate(-3deg);
+  color: var(--accent);
+}
+
+/* Sample hand turns toward the pointer (vars set from PerceptionDemo) */
+.hand-tilt {
+  transform-box: fill-box;
+  transform-origin: 50% 86%;
+  transform: rotate(calc(var(--tx, 0) * 9deg))
+    translate(calc(var(--tx, 0) * 8px), calc(var(--ty, 0) * 6px));
+  transition: transform 500ms var(--ease-out-quart);
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(105vh) rotate(720deg);
+    opacity: 0.2;
+  }
+}
+.confetti {
+  animation: confetti-fall 1.9s cubic-bezier(0.2, 0.7, 0.4, 1) both;
+}
+
 .scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -681,8 +717,13 @@
   }
   .sway,
   .orb,
-  .breathe {
+  .breathe,
+  .confetti {
     animation: none;
+  }
+  .wave .wave-ch,
+  .hand-tilt {
+    transition: none;
   }
   [data-reveal="pending"] {
     opacity: 1;

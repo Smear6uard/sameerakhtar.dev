@@ -13,6 +13,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 // `@tanstack/router-plugin` directly (which is what Vercel's auto-detection
 // keys off) and would otherwise fall through to the plain Nitro preset.
 export default defineConfig({
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   server: {
     port: 3000,
   },

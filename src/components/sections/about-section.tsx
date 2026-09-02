@@ -6,11 +6,28 @@ import { CountUp } from "@/components/fx/CountUp";
 import { education, honors, skills, stats } from "@/lib/resume";
 import { site } from "@/lib/site";
 
+// Camera data read from the original files' EXIF.
 const photos = [
-  { base: "/photography/photo-1", alt: "Chicago skyline silhouetted at golden hour" },
-  { base: "/photography/photo-2", alt: "Wrigley Field under stadium lights at dusk" },
-  { base: "/photography/photo-3", alt: "Stone church in a mountain valley" },
-  { base: "/photography/photo-4", alt: "Red brick church against a mountain range" },
+  {
+    base: "/photography/photo-1",
+    alt: "Chicago skyline silhouetted at golden hour",
+    meta: "45mm · f/5.6 · 1/320 s · ISO 320 · Jul 2025",
+  },
+  {
+    base: "/photography/photo-2",
+    alt: "Wrigley Field under stadium lights at dusk",
+    meta: "27mm · f/5 · 1/125 s · ISO 640 · May 2025",
+  },
+  {
+    base: "/photography/photo-3",
+    alt: "Stone church in a mountain valley",
+    meta: "22mm · f/22 · 1/420 s · ISO 640 · Aug 2025",
+  },
+  {
+    base: "/photography/photo-4",
+    alt: "Red brick church against a mountain range",
+    meta: "45mm · f/5.6 · 1/4000 s · ISO 800 · Jul 2025",
+  },
 ];
 
 export function AboutSection() {
@@ -271,7 +288,13 @@ function PhotoGallery() {
           />
         </picture>
         <span className="absolute top-4 left-4 rounded bg-black/40 px-2 py-1 font-mono text-[10px] tracking-widest text-white/85 uppercase backdrop-blur-sm">
-          Photography · X-T30 II
+          Photography · X-T30 II · XC 15-45mm
+        </span>
+        <span
+          key={photo.meta}
+          className="animate-fade-in absolute bottom-3 left-4 rounded bg-black/45 px-2 py-1 font-mono text-[10px] tracking-[0.08em] text-white/80 backdrop-blur-sm"
+        >
+          {photo.meta}
         </span>
       </div>
       <div className="flex gap-2 px-4 py-3">
