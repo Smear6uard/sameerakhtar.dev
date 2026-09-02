@@ -4,9 +4,9 @@ import type { NormalizedPoint } from "./perception-sample";
 const FINGERTIPS = new Set([4, 8, 12, 16, 20]);
 
 // Fixed colours: the viewfinder panel is dark in both themes.
-const BONE = "#f97316";
-const JOINT = "#fdba74";
-const RING = "#06101f";
+const BONE = "#f76b57";
+const JOINT = "#ffb86b";
+const RING = "#090c1a";
 
 interface HandSkeletonProps {
   /** Hands as arrays of 21 normalized [x, y] points in [0, 1]. */

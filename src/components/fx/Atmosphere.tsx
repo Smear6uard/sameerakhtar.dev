@@ -1,11 +1,11 @@
-// Fixed background: soft orange, blue, and violet orbs plus a film grain.
+// Fixed background: coral, periwinkle, amber, and violet orbs plus film grain.
 // Pure CSS so it costs nothing at runtime; dims under the light theme.
 
 const ORBS = [
-  { size: 520, x: "18%", y: "28%", color: "rgba(249,115,22,0.16)", blur: 110, delay: "0s" },
-  { size: 380, x: "78%", y: "18%", color: "rgba(96,165,250,0.09)", blur: 100, delay: "-5s" },
-  { size: 420, x: "70%", y: "72%", color: "rgba(249,115,22,0.08)", blur: 120, delay: "-9s" },
-  { size: 360, x: "10%", y: "78%", color: "rgba(167,139,250,0.07)", blur: 110, delay: "-3s" },
+  { size: 540, x: "18%", y: "28%", color: "rgba(247,107,87,0.2)", blur: 110, delay: "0s" },
+  { size: 420, x: "80%", y: "18%", color: "rgba(139,156,255,0.16)", blur: 100, delay: "-5s" },
+  { size: 420, x: "70%", y: "72%", color: "rgba(255,184,107,0.09)", blur: 120, delay: "-9s" },
+  { size: 360, x: "10%", y: "78%", color: "rgba(179,156,255,0.08)", blur: 110, delay: "-3s" },
 ];
 
 export function Atmosphere() {

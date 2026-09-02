@@ -61,13 +61,9 @@ export function TopNav() {
           className="flex items-center gap-2.5 font-medium tracking-tight text-ink transition-colors hover:text-accent"
           onClick={() => setOpen(false)}
         >
-          <img
-            src="/SameerAkhtar.dev-logo-navybg.jpg"
-            alt=""
-            width={26}
-            height={26}
-            className="rounded-md"
-          />
+          <span className="flex h-7 w-7 items-center justify-center rounded-md border border-line bg-elev">
+            <img src="/logo-mark.png" alt="" width={16} height={16} className="h-4 w-4" />
+          </span>
           <span>sameer akhtar</span>
         </Link>
 

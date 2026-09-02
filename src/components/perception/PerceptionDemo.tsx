@@ -74,7 +74,7 @@ export function PerceptionDemo() {
         className="rounded-2xl p-px"
         style={{
           background:
-            "linear-gradient(135deg, rgba(249,115,22,0.55), rgba(230,241,255,0.08) 45%, rgba(96,165,250,0.35))",
+            "linear-gradient(135deg, rgba(247,107,87,0.6), rgba(244,239,230,0.08) 45%, rgba(139,156,255,0.45))",
           boxShadow: "0 0 70px -18px var(--glow), var(--shadow)",
         }}
       >
@@ -83,7 +83,7 @@ export function PerceptionDemo() {
           className="ticks relative aspect-[4/3] w-full overflow-hidden rounded-[15px] bg-panel"
           style={{
             backgroundImage:
-              "radial-gradient(120% 90% at 50% 60%, rgba(249,115,22,0.08), transparent 60%), linear-gradient(rgba(230,241,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(230,241,255,0.05) 1px, transparent 1px)",
+              "radial-gradient(120% 90% at 50% 60%, rgba(247,107,87,0.08), transparent 60%), linear-gradient(rgba(244,239,230,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(244,239,230,0.05) 1px, transparent 1px)",
             backgroundSize: "100% 100%, 40px 40px, 40px 40px",
             backgroundPosition: "center, center, center",
           }}
@@ -106,7 +106,7 @@ export function PerceptionDemo() {
           {/* Readout */}
           <div
             className="pointer-events-none absolute inset-x-8 top-3.5 flex items-center justify-between gap-3 font-mono text-[10.5px] tracking-[0.14em] uppercase"
-            style={{ color: "rgba(230,241,255,0.62)" }}
+            style={{ color: "rgba(244,239,230,0.62)" }}
           >
             <span className="truncate">
               hand_landmarker<span className="hidden sm:inline"> · 21 keypoints</span>
@@ -115,7 +115,7 @@ export function PerceptionDemo() {
               {isLive && (
                 <span
                   className="inline-block h-1.5 w-1.5 rounded-full"
-                  style={{ background: "#f97316" }}
+                  style={{ background: "#f76b57" }}
                   aria-hidden="true"
                 />
               )}
@@ -141,7 +141,7 @@ export function PerceptionDemo() {
           {/* Controls */}
           <div className="absolute inset-x-5 bottom-5 flex flex-wrap items-center justify-between gap-3">
             {cameraMounted ? (
-              <button type="button" onClick={stop} className="btn btn-sm btn-ghost !text-[#e6f1ff]">
+              <button type="button" onClick={stop} className="btn btn-sm btn-ghost !text-[#f4efe6]">
                 Stop camera
               </button>
             ) : (
@@ -152,7 +152,7 @@ export function PerceptionDemo() {
             )}
             <span
               className="font-mono text-[10.5px] tracking-[0.1em] uppercase"
-              style={{ color: "rgba(230,241,255,0.5)" }}
+              style={{ color: "rgba(244,239,230,0.5)" }}
             >
               <span className="hidden sm:inline">Runs in your browser · </span>nothing uploaded
             </span>

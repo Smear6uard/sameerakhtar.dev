@@ -4,9 +4,9 @@ import { site } from "@/lib/site";
 export function ConsoleEasterEgg() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const heading = "color:#f97316;font-weight:600;font-size:13px";
-    const body = "color:#a8b2d1;font-size:12px";
-    const mono = "color:#8892b0;font-family:monospace;font-size:11px";
+    const heading = "color:#f76b57;font-weight:600;font-size:13px";
+    const body = "color:#b9b6c8;font-size:12px";
+    const mono = "color:#807e95;font-family:monospace;font-size:11px";
 
     console.log("%cYou found the console.", heading);
     console.log(

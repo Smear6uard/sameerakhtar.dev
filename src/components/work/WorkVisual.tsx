@@ -12,7 +12,7 @@ type Visual = {
 const visuals: Record<string, Visual> = {
   renaro: {
     eyebrow: "Dispatch platform",
-    tint: ["rgba(249,115,22,0.22)", "rgba(251,191,36,0.06)"],
+    tint: ["rgba(247,107,87,0.24)", "rgba(255,184,107,0.06)"],
     nodes: [
       { label: "Bookings", detail: "phone · web · app", x: 12, y: 50 },
       { label: "Dispatch", detail: "driver scoring", x: 37, y: 28 },
@@ -32,7 +32,7 @@ const visuals: Record<string, Visual> = {
   },
   "brand-discovery": {
     eyebrow: "GenAI pipeline",
-    tint: ["rgba(167,139,250,0.22)", "rgba(96,165,250,0.08)"],
+    tint: ["rgba(139,156,255,0.24)", "rgba(179,156,255,0.08)"],
     nodes: [
       { label: "Source", detail: "URL or PDF", x: 12, y: 50 },
       { label: "Render", detail: "Cloud Run", x: 37, y: 28 },
@@ -52,7 +52,7 @@ const visuals: Record<string, Visual> = {
   },
   styleum: {
     eyebrow: "Vision + LLM pipeline",
-    tint: ["rgba(244,114,182,0.2)", "rgba(249,115,22,0.08)"],
+    tint: ["rgba(255,120,170,0.22)", "rgba(247,107,87,0.08)"],
     nodes: [
       { label: "Wardrobe", detail: "one photo each", x: 12, y: 50 },
       { label: "Segment", detail: "BiRefNet", x: 37, y: 28 },
@@ -71,7 +71,7 @@ const visuals: Record<string, Visual> = {
   },
   hazardlens: {
     eyebrow: "Detection pipeline",
-    tint: ["rgba(248,113,113,0.22)", "rgba(249,115,22,0.08)"],
+    tint: ["rgba(255,90,90,0.22)", "rgba(255,184,107,0.08)"],
     nodes: [
       { label: "Video", detail: "OpenCV decode", x: 12, y: 50 },
       { label: "YOLO26", detail: "NMS-free", x: 37, y: 28 },
@@ -91,7 +91,7 @@ const visuals: Record<string, Visual> = {
   },
   windwalk: {
     eyebrow: "Routing",
-    tint: ["rgba(34,211,238,0.2)", "rgba(96,165,250,0.08)"],
+    tint: ["rgba(120,200,255,0.22)", "rgba(139,156,255,0.08)"],
     nodes: [
       { label: "Pedway", detail: "40+ nodes", x: 12, y: 30 },
       { label: "Streets", detail: "surface edges", x: 12, y: 70 },
@@ -110,7 +110,7 @@ const visuals: Record<string, Visual> = {
   },
   "llm-router": {
     eyebrow: "Routing layer",
-    tint: ["rgba(96,165,250,0.2)", "rgba(34,211,238,0.06)"],
+    tint: ["rgba(139,156,255,0.2)", "rgba(120,200,255,0.06)"],
     nodes: [
       { label: "Prompt", detail: "request", x: 12, y: 50 },
       { label: "Signals", detail: "6 features", x: 37, y: 28 },
@@ -130,7 +130,7 @@ const visuals: Record<string, Visual> = {
   },
   deepcite: {
     eyebrow: "Retrieval engine",
-    tint: ["rgba(74,222,128,0.18)", "rgba(52,211,153,0.06)"],
+    tint: ["rgba(127,224,166,0.18)", "rgba(139,156,255,0.06)"],
     nodes: [
       { label: "Query", detail: "research", x: 12, y: 50 },
       { label: "Search", detail: "Serper", x: 37, y: 28 },
@@ -171,7 +171,7 @@ export function WorkVisual({
         className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(230,241,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(230,241,255,0.07) 1px, transparent 1px)",
+            "linear-gradient(rgba(244,239,230,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(244,239,230,0.07) 1px, transparent 1px)",
           backgroundSize: "32px 32px",
         }}
       />

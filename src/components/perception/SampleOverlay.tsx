@@ -80,7 +80,7 @@ export function SampleOverlay({ width, height, dim = false }: SampleOverlayProps
               left: `calc(${x * 100}% + ${dx}px)`,
               top: `calc(${y * 100}% + ${dy}px)`,
               transform: alignRight ? "translateX(-100%)" : undefined,
-              color: "rgba(230, 241, 255, 0.55)",
+              color: "rgba(244, 239, 230, 0.55)",
               animationDelay: `${900 + index * 30}ms`,
             }}
           >

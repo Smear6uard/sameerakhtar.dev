@@ -7,7 +7,7 @@ hand-tracking demo (MediaPipe Hand Landmarker on WebAssembly + WebGL) entirely i
 
 - **Framework**: [TanStack Start](https://tanstack.com/start) (React 19 + Vite 7), file-based routing
 - **Build / SSR**: [Nitro](https://nitro.build), deployed on [Vercel](https://vercel.com)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) with CSS-variable tokens; navy + orange theme, dark by default with a light variant
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) with CSS-variable tokens; the "Chicago dusk" palette (midnight indigo, coral, periwinkle, amber), dark by default with a light variant
 - **Type**: Satoshi (self-hosted) with JetBrains Mono for labels and code
 - **Motion**: CSS reveals plus Framer Motion for the cursor, magnetic buttons, and nav; reduced motion is respected
 - **Perception demo**: `@mediapipe/tasks-vision` on the main thread with GPU delegate and CPU fallback
