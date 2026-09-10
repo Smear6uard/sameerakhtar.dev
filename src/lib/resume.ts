@@ -18,10 +18,10 @@ export const experience: Role[] = [
     period: "Jun 2026 – Present",
     location: "Remote",
     bullets: [
-      "Owned AI Brand Discovery, a GenAI feature that derives survey branding from PDFs and websites, from pre-GA design to production launch across a React/TypeScript frontend, Go backend, and a new browser-rendering service.",
-      "Built a Go + Gemini 2.5 Flash / Vertex AI pipeline with schema-constrained output and prompt-injection defenses; grounded colors in measured palettes with WCAG contrast checks to prevent hallucination.",
-      "Built a Cloud Run + Playwright service for untrusted URLs; wrote Terraform for Direct VPC egress, Cloud NAT, OIDC auth, and a deny-private-range firewall; SSRF-hardened with DNS pinning and redirect revalidation.",
-      "Built Go workers with Redis-backed async orchestration, rate limiting, stale-job recovery, failure-aware retries, graceful shutdown draining, and cold-start egress validation. Warm end-to-end renders complete in about 2–3 seconds.",
+      "Owned AI Brand Discovery, a GenAI feature deriving survey branding from PDFs and websites, from pre-GA design to production launch; cut per-client branding setup from ~2 hours of manual work to under 5 minutes.",
+      "Developed a Go + Gemini 2.5 Flash / Vertex AI pipeline with schema-constrained output and prompt-injection defenses; grounded colors in measured palettes with WCAG contrast checks to prevent hallucination.",
+      "Built a Cloud Run + Playwright service for untrusted URLs; wrote Terraform for Direct VPC egress, Cloud NAT, OIDC auth, and deny-private-range firewall; SSRF-hardened by DNS pinning and redirect revalidation.",
+      "Wrote Go workers with Redis-backed async orchestration, rate limiting, stale-job recovery, failure-aware retries, graceful shutdown draining, and cold-start egress validation; warm end-to-end renders complete in ~2–3s.",
     ],
     tech: "Go · Gemini 2.5 Flash · Vertex AI · Cloud Run · Playwright · Terraform · Redis · React · TypeScript",
   },
@@ -34,14 +34,14 @@ export const experience: Role[] = [
     bullets: [
       "Built and shipped a multi-tenant dispatch SaaS for taxi and limo fleets covering dispatch, payments, driver operations, messaging, and analytics; secured $3K+ in pre-launch revenue and prepared an operator pilot.",
       "Hardened WebSockets against a 10K-client reconnect storm (124 → 4,543 authenticated connections) and replaced per-tenant polling with a SKIP LOCKED batch claim, restoring 97% event delivery at simulated 3K-tenant load.",
-      "Built Stripe Connect payments (ACH, disputes, refunds, payout holds, metered billing) on idempotent, webhook-deduplicated, compare-and-swap money paths.",
+      "Shipped Stripe Connect payments (ACH, disputes, refunds, payout holds, metered billing) on idempotent, webhook-deduplicated, compare-and-swap money paths.",
       "Enforced tenant isolation with forced PostgreSQL row-level security on every tenant table and CI schema gates; validated with an adversarial suite covering cross-tenant access and payment IDOR.",
     ],
     tech: "TypeScript · Fastify · PostgreSQL · Drizzle · pg-boss · Redis · WebSockets · Stripe Connect · WorkOS",
   },
   {
     company: "BrunoSoft",
-    title: "Software Engineering Intern",
+    title: "Software Engineer Intern",
     period: "Oct 2025 – May 2026",
     location: "Remote",
     bullets: [
@@ -56,7 +56,7 @@ export const experience: Role[] = [
     period: "Jul 2022 – Feb 2024",
     location: "Downers Grove, IL",
     bullets: [
-      "Integrated the FastTrak booking API with internal dispatch via REST: 50+ affiliates and 3,000+ weekly bookings.",
+      "Integrated the FastTrak booking API with internal dispatch via REST: 50+ affiliates, 3,000+ weekly bookings.",
     ],
     tech: "REST APIs · FastTrak · Dispatch operations",
   },
@@ -103,7 +103,7 @@ export const skills: { label: string; items: string[] }[] = [
     label: "AI & CV",
     items: [
       "Gemini",
-      "OpenAI & Anthropic APIs",
+      "LLM APIs (OpenAI, Anthropic)",
       "PyTorch",
       "OpenCV",
       "YOLO",
@@ -126,21 +126,24 @@ export const education = {
   school: "DePaul University",
   degree: "B.S. Mathematics and Computer Science",
   gpa: "3.8 / 4.0",
-  expected: "Expected July 2027",
-  coursework:
-    "Data Structures & Algorithms, Computer Systems, Computer Networks, Programming Languages",
+  expected: "Expected June 2027",
+  coursework: "Data Structures & Algorithms, Discrete Math, Computer Systems, Computer Networks",
 };
 
-export const honors = [
+export const honors: { title: string; detail?: string; href?: string; when: string }[] = [
+  {
+    title: "Muslim Tech Collaborative, DePaul chapter, project manager",
+    when: "Sep 2026 – Present",
+  },
   {
     title: "DemonHacks 2026, 1st place",
-    detail: "WindWalk, weather-aware routing through Chicago's Pedway",
+    detail: "WindWalk, weather-aware Dijkstra routing",
     href: "https://devpost.com/software/windwalk",
     when: "Mar 2026",
   },
   {
-    title: "Muslim Tech Founders Newsletter, co-founder",
-    detail: "Tech startup insights for 500+ subscribers",
+    title: "Muslim Tech Builders Newsletter, co-founder",
+    detail: "500+ subscribers on Substack",
     href: "https://sameerakhtar.substack.com",
     when: "Feb 2025 – Present",
   },

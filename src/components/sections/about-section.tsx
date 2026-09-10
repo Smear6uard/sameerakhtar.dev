@@ -54,13 +54,13 @@ export function AboutSection() {
             </div>
             <div className="flex flex-1 flex-col justify-center p-6 md:p-7">
               <p className="text-ink-2">
-                Math &amp; CS at DePaul, graduating July 2027. Over the last year I&apos;ve shipped
+                Math &amp; CS at DePaul, graduating June 2027. Over the last year I&apos;ve shipped
                 a GenAI feature at Quantum Metric, built Renaro on my own, and launched Styleum to
                 100+ users. I care about the details that make software feel reliable: the retry,
                 the migration, the idempotent webhook.
               </p>
               <p className="mt-4 text-sm text-ink-3">
-                Off the clock I co-founded the Muslim Tech Founders newsletter and shoot on a
+                Off the clock I co-founded the Muslim Tech Builders newsletter and shoot on a
                 Fujifilm X-T30 II.
               </p>
             </div>
@@ -139,7 +139,7 @@ export function AboutSection() {
           <Spotlight className="flex h-full flex-col justify-between p-6">
             <div>
               <span className="eyebrow">Newsletter</span>
-              <h3 className="mt-2 text-lg font-bold text-ink">Muslim Tech Founders</h3>
+              <h3 className="mt-2 text-lg font-bold text-ink">Muslim Tech Builders</h3>
               <p className="mt-1 text-sm text-ink-2">
                 Co-founder. Startup insights for{" "}
                 <span className="text-accent">
@@ -202,7 +202,7 @@ export function AboutSection() {
                 <p className="mt-0.5 text-xs text-ink-3">{education.coursework}</p>
               </div>
             </div>
-            <GraduationCountdown target="2027-07-01" />
+            <GraduationCountdown target="2027-06-01" />
           </Spotlight>
         </Reveal>
 
@@ -213,16 +213,20 @@ export function AboutSection() {
               <div key={honor.title} className="flex items-start justify-between gap-4">
                 <div>
                   <p className="font-bold text-ink">
-                    <a
-                      href={honor.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="transition-colors hover:text-accent"
-                    >
-                      {honor.title} <span aria-hidden="true">↗</span>
-                    </a>
+                    {honor.href ? (
+                      <a
+                        href={honor.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-accent"
+                      >
+                        {honor.title} <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : (
+                      honor.title
+                    )}
                   </p>
-                  <p className="text-sm text-ink-2">{honor.detail}</p>
+                  {honor.detail && <p className="text-sm text-ink-2">{honor.detail}</p>}
                 </div>
                 <p className="shrink-0 font-mono text-xs text-ink-3">{honor.when}</p>
               </div>
