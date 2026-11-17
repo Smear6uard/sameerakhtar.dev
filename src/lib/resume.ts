@@ -15,7 +15,7 @@ export const experience: Role[] = [
   {
     company: "Quantum Metric",
     title: "Software Engineering Intern",
-    period: "Jun 2026 – Present",
+    period: "Jun 2026 – Nov 2026",
     location: "Remote",
     bullets: [
       "Owned AI Brand Discovery, a GenAI feature deriving survey branding from PDFs and websites, from pre-GA design to production launch; cut per-client branding setup from ~2 hours of manual work to under 5 minutes.",
@@ -125,7 +125,7 @@ export const stats: { value: number | string; suffix?: string; label: string }[]
 export const education = {
   school: "DePaul University",
   degree: "B.S. Mathematics and Computer Science",
-  gpa: "3.8 / 4.0",
+  gpa: "3.7 / 4.0",
   expected: "Expected June 2027",
   coursework: "Data Structures & Algorithms, Discrete Math, Computer Systems, Computer Networks",
 };

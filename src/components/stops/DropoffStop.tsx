@@ -1,10 +1,10 @@
-import { Reveal } from "@/components/ui/Reveal";
-import { SectionTitle } from "@/components/fx/SectionTitle";
 import { Magnetic } from "@/components/fx/Magnetic";
+import { Cover, Stop, Ticket } from "@/components/ride/Stop";
 import { useToast } from "@/components/ui/Toast";
 import { site } from "@/lib/site";
 
-export function ContactSection() {
+/** Stop 6: the end of the pier. Contact. */
+export function DropoffStop() {
   const { showToast } = useToast();
 
   const copyEmail = async () => {
@@ -17,20 +17,18 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="wrap relative z-10 pt-24 pb-8 md:pt-32">
-      <Reveal className="max-w-2xl">
-        <SectionTitle text="contact" />
-        <h2 className="display-lg mt-4">Let&apos;s talk.</h2>
-        <p className="lede mt-5">
+    <Stop id="contact" side="left" last>
+      <Cover>Contact</Cover>
+      <Ticket>
+        <p className="lede">
           I graduate in {site.graduation} and I&apos;m looking for new-grad software engineering
-          roles, remote or in Chicago. Product engineering, infrastructure, AI features: if
-          you&apos;re hiring for any of them, get in touch.
+          roles, remote or in Chicago. If you&apos;re hiring for product engineering, infrastructure
+          or AI features, email me.
         </p>
-
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           <Magnetic>
             <a href={`mailto:${site.email}`} className="btn btn-primary">
-              Send me an email <span aria-hidden="true">→</span>
+              Email me
             </a>
           </Magnetic>
           <Magnetic>
@@ -40,26 +38,24 @@ export function ContactSection() {
               rel="noopener noreferrer"
               className="btn btn-ghost"
             >
-              View my resume <span aria-hidden="true">↗</span>
+              Résumé
             </a>
           </Magnetic>
         </div>
-
-        <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-sm text-ink-3">
+        <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-sm">
           <a href={`mailto:${site.email}`} className="link">
             {site.email}
           </a>
           <button type="button" onClick={copyEmail} className="link-quiet text-xs">
-            [copy]
+            Copy
           </button>
         </p>
-
-        <p className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <p className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem]">
           <a href={site.github} target="_blank" rel="noopener noreferrer" className="link-quiet">
-            github
+            GitHub
           </a>
           <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="link-quiet">
-            linkedin
+            LinkedIn
           </a>
           <a
             href={site.newsletter}
@@ -67,11 +63,10 @@ export function ContactSection() {
             rel="noopener noreferrer"
             className="link-quiet"
           >
-            newsletter
+            Newsletter
           </a>
-          <span className="text-ink-3">{site.location}</span>
         </p>
-      </Reveal>
-    </section>
+      </Ticket>
+    </Stop>
   );
 }

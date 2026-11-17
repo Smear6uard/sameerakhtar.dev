@@ -147,7 +147,7 @@ RETURNING id, tenant_id, payload;`,
       "A GenAI feature at Quantum Metric that derives survey branding from PDFs and websites",
     summary:
       "Owned end to end as an intern: a React/TypeScript frontend, a Go backend, and a new browser-rendering service that turns a customer's website or PDF into an on-brand survey theme. Taken from pre-GA design to production launch.",
-    timeline: "Jun 2026 – Present",
+    timeline: "Jun 2026 – Nov 2026",
     year: "2026",
     role: "Software engineering intern, feature owner · Quantum Metric",
     stack: [

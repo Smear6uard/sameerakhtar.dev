@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/#work", label: "work", section: "work" },
-  { href: "/#experience", label: "experience", section: "experience" },
   { href: "/#about", label: "about", section: "about" },
+  { href: "/#contact", label: "contact", section: "contact" },
   { href: "/blog", label: "blog", section: "blog" },
 ] as const;
 
@@ -19,7 +19,7 @@ export function TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const active = useActiveSection();
+  const active = useActiveSection(pathname);
   const isHome = pathname === "/";
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
@@ -47,7 +47,9 @@ export function TopNav() {
     <header
       className={cn(
         "sticky top-0 z-40 border-b transition-[background-color,border-color] duration-300",
-        scrolled || open ? "border-line bg-bg/80 backdrop-blur-md" : "border-transparent",
+        open || (scrolled && !isHome)
+          ? "border-line bg-bg/80 backdrop-blur-md"
+          : "border-transparent",
       )}
     >
       <motion.div
@@ -91,11 +93,11 @@ export function TopNav() {
               resume
             </a>
           </Magnetic>
-          <ThemeToggle />
+          {!isHome && <ThemeToggle />}
         </div>
 
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
+          {!isHome && <ThemeToggle />}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}

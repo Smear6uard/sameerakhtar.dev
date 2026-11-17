@@ -10,7 +10,7 @@ export function JsonLd() {
     image: `${site.url}/profile.jpg`,
     sameAs: [site.github, site.linkedin],
     jobTitle: "Software Engineer",
-    worksFor: { "@type": "Organization", name: "Quantum Metric" },
+    worksFor: { "@type": "Organization", name: "Renaro" },
     alumniOf: { "@type": "CollegeOrUniversity", name: "DePaul University" },
     address: { "@type": "PostalAddress", addressLocality: "Chicago", addressRegion: "IL" },
     knowsAbout: [

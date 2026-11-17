@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MEDIAPIPE_VERSION } from "@/components/perception/landmarker";
 import { site } from "@/lib/site";
 
 const SEQUENCE = [
@@ -58,8 +57,8 @@ export function Konami() {
   const rows: [string, string][] = [
     ["framework", "TanStack Start · React 19 · Vite 7"],
     ["styling", "Tailwind v4 · CSS tokens"],
-    ["type", "Satoshi · JetBrains Mono"],
-    ["hand demo", `MediaPipe ${MEDIAPIPE_VERSION} · WASM + WebGL`],
+    ["type", "Big Shoulders Display · Satoshi · JetBrains Mono"],
+    ["home page", "three.js · scene built in code"],
     ["hosting", "Vercel"],
     ["last shipped", formatBuildTime()],
   ];
