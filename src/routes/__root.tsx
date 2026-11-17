@@ -2,7 +2,13 @@
 
 /// <reference types="vite/client" />
 
-import { HeadContent, Outlet, Scripts, createRootRoute } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRoute,
+  useRouterState,
+} from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -25,7 +31,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "color-scheme", content: "dark light" },
-      { name: "theme-color", content: "#0d1121" },
+      { name: "theme-color", content: "#06070c" },
       { name: "format-detection", content: "telephone=no" },
       { name: "apple-mobile-web-app-title", content: site.name },
       { name: "author", content: site.name },
@@ -55,6 +61,10 @@ function RootComponent() {
 }
 
 function RootDocument({ children }: { children: ReactNode }) {
+  // The home page is the night ride: always dark, with the 3D stage in place
+  // of the orb backdrop.
+  const isHome = useRouterState({ select: (s) => s.location.pathname === "/" });
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -65,7 +75,7 @@ function RootDocument({ children }: { children: ReactNode }) {
         <ThemeProvider>
           <ToastProvider>
             <ConsoleEasterEgg />
-            <Atmosphere />
+            {!isHome && <Atmosphere />}
             <Cursor />
             <Konami />
             <a
@@ -74,11 +84,16 @@ function RootDocument({ children }: { children: ReactNode }) {
             >
               Skip to content
             </a>
-            <TopNav />
-            <main id="main" className="relative">
-              {children}
-            </main>
-            <Footer />
+            <div
+              data-theme={isHome ? "dark" : undefined}
+              className={isHome ? "ride-page" : undefined}
+            >
+              <TopNav />
+              <main id="main" className="relative">
+                {children}
+              </main>
+              <Footer />
+            </div>
             <Analytics />
           </ToastProvider>
         </ThemeProvider>

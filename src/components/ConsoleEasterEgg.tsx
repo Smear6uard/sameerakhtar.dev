@@ -10,7 +10,7 @@ export function ConsoleEasterEgg() {
 
     console.log("%cYou found the console.", heading);
     console.log(
-      "%cThe hand tracking on the homepage is MediaPipe Hand Landmarker running on WebAssembly + WebGL in this tab. No frames leave your browser.",
+      "%cThe ride on the homepage is plain three.js: the car, city and wet road are built in code, with no models or textures beyond four photographs.",
       body,
     );
     console.log(

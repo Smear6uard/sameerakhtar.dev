@@ -10,7 +10,7 @@ export function ChicagoTime({ className = "" }: { className?: string }) {
       minute: "2-digit",
       timeZone: "America/Chicago",
     });
-    const tick = () => setTime(format.format(new Date()).toLowerCase());
+    const tick = () => setTime(format.format(new Date()).toLowerCase().replace(/\s/g, " "));
     tick();
     const id = window.setInterval(tick, 15000);
     return () => window.clearInterval(id);
@@ -18,7 +18,7 @@ export function ChicagoTime({ className = "" }: { className?: string }) {
 
   return (
     <span className={className} suppressHydrationWarning>
-      {time ? `chicago, ${time}` : "chicago"}
+      {time ? `It is ${time} in Chicago.` : "Based in Chicago."}
     </span>
   );
 }

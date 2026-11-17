@@ -2,6 +2,8 @@
 @import "@fontsource/jetbrains-mono/latin-400.css";
 @import "@fontsource/jetbrains-mono/latin-500.css";
 @import "@fontsource/jetbrains-mono/latin-700.css";
+@import "@fontsource/big-shoulders-display/latin-800";
+@import "@fontsource/big-shoulders-display/latin-900";
 
 /* Satoshi (self-hosted): display and body */
 @font-face {
@@ -31,7 +33,8 @@
    Wrigley Field sunset and the SA mark, periwinkle dusk, amber keypoints.
    Dark is the default.
    ------------------------------------------------------------------ */
-:root {
+:root,
+[data-theme="dark"] {
   color-scheme: dark;
   --bg: #0d1121;
   --elev: #161b31;
@@ -99,6 +102,8 @@
 
   --font-sans: "Satoshi", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Big Shoulders was commissioned for the City of Chicago. */
+  --font-display: "Big Shoulders Display", "Arial Narrow", "Helvetica Neue", sans-serif;
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -452,7 +457,6 @@
   }
   .tok-cm {
     color: rgba(244, 239, 230, 0.45);
-    font-style: italic;
   }
 
   /* Long-form prose */
@@ -728,5 +732,544 @@
   [data-reveal="pending"] {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Night ride (home page). The 3D stage is fixed behind normal sections;
+   each section is a stop the scene holds still for.
+   ------------------------------------------------------------------ */
+.ride-page {
+  /* The ride is always night, whatever theme the rest of the site is in. */
+  --bg: #06070c;
+  color: var(--ink-2);
+}
+
+.ride-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  /* Shown until the scene is ready, and instead of it when there is no WebGL
+     or the visitor prefers reduced motion. */
+  background:
+    radial-gradient(120% 70% at 78% 100%, rgba(247, 107, 87, 0.5), transparent 60%),
+    radial-gradient(90% 60% at 20% 100%, rgba(139, 156, 255, 0.16), transparent 65%),
+    linear-gradient(180deg, #080a16 0%, #0d1121 46%, #2a1730 78%, #5a2630 100%);
+}
+.ride-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  transition: opacity 1400ms var(--ease-out-quart);
+}
+.ride-stage[data-state="ready"] .ride-canvas {
+  opacity: 1;
+}
+.ride-stage[data-state="off"] .ride-canvas {
+  display: none;
+}
+/* Keeps copy readable where it crosses bright parts of the scene. */
+.ride-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(6, 7, 12, 0.5) 0%, transparent 16%),
+    linear-gradient(0deg, rgba(6, 7, 12, 0.55) 0%, transparent 22%);
+}
+
+@layer components {
+  .stop {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    min-height: 100svh;
+    padding-block: 7rem;
+  }
+  .stop-col {
+    max-width: 33rem;
+    transition:
+      opacity 800ms var(--ease-out-quart),
+      transform 1000ms var(--ease-out-quart);
+  }
+  .stop-wide .stop-col {
+    max-width: 38rem;
+  }
+  .stop-right .stop-col {
+    margin-left: auto;
+  }
+  .stop[data-in="0"] .stop-col {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  .transit {
+    height: 125vh;
+  }
+
+  .cover {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: clamp(3.75rem, 10.5vw, 9.25rem);
+    line-height: 0.84;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-shadow: 0 4px 60px rgba(4, 5, 10, 0.55);
+    text-wrap: balance;
+    margin-bottom: 1.5rem;
+  }
+  .stop-meta {
+    margin-bottom: 0.9rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+    text-shadow: 0 1px 18px rgba(4, 5, 10, 0.9);
+  }
+
+  .ticket {
+    position: relative;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.875rem;
+    padding: 1.4rem 1.5rem 1.5rem;
+    background: rgba(8, 9, 15, 0.7);
+    backdrop-filter: blur(20px) saturate(1.25);
+    -webkit-backdrop-filter: blur(20px) saturate(1.25);
+    box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);
+    color: var(--ink-2);
+  }
+  .ticket-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  /* Tear line, as on a ride receipt. */
+  .ticket-rule {
+    margin: 1.25rem -1.5rem;
+    border: 0;
+    border-top: 1px dashed var(--line-strong);
+  }
+  .ticket-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.25rem;
+  }
+
+  .figures {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.4rem;
+  }
+  .figures dt {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.45rem, 2.3vw, 1.95rem);
+    line-height: 1.02;
+    text-wrap: balance;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+  }
+  .figures dd {
+    margin-top: 0.4rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    color: var(--ink-3);
+  }
+
+  .scene-note {
+    margin-top: 0.9rem;
+    padding-left: 0.85rem;
+    border-left: 2px solid var(--accent);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink);
+    text-shadow: 0 1px 16px rgba(4, 5, 10, 0.95);
+  }
+
+  /* Hero */
+  .stop-hero {
+    align-items: stretch;
+    /* The sticky header sits above this section in the flow. */
+    min-height: calc(100svh - 4rem);
+    padding-block: 3.5rem 6rem;
+  }
+  /* Holds the cover type and copy off the bright end of the avenue. */
+  .stop-hero::before {
+    content: "";
+    position: absolute;
+    inset: -4rem 0 0 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      rgba(6, 7, 12, 0.62) 0%,
+      rgba(6, 7, 12, 0.3) 34%,
+      transparent 58%
+    );
+  }
+  .stop-hero .wrap {
+    display: flex;
+    max-width: 92rem;
+  }
+  .stop-hero .stop-col {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    max-width: none;
+  }
+  .cover-hero {
+    font-size: clamp(4.5rem, min(14.5vw, 30svh), 15rem);
+    line-height: 0.8;
+    text-shadow: none;
+    margin-bottom: 0;
+    margin-left: -0.03em;
+  }
+  .cover-line {
+    display: block;
+    overflow: hidden;
+    padding-top: 0.04em;
+  }
+  .cover-line > span {
+    display: block;
+    animation: cover-rise 1100ms var(--ease-out-quart) both;
+  }
+  .cover-line:nth-child(2) > span {
+    animation-delay: 110ms;
+  }
+  .hero-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: auto;
+    padding-top: 2.5rem;
+    animation: fade-in 900ms 500ms ease-out both;
+  }
+  .hero-copy {
+    max-width: 31rem;
+  }
+  .hero-copy .lede {
+    text-shadow: 0 1px 24px rgba(4, 5, 10, 0.85);
+  }
+  .hero-role {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .hero-status {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.875rem;
+    color: var(--ink);
+  }
+  .hero-cue {
+    position: absolute;
+    right: 2rem;
+    bottom: 1.9rem;
+    font-size: 0.8125rem;
+    color: var(--ink-2);
+    animation: fade-in 900ms 1400ms ease-out both;
+  }
+
+  /* More work: a playbill */
+  .bill {
+    list-style: none;
+    margin: -0.4rem 0 0;
+    padding: 0;
+  }
+  .bill li + li {
+    border-top: 1px solid var(--line);
+  }
+  .bill-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.2rem 1rem;
+    padding: 0.85rem 0;
+  }
+  .bill-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--ink);
+    transition: color 200ms;
+  }
+  .bill-figure {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+  .bill-sub {
+    grid-column: 1 / -1;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--ink-3);
+  }
+  .bill-row:hover .bill-title {
+    color: var(--accent);
+  }
+
+  /* About */
+  .about-head {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 1.1rem;
+    align-items: start;
+  }
+  .about-photo {
+    width: 5.5rem;
+    height: 7rem;
+    border-radius: 0.5rem;
+    object-fit: cover;
+    object-position: top;
+  }
+  .roles {
+    list-style: none;
+    margin: 0.7rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .roles-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.1rem 1rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .roles-when {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .roles-body {
+    margin-top: 0.2rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+  }
+  .skills {
+    margin-top: 0.7rem;
+    display: grid;
+    gap: 0.45rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .skills > div {
+    display: grid;
+    grid-template-columns: 8.5rem 1fr;
+    gap: 0.75rem;
+  }
+  .skills dt {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .skills dd {
+    color: var(--ink-3);
+  }
+
+  /* Route strip */
+  .route {
+    position: fixed;
+    left: 50%;
+    bottom: 1.35rem;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    width: min(34rem, calc(100vw - 2.5rem));
+    transform: translateX(-50%);
+    padding: 0.55rem 1.25rem 0.55rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(8, 9, 15, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .route-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    min-width: 9.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .route-count {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+  .route-track {
+    position: relative;
+    flex: 1;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--line-strong);
+  }
+  .route-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(var(--ride-p, 0) * 100%);
+    border-radius: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--glow);
+  }
+  .route-track ol {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .route-track li {
+    position: absolute;
+    top: 50%;
+  }
+  .route-station {
+    position: absolute;
+    left: -11px;
+    top: -11px;
+    display: grid;
+    width: 22px;
+    height: 22px;
+    place-items: center;
+  }
+  .route-station::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    border: 2px solid var(--ink-3);
+    background: #08090f;
+    transition:
+      border-color 250ms,
+      background-color 250ms,
+      transform 250ms var(--ease-out-quart);
+  }
+  .route-station[data-state="passed"]::before {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+  .route-station[data-state="active"]::before {
+    border-color: var(--ink);
+    background: var(--ink);
+    transform: scale(1.25);
+  }
+  .route-station:hover::before {
+    border-color: var(--ink);
+  }
+  /* The car: a tail-light bar sliding along the line. */
+  .route-car {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--ride-p, 0) * 100%);
+    width: 16px;
+    height: 5px;
+    margin: -2.5px 0 0 -8px;
+    border-radius: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 14px 2px var(--glow);
+    pointer-events: none;
+  }
+}
+
+/* No scene (no WebGL, or the engine failed to load): nothing to drive
+   through, so the gaps between stops close up. */
+.ride-stage[data-state="off"] ~ .transit {
+  height: 4rem;
+}
+.ride-stage[data-state="off"] ~ .stop:not(.stop-hero) {
+  min-height: 0;
+}
+
+/* The route strip is fixed over the bottom edge: keep the footer and any
+   focused control clear of it. */
+.ride-page footer {
+  padding-bottom: 4.5rem;
+}
+html:has(.ride-page) {
+  scroll-padding-bottom: 5.5rem;
+}
+
+@keyframes cover-rise {
+  from {
+    transform: translateY(104%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .stop {
+    padding-block: 5.5rem;
+  }
+  .stop-col,
+  .stop-wide .stop-col {
+    max-width: none;
+  }
+  .transit {
+    height: 95vh;
+  }
+  .hero-cue {
+    display: none;
+  }
+  .stop-hero::before {
+    background: linear-gradient(
+      0deg,
+      rgba(6, 7, 12, 0.82) 0%,
+      rgba(6, 7, 12, 0.55) 45%,
+      transparent 78%
+    );
+  }
+  .figures {
+    gap: 0.75rem;
+  }
+  .skills > div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .route-label {
+    min-width: 0;
+  }
+  .route {
+    gap: 0.85rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stop[data-in="0"] .stop-col {
+    opacity: 1;
+    transform: none;
+  }
+  /* No scene to drive through, so the gaps between stops close up. */
+  .transit {
+    height: 4rem;
+  }
+  .stop {
+    min-height: 0;
+  }
+  .stop-hero {
+    min-height: 100svh;
+  }
+  .route-car {
+    display: none;
   }
 }
