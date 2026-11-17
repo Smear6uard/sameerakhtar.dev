@@ -17,7 +17,7 @@ export const site = {
   availability: "Open to 2027 new-grad software engineering roles · remote or Chicago",
   graduation: "June 2027",
   description:
-    "Sameer Akhtar is a software engineer and founder in Chicago. Software engineering intern at Quantum Metric, founder of Renaro, creator of Styleum. Math & CS at DePaul, class of 2027.",
+    "Sameer Akhtar is a software engineer and founder in Chicago. Founder of Renaro, creator of Styleum, and a former software engineering intern at Quantum Metric. Math & CS at DePaul, class of 2027.",
   ogImage: "https://sameerakhtar.dev/og-image.jpg",
 } as const;
 
