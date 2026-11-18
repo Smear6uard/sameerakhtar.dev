@@ -175,20 +175,149 @@ const fragmentShader = /* glsl */ `
   ${GLSL_SKY}
   ${GLSL_FOG}
 
+  const vec3 SUN = vec3(0.0599, 0.0349, 0.9976);
+
+  // Interior mapping: a window is a box of room behind the glass, found by
+  // following the eye ray to whichever wall it reaches first. p is where
+  // the ray enters (0..1 across and up), d the ray in the same units with
+  // z running into the room. Returns the wall hit: xyz position, w = kind
+  // (0 back wall, 1 side wall, 2 ceiling, 3 floor).
+  vec4 roomHit(vec2 p, vec3 d) {
+    vec2 inv = 1.0 / (d.xy + sign(d.xy) * 1e-4 + 1e-5);
+    vec2 tw = (step(0.0, d.xy) - p) * inv;
+    float tz = 1.0 / max(d.z, 1e-4);
+    float t = min(min(tw.x, tw.y), tz);
+    vec3 h = vec3(p, 0.0) + d * t;
+    float kind = t == tz ? 0.0 : tw.x < tw.y ? 1.0 : d.y > 0.0 ? 2.0 : 3.0;
+    return vec4(h, kind);
+  }
+
+  vec3 hue(float t) {
+    return 0.5 + 0.5 * cos(6.2831853 * (t + vec3(0.0, 0.33, 0.67)));
+  }
+
+  // Darkens the corners of a room, which is most of what makes it read as a box.
+  float cornerShade(vec2 e) {
+    vec2 ed = min(e, 1.0 - e);
+    return 0.4 + 0.6 * smoothstep(0.0, 0.2, min(ed.x, ed.y));
+  }
+
+  // A flat or an office: painted walls lit by one ceiling lamp, some furniture.
+  vec3 roomShade(vec2 p, vec3 d, float seed) {
+    vec4 hit = roomHit(p, d);
+    vec3 h = hit.xyz;
+    vec3 paint = mix(vec3(0.72), hue(seed), 0.28);
+    vec3 c;
+    vec2 e;
+    if (hit.w < 0.5) {
+      c = paint;
+      e = h.xy;
+      float at = fract(seed * 7.13);
+      float furniture = step(abs(h.x - 0.25 - 0.5 * at), 0.16 + 0.1 * fract(seed * 3.7))
+        * step(h.y, 0.3 + 0.22 * fract(seed * 5.3));
+      c *= 1.0 - 0.72 * furniture;
+      float picture = step(abs(h.x - 0.74 + 0.45 * at), 0.09) * step(abs(h.y - 0.62), 0.1)
+        * step(0.45, fract(seed * 11.1));
+      c = mix(c, paint.zxy * 0.45, picture);
+    } else if (hit.w < 1.5) {
+      c = paint * 0.85;
+      e = h.zy;
+      float door = step(abs(h.z - 0.55), 0.14) * step(h.y, 0.68) * step(0.5, fract(seed * 13.3));
+      c *= 1.0 - 0.5 * door;
+    } else if (hit.w < 2.5) {
+      c = vec3(0.6);
+      e = h.xz;
+    } else {
+      c = paint * 0.3 + 0.05;
+      e = h.xz;
+    }
+    vec3 toLamp = h - vec3(0.5, 0.97, 0.42);
+    toLamp.z *= 1.3;
+    float fall = 0.16 + 1.25 / (1.0 + 7.0 * dot(toLamp, toLamp));
+    float bulb = step(1.5, hit.w) * step(hit.w, 2.5) * (1.0 - smoothstep(0.03, 0.1, length(toLamp.xz))) * 3.0;
+    return c * cornerShade(e) * fall + bulb;
+  }
+
+  // Shelving with stock on it, as seen on a shop wall.
+  vec3 shelves(vec2 q, float seed) {
+    vec2 sh = vec2(q.x * 14.0, q.y * 5.0);
+    vec2 si = floor(sh);
+    vec2 sf = fract(sh);
+    float item = step(0.35, hash21(si + seed * 31.0)) * step(0.16, sf.y) * step(sf.y, 0.8)
+      * step(0.1, sf.x) * step(q.y, 0.8);
+    vec3 stock = mix(vec3(0.55, 0.5, 0.45), hue(hash21(si * 1.7 + seed)), 0.26);
+    vec3 c = mix(vec3(0.3, 0.29, 0.28), stock, item);
+    return c * (1.0 - 0.55 * step(sf.y, 0.1) * step(q.y, 0.85));
+  }
+
+  // Behind a shop window: a store with strip lights, or a bar with a backlit
+  // shelf of bottles and lamps hung over the counter.
+  vec3 shopShade(vec2 p, vec3 d, float seed) {
+    vec4 hit = roomHit(p, d);
+    vec3 h = hit.xyz;
+    float bar = step(0.62, fract(seed * 5.7));
+    vec3 wood = vec3(0.17, 0.09, 0.05);
+    vec3 c;
+    vec2 e;
+    if (hit.w < 0.5) {
+      e = h.xy;
+      vec3 store = shelves(h.xy, seed) * (0.4 + 0.6 * h.y);
+      float bottle = step(0.42, h.y) * step(h.y, 0.63) * step(0.08, h.x) * step(h.x, 0.92);
+      vec3 bottles = vec3(1.25, 0.82, 0.4) * (0.35 + 0.65 * step(0.38, fract(h.x * 46.0)))
+        * (0.6 + 0.4 * hash11(floor(h.x * 46.0) + seed));
+      vec3 lounge = mix(wood, bottles, bottle);
+      for (int i = 0; i < 3; i++) {
+        vec2 lp = h.xy - vec2(0.2 + 0.3 * float(i), 0.76);
+        lounge += vec3(1.3, 0.8, 0.42) * exp(-dot(lp, lp) * 220.0) * 2.2;
+      }
+      c = mix(store, lounge, bar);
+    } else if (hit.w < 1.5) {
+      e = h.zy;
+      c = mix(shelves(h.zy, seed + 3.0) * (0.3 + 0.5 * h.y), wood * 0.75, bar);
+    } else if (hit.w < 2.5) {
+      e = h.xz;
+      float strip = step(abs(fract(h.z * 3.0) - 0.5), 0.07);
+      c = mix(vec3(0.32) + 2.4 * strip, vec3(0.05, 0.03, 0.02), bar);
+    } else {
+      e = h.xz;
+      float sheen = step(abs(fract(h.z * 3.0) - 0.5), 0.12);
+      c = mix(vec3(0.2) + 0.2 * sheen, vec3(0.07, 0.04, 0.03), bar);
+    }
+    return c * cornerShade(e) * (1.0 - 0.5 * clamp(h.z, 0.0, 1.0));
+  }
+
   void main() {
     vec3 N = normalize(vN);
-    vec3 V = normalize(cameraPosition - vWorld);
+    vec3 toP = vWorld - cameraPosition;
+    vec3 V = -normalize(toP);
     vec3 col;
     float glow = 0.0;
 
     if (N.y > 0.5) {
-      // Roof: tar, a parapet line and a little rooftop plant.
+      // Roof: tar, a parapet, plant, the odd skylight.
       vec2 inset = vSz.xz * 0.5 - abs(vLp.xz);
       float edge = min(inset.x, inset.y);
       float parapet = 1.0 - smoothstep(0.45, 0.8, edge);
-      float plant = step(0.84, hash21(floor(vLp.xz / 4.0) + vSeed)) * step(3.5, edge);
-      col = mix(vec3(0.006, 0.007, 0.011), vec3(0.028, 0.028, 0.036), parapet) + plant * vec3(0.016);
+      vec2 pc = floor(vLp.xz / 4.0);
+      vec2 pf = fract(vLp.xz / 4.0);
+      float inner = step(3.5, edge);
+      float plant = step(0.8, hash21(pc + vSeed)) * inner
+        * step(0.15, pf.x) * step(pf.x, 0.85) * step(0.2, pf.y) * step(pf.y, 0.8);
+      col = mix(vec3(0.006, 0.007, 0.011), vec3(0.028, 0.028, 0.036), parapet) + plant * vec3(0.024);
       col += skyBase(vec3(0.0, 1.0, 0.0)) * 0.05;
+      float lit = smoothstep(0.1, 0.5, uNight);
+      float skylight = step(0.93, hash21(pc * 1.3 + vSeed + 5.0)) * inner
+        * step(0.25, pf.x) * step(pf.x, 0.75) * step(0.3, pf.y) * step(pf.y, 0.7);
+      col += vec3(1.0, 0.7, 0.42) * skylight * 0.55 * lit;
+      // A helipad on the tall ones.
+      float pad = step(120.0, vWorld.y) * step(9.0, min(vSz.x, vSz.z) * 0.5);
+      float ring = 1.0 - smoothstep(0.2, 0.34, abs(length(vLp.xz) - 6.0));
+      float mark = step(abs(vLp.z), 0.32) * step(abs(vLp.x), 2.0)
+        + step(abs(abs(vLp.x) - 1.9), 0.32) * step(abs(vLp.z), 2.7);
+      col += pad * (ring + min(mark, 1.0)) * vec3(0.3, 0.3, 0.27);
+      // Red obstruction lights on the corners of anything high.
+      float corner = (1.0 - smoothstep(0.3, 0.75, length(inset - 0.7))) * step(70.0, vWorld.y);
+      col += vec3(3.2, 0.12, 0.08) * corner * (0.55 + 0.45 * sin(uTime * 2.2 + vSeed * 6.0)) * lit;
     } else {
       float s1 = hash11(vSeed);
       float s2 = hash11(vSeed + 4.7);
@@ -218,24 +347,46 @@ const fragmentShader = /* glsl */ `
       vec3 cool = vec3(0.42, 0.62, 1.0);
       vec3 wc = mix(warm, cool, step(0.64, hash21(room.yx + vSeed * 3.0)));
 
-      // Facade: brick, limestone or dark steel, lit only by the sky it faces.
+      // Facade: brick, limestone or dark steel, lit by the sky it faces and,
+      // low down, by the street lamps.
       vec3 tone = s1 < 0.34 ? vec3(0.034, 0.017, 0.013) : s1 < 0.67 ? vec3(0.05, 0.046, 0.042) : vec3(0.011, 0.013, 0.019);
       vec3 ambient = skyBase(normalize(N + vec3(0.0, 0.35, 0.0)));
-      vec3 wall = tone * (0.35 + ambient * 2.6);
+      float lampOn = smoothstep(0.1, 0.42, uNight);
+      vec3 wall = tone * (0.35 + ambient * 2.6 + vec3(0.7, 0.82, 1.0) * 1.5 * lampOn * exp(-vFace.y / 7.0));
       wall *= 0.82 + 0.18 * step(0.5, fract(id.x * 0.25 + s2)); // piers
       vec3 Rv = reflect(-V, N);
       float fres = pow(clamp(1.0 - dot(V, N), 0.0, 1.0), 3.0);
       float blind = 0.55 + 0.45 * hash21(id + 7.7 + vSeed);
-      vec3 glass = skyBase(Rv) * (0.05 + 0.3 * fres) * blind + vec3(0.002);
+      vec3 sunGlint = vec3(1.9, 0.62, 0.22) * pow(max(dot(Rv, SUN), 0.0), 60.0) * (1.0 - uNight) * 0.7;
+      vec3 glass = (skyBase(Rv) * (0.05 + 0.3 * fres) + sunGlint * (0.15 + 0.85 * fres)) * blind + vec3(0.002);
 
       vec3 near = mix(wall, glass, win);
-      // Brighter near the ceiling, with the odd blind half drawn.
-      float inside = (0.55 + 0.45 * f.y) * mix(1.0, 0.45, step(0.7, hash21(id + 1.9)) * step(f.y, 0.55));
-      // Frame and meeting rail, so a lit window is not one flat panel.
-      vec2 wl = (f - lo) / (hi - lo);
-      float frame = step(0.04, wl.x) * step(wl.x, 0.96) * step(0.03, wl.y) * step(wl.y, 0.97);
-      frame *= mix(1.0, step(0.018, abs(wl.y - 0.52)), step(style, 0.5));
-      vec3 emitNear = wc * bright * lit * win * inside * mix(0.25, 1.0, frame);
+      vec3 emitNear = wc * bright * lit * win * (0.55 + 0.45 * f.y);
+      #ifdef CITY_BOXES
+        // The eye ray in facade space: x along the wall, y up, z into it.
+        vec3 d = vec3(abs(N.x) > 0.5 ? -V.z : -V.x, -V.y, max(dot(V, N), 1e-3));
+        if (aa > 0.02) {
+          // The glass sits back from the face of the wall.
+          float recess = style < 0.5 ? 0.3 : style < 1.5 ? 0.06 : 0.15;
+          vec3 dc = vec3(d.xy / cell, d.z);
+          vec2 p1 = f + dc.xy * (recess / dc.z);
+          float open = step(lo.x, p1.x) * step(p1.x, hi.x) * step(lo.y, p1.y) * step(p1.y, hi.y);
+          near = mix(wall, mix(wall * 0.4, glass, open), win);
+          if (lit * win * open > 0.5) {
+            vec3 interior = roomShade(p1, vec3(dc.xy, dc.z / 4.5), hash21(room + vSeed)) * wc * bright * 2.3;
+            // The odd blind half drawn.
+            float drawn = step(0.7, hash21(id + 1.9)) * step(0.5, p1.y);
+            interior = mix(interior, wc * bright * 0.5, drawn * 0.85);
+            // Frame and meeting rail.
+            vec2 wl = (p1 - lo) / (hi - lo);
+            float frame = step(0.04, wl.x) * step(wl.x, 0.96) * step(0.03, wl.y) * step(wl.y, 0.97);
+            frame *= mix(1.0, step(0.018, abs(wl.y - 0.52)), step(style, 0.5));
+            emitNear = interior * mix(0.2, 1.0, frame);
+          } else {
+            emitNear = vec3(0.0);
+          }
+        }
+      #endif
       // Far away the grid dissolves into its average so it does not shimmer.
       vec3 far = mix(wall, glass * 0.8, area);
       vec3 emitFar = mix(warm, cool, 0.4) * litFrac * area * 1.25;
@@ -244,26 +395,60 @@ const fragmentShader = /* glsl */ `
 
       // Street level: shop bays, some shut, each with a sign above the glass.
       float street = 1.0 - smoothstep(4.6, 4.9, vFace.y);
-      float bay = floor(vFace.x / 7.0);
-      float bx = fract(vFace.x / 7.0);
-      float shop = hash21(vec2(bay, vSeed));
-      float glassBand = step(0.55, vFace.y) * step(vFace.y, 3.3);
-      float pane = step(0.05, bx) * step(bx, 0.95) * step(0.045, fract(bx * 3.0));
-      vec3 shopCol = mix(vec3(1.0, 0.64, 0.36), vec3(0.5, 0.68, 1.0), step(0.68, shop));
-      float evening = smoothstep(0.05, 0.4, uNight + 0.15);
-      vec3 shopEmit = shopCol * (0.08 + 0.42 * shop) * step(0.3, shop) * glassBand * pane
-        * (0.45 + 0.55 * smoothstep(0.55, 3.3, vFace.y));
-      float sign = step(3.6, vFace.y) * step(vFace.y, 4.25) * step(0.14, bx) * step(bx, 0.86) * step(0.6, shop);
-      vec3 signCol = mix(vec3(1.0, 0.2, 0.12), vec3(0.3, 0.42, 1.0), step(0.5, hash11(bay + vSeed * 2.0)));
-      signCol = mix(signCol, vec3(1.0, 0.8, 0.55), step(0.7, hash11(bay * 1.7 + vSeed)));
-      shopEmit += signCol * sign * 0.75;
-      col = mix(col, wall * 0.55 + glass * 0.5 * glassBand * pane, street);
-      emit = mix(emit, shopEmit * evening, street);
+      if (street > 0.001) {
+        float bay = floor(vFace.x / 7.0);
+        float bx = fract(vFace.x / 7.0);
+        float shop = hash21(vec2(bay, vSeed));
+        float trading = step(0.3, shop);
+        float evening = smoothstep(0.05, 0.4, uNight + 0.15);
+        vec3 shopCol = mix(vec3(1.0, 0.66, 0.38), vec3(0.62, 0.78, 1.0), step(0.68, shop));
+        float pane = fract(bx * 3.0);
+        float inGlass = step(0.5, vFace.y) * step(vFace.y, 3.35) * step(0.04, bx) * step(bx, 0.96)
+          * step(0.025, pane) * step(pane, 0.975);
+        vec3 shopEmit = shopCol * (0.1 + 0.4 * shop) * (0.45 + 0.55 * smoothstep(0.5, 3.35, vFace.y));
+        #ifdef CITY_BOXES
+          float nearK = 1.0 - smoothstep(70.0, 150.0, length(toP));
+          if (nearK * inGlass * trading > 0.0) {
+            vec3 inside = shopShade(vec2(bx, vFace.y / 3.9), vec3(d.x / 7.0, d.y / 3.9, d.z / 6.0), shop + vSeed);
+            shopEmit = mix(shopEmit, inside * shopCol * (0.55 + 0.85 * shop), nearK);
+          }
+        #endif
+        shopEmit *= inGlass * trading;
 
+        // The sign: lettering as blocks, either lit on dark or dark on a lit box.
+        float sy = (vFace.y - 3.62) / 0.68;
+        float sx = (bx - 0.12) / 0.76;
+        float inSign = step(0.0, sy) * step(sy, 1.0) * step(0.0, sx) * step(sx, 1.0) * step(0.45, shop);
+        vec3 signCol = mix(vec3(1.0, 0.2, 0.12), vec3(0.3, 0.42, 1.0), step(0.5, hash11(bay + vSeed * 2.0)));
+        signCol = mix(signCol, vec3(1.0, 0.8, 0.55), step(0.7, hash11(bay * 1.7 + vSeed)));
+        float gx = sx * 16.0;
+        float gl = floor(gx);
+        float letter = step(2.0, gl) * step(gl, 13.0) * step(0.2, hash21(vec2(gl, bay + vSeed)))
+          * step(0.2, fract(gx)) * step(0.24, sy) * step(sy, 0.76);
+        letter = mix(0.4, letter, clamp(1.0 - fwidth(gx) * 1.3, 0.0, 1.0));
+        float neon = step(0.5, hash11(bay * 3.3 + vSeed));
+        shopEmit += signCol * mix(mix(0.55, 0.05, letter), 0.03 + 1.6 * letter, neon) * inSign;
+
+        col = mix(col, wall * 0.55 + glass * 0.6 * inGlass, street);
+        emit = mix(emit, shopEmit * evening, street);
+      }
+
+      float nightOn = smoothstep(0.2, 0.6, uNight);
       // A lit crown on some of the tall ones.
       float crown = (1.0 - smoothstep(2.0, 5.0, vTop)) * step(0.82, s2) * step(60.0, vFace.y + vTop);
-      vec3 crownCol = mix(vec3(1.0, 0.2, 0.12), vec3(0.3, 0.4, 1.0), step(0.5, s1));
-      emit += crownCol * crown * 2.2 * smoothstep(0.2, 0.6, uNight);
+      vec3 accent = mix(vec3(1.0, 0.2, 0.12), vec3(0.3, 0.4, 1.0), step(0.5, s1));
+      emit += accent * crown * 2.2 * nightOn;
+      #ifdef CITY_BOXES
+        // And light strips up the corners of a few towers.
+        float halfU = (abs(N.x) > 0.5 ? vSz.z : vSz.x) * 0.5;
+        // Never thinner than a pixel and a half, or the line breaks into dots.
+        float texel = fwidth(vFace.x);
+        float corner = (1.0 - smoothstep(max(0.22, texel * 0.8), max(0.5, texel * 1.6), halfU - abs(vFace.x)))
+          * min(1.0, 0.36 / max(texel * 1.2, 1e-3));
+        float outlined = step(0.74, hash11(vSeed + 2.2)) * step(70.0, vSz.y) * step(5.2, vFace.y);
+        vec3 stripCol = mix(accent, vec3(1.0, 0.72, 0.4), step(0.6, hash11(vSeed + 6.1)));
+        emit += stripCol * corner * outlined * 1.7 * nightOn;
+      #endif
 
       col += emit;
       glow = 1.0;
@@ -279,6 +464,8 @@ export function createCity(shared: SharedUniforms): Group {
   const boxes = layout();
 
   const material = new ShaderMaterial({
+    // three.js only tells the vertex shader about instancing.
+    defines: { CITY_BOXES: "" },
     uniforms: {
       uTime: shared.uTime,
       uNight: shared.uNight,
@@ -307,6 +494,7 @@ export function createCity(shared: SharedUniforms): Group {
 
   // Hancock: a tapered shaft with twin masts.
   const taperMat = material.clone();
+  taperMat.defines = {};
   taperMat.uniforms.uTime = shared.uTime;
   taperMat.uniforms.uNight = shared.uNight;
   taperMat.uniforms.uFogDensity = shared.uFogDensity;

@@ -45,8 +45,9 @@ src/
 ├── ride/                   # The three.js engine, framework-free
 │   ├── route.ts            # Stops, street grid constants, scroll timeline
 │   ├── shots.ts            # One camera shot per stop and the moves between them
-│   ├── engine.ts           # Renderer, post-processing, quality tiers, frame loop
-│   └── world/              # Sky, ground, city, car, street, set pieces, rain
+│   ├── engine.ts           # Renderer, lighting, quality tiers, frame loop
+│   ├── post.ts             # Depth of field, motion blur, sun shafts, tone map and grade
+│   └── world/              # Sky, ground, city, car, street, signs, set pieces, rain, fireworks
 ├── lib/
 │   ├── site.ts             # Identity, links, availability copy
 │   ├── resume.ts           # Experience, skills, education, honors, proof numbers
@@ -67,5 +68,14 @@ dark: the ride takes place at night.
 
 `src/ride/route.ts` lists the stops. Each stop is a `[data-stop]` section; `RideCanvas` maps
 scroll position to one number on a hold/drive timeline and hands it to the engine, which eases
-toward it. To move the camera at a stop, edit its entry in `src/ride/shots.ts`. In development,
-`window.__ride.snap(n)` jumps the scene to timeline position `n` (stop `i` rests at `2 * i`).
+toward it. To move the camera at a stop, edit its entry in `src/ride/shots.ts`; each shot also
+sets where the lens focuses and how far the background falls out of focus.
+
+The car is lofted from cross-sections in `world/carShell.ts` and dressed in `world/car.ts`;
+traffic and parked cars are a shortened, low-detail cut of the same shell. Building windows and
+shopfronts are flat boxes with rooms drawn behind the glass in the shader (`world/city.ts`).
+
+In development, `window.__ride` has a few handles: `snap(n)` jumps to timeline position `n`
+(stop `i` rests at `2 * i`), `orbit(degrees, metres, height)` looks at the car from anywhere
+(`orbit(null)` hands the camera back), and `drive(from, to)` plays a stretch of the timeline
+and holds its last frame, which is how to look at motion blur.

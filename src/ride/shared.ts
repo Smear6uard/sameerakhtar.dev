@@ -12,6 +12,8 @@ export interface SharedUniforms {
   uCar: { value: Vector3 };
   /** 0..1, how strongly the dispatch-map overlay is drawn on the streets. */
   uDispatch: { value: number };
+  /** 0..1, how hard it is raining. */
+  uRain: { value: number };
 }
 
 export function createSharedUniforms(): SharedUniforms {
@@ -21,6 +23,7 @@ export function createSharedUniforms(): SharedUniforms {
     uFogDensity: { value: 0.001 },
     uCar: { value: new Vector3() },
     uDispatch: { value: 0 },
+    uRain: { value: 0 },
   };
 }
 
@@ -123,6 +126,36 @@ export function glowTexture(): CanvasTexture {
   }
   glow = new CanvasTexture(c);
   return glow;
+}
+
+let streak: CanvasTexture | null = null;
+
+/** A long thin flare, the horizontal smear a bright lamp leaves in a lens. */
+export function streakTexture(): CanvasTexture {
+  if (streak) return streak;
+  const w = 256;
+  const h = 32;
+  const c = document.createElement("canvas");
+  c.width = w;
+  c.height = h;
+  const ctx = c.getContext("2d");
+  if (ctx) {
+    const img = ctx.createImageData(w, h);
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        const dx = (x + 0.5 - w / 2) / (w / 2);
+        const dy = (y + 0.5 - h / 2) / (h / 2);
+        const edge = Math.max(0, 1 - dx * dx);
+        const a = Math.exp(-dx * dx * 9) * Math.exp(-dy * dy * 14) * edge;
+        const o = (y * w + x) * 4;
+        img.data[o] = img.data[o + 1] = img.data[o + 2] = 255;
+        img.data[o + 3] = Math.round(255 * a);
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  streak = new CanvasTexture(c);
+  return streak;
 }
 
 export interface SignOptions {

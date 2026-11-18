@@ -48,6 +48,15 @@ export function createSky(shared: SharedUniforms): Mesh {
         vec3 cloudNight = vec3(0.014, 0.013, 0.026);
         col = mix(col, mix(cloudLit, cloudNight, uNight), c * 0.7);
 
+        // A gibbous moon in the east, with a halo the clouds pick up.
+        vec3 moonDir = normalize(vec3(-0.34, 0.4, -1.0));
+        float md = max(dot(d, moonDir), 0.0);
+        float disc = smoothstep(0.99958, 0.99972, md);
+        vec3 moon = vec3(1.7, 1.75, 1.9) * disc * (0.82 + 0.18 * vnoise(d.xy * 240.0));
+        moon += vec3(0.32, 0.4, 0.62) * (pow(md, 900.0) * 0.5 + pow(md, 40.0) * 0.1);
+        col += moon * uNight * (1.0 - c * 0.85);
+        col += vec3(0.05, 0.06, 0.1) * c * pow(md, 12.0) * uNight;
+
         // Stars.
         vec3 sp = d * 260.0;
         vec3 cell = floor(sp);

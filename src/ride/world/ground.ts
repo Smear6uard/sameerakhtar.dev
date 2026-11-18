@@ -35,6 +35,7 @@ const fragmentShader = /* glsl */ `
   uniform vec3 uCar;
   uniform float uDispatch;
   uniform float uBeam;
+  uniform float uRain;
   uniform vec4 uGlowPos[4];
   uniform vec3 uGlowCol[4];
   varying vec4 vUvP;
@@ -49,6 +50,20 @@ const fragmentShader = /* glsl */ `
 
   float band(float d, float halfWidth, float aa) {
     return 1.0 - smoothstep(halfWidth - aa, halfWidth + aa, abs(d));
+  }
+
+  // One raindrop per cell: a ring that spreads and dies. Returns the tilt it
+  // gives the surface.
+  vec2 ripple(vec2 p) {
+    vec2 cell = floor(p);
+    float h = hash21(cell);
+    float age = fract(uTime * (0.8 + h * 0.7) + h * 7.0);
+    vec2 centre = (vec2(hash21(cell + 3.1), hash21(cell + 7.7)) - 0.5) * 0.5;
+    vec2 dv = fract(p) - 0.5 - centre;
+    float r = length(dv);
+    float front = r - age * 0.42;
+    float ring = sin(front * 46.0) * smoothstep(0.07, 0.0, abs(front)) * (1.0 - age);
+    return dv / max(r, 1e-3) * ring;
   }
 
   void main() {
@@ -146,7 +161,7 @@ const fragmentShader = /* glsl */ `
     }
 
     // contact shadow under the car
-    vec2 cs = abs(q + vec2(0.0, 0.05)) - vec2(0.75, 2.75);
+    vec2 cs = abs(q - vec2(0.0, 0.12)) - vec2(0.82, 2.82);
     float shadow = 1.0 - 0.85 * (1.0 - smoothstep(-0.2, 0.9, max(cs.x, cs.y)));
     vec3 col = albedo * E * shadow;
 
@@ -169,6 +184,10 @@ const fragmentShader = /* glsl */ `
       nrm = (vec2(vnoise(p.xz * 17.0), vnoise(p.xz * 17.0 + 31.0)) - 0.5) * 0.012 * (1.0 - puddle * 0.9);
       nrm += (vec2(vnoise(p.xz * 1.3), vnoise(p.xz * 1.3 + 7.0)) - 0.5) * 0.004;
       smear = 0.05 * (1.0 - puddle * 0.55);
+    }
+    if (uRain > 0.01 && dist < 46.0 && !water) {
+      float nearK = uRain * (1.0 - smoothstep(22.0, 46.0, dist));
+      nrm += (ripple(p.xz * 1.9) + ripple(p.xz * 1.9 + 17.3)) * 0.016 * nearK;
     }
     float persp = 1.0 / (1.0 + dist * 0.05);
     uv += nrm * (0.25 + persp);
@@ -264,6 +283,7 @@ export function createGround(shared: SharedUniforms, textureScale: number): Grou
   u.uFogDensity = shared.uFogDensity;
   u.uCar = shared.uCar;
   u.uDispatch = shared.uDispatch;
+  u.uRain = shared.uRain;
   u.uGlowPos = { value: glowPos };
   u.uGlowCol = { value: glowCol };
 

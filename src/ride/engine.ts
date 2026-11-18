@@ -14,6 +14,7 @@ import {
   MeshBasicMaterial,
   PerspectiveCamera,
   PlaneGeometry,
+  PointLight,
   Scene,
   Vector2,
   Vector3,
@@ -25,18 +26,19 @@ import {
   type Texture,
 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
-import { CAR_X, carDistance, nightAt, smooth, splitProgress } from "./route";
+import { CinePass, FinalShader } from "./post";
+import { CAR_X, PIER_END_Z, WEST_Z, carDistance, nightAt, smooth, splitProgress } from "./route";
 import { createSharedUniforms } from "./shared";
 import { sampleShot, type CameraSample } from "./shots";
 import { createCar } from "./world/car";
 import { createCity } from "./world/city";
+import { createFireworks } from "./world/fireworks";
 import { createGround } from "./world/ground";
 import { createRain } from "./world/rain";
+import { createSigns } from "./world/signs";
 import { createSky } from "./world/sky";
 import { createStops, type StopSets } from "./world/stops";
 import { createStreet } from "./world/street";
@@ -55,63 +57,8 @@ export interface RideOptions {
   onReady: () => void;
 }
 
-const GradeShader = {
-  name: "RideGrade",
-  uniforms: { tDiffuse: { value: null }, uTime: { value: 0 } },
-  vertexShader: /* glsl */ `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D tDiffuse;
-    uniform float uTime;
-    varying vec2 vUv;
-    float hash(vec2 p) {
-      vec3 p3 = fract(vec3(p.xyx) * 0.1031);
-      p3 += dot(p3, p3.yzx + 33.33);
-      return fract((p3.x + p3.y) * p3.z);
-    }
-    void main() {
-      vec2 c = vUv - 0.5;
-      float r2 = dot(c, c);
-      vec2 ca = c * r2 * 0.006;
-      vec3 col;
-      col.r = texture2D(tDiffuse, vUv + ca).r;
-      col.g = texture2D(tDiffuse, vUv).g;
-      col.b = texture2D(tDiffuse, vUv - ca).b;
-      float vig = 1.0 - smoothstep(0.22, 0.92, length(c * vec2(1.0, 1.12)));
-      col *= mix(0.58, 1.0, vig);
-      col += (hash(gl_FragCoord.xy + fract(uTime) * 61.0) - 0.5) * 0.04;
-      col += vec3(0.004, 0.005, 0.011) * (1.0 - col);
-      gl_FragColor = vec4(col, 1.0);
-    }
-  `,
-};
-
-/**
- * Mirror-smooth clearcoat can throw a specular spike past what a half-float
- * holds. One such pixel becomes Inf, and the bloom blur spreads it into a
- * black frame, so highlights are capped before bloom sees them.
- */
-const ClampShader = {
-  name: "RideClamp",
-  uniforms: { tDiffuse: { value: null } },
-  vertexShader: GradeShader.vertexShader,
-  fragmentShader: /* glsl */ `
-    uniform sampler2D tDiffuse;
-    varying vec2 vUv;
-    void main() {
-      vec3 c = texture2D(tDiffuse, vUv).rgb;
-      if (any(isnan(c)) || any(isinf(c))) c = vec3(0.0);
-      gl_FragColor = vec4(clamp(c, 0.0, 24.0), 1.0);
-    }
-  `,
-};
-
 const FOG_NIGHT = new Color(0.01, 0.016, 0.04);
+const LAMP_POWER = 420;
 
 function disposeTree(root: Object3D) {
   root.traverse((obj) => {
@@ -158,7 +105,8 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
   const car = createCar();
   const street = createStreet(low);
   const rain = createRain(shared, low ? 500 : 1500);
-  scene.add(sky, ground.mesh, city, car.group, street.group, rain.mesh);
+  const fireworks = createFireworks(shared);
+  scene.add(sky, ground.mesh, city, car.group, street.group, rain.mesh, fireworks.mesh);
   ground.setReflection(!low);
 
   // Set pieces draw sign text, so they wait for the display font.
@@ -172,24 +120,46 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
   const timeout = new Promise((resolve) => window.setTimeout(resolve, 2500));
   void Promise.race([fontsReady, timeout]).then(() => {
     if (disposed) return;
-    stops = createStops(shared, ground);
-    scene.add(stops.group);
+    const sets = createStops(shared, ground);
+    const signs = createSigns();
+    car.dress();
+    // Compiled before they join the scene, so they do not stall a frame.
+    void Promise.all([precompile(sets.group), precompile(signs)]).then(() => {
+      if (disposed) return;
+      stops = sets;
+      scene.add(sets.group, signs);
+    });
   });
 
   // Light for the few physically shaded things: the car and the boutique.
   const hemi = new HemisphereLight(0x8b9cff, 0x05060a, 0.35);
   const sun = new DirectionalLight(0xff8a5c, 0);
-  scene.add(hemi, sun, sun.target);
+  const moon = new DirectionalLight(0x9fb4ff, 0);
+  scene.add(hemi, sun, sun.target, moon, moon.target);
+  // The four street lamps nearest the car are real lights, so their
+  // highlights slide along the bodywork as it passes under them.
+  const lampLights = [0, 1, 2, 3].map(() => {
+    const light = new PointLight(0xbcd4ff, 0, 42, 1.7);
+    scene.add(light);
+    return light;
+  });
 
   // The car mirrors its surroundings through a small live cube map.
-  const cubeTarget = new WebGLCubeRenderTarget(low ? 64 : 128, {
+  const cubeTarget = new WebGLCubeRenderTarget(low ? 64 : 192, {
     type: HalfFloatType,
     generateMipmaps: true,
     minFilter: LinearMipmapLinearFilter,
   });
   const cubeCamera = new CubeCamera(0.4, 2600, cubeTarget);
   scene.add(cubeCamera);
+  // Its six faces are drawn a couple per frame rather than all at once, so
+  // the cost is spread evenly instead of landing on every third frame.
+  cubeCamera.coordinateSystem = renderer.coordinateSystem;
+  cubeCamera.updateCoordinateSystem();
+  const cubeFaces = cubeCamera.children as PerspectiveCamera[];
+  let cubeFace = 0;
   car.setEnvMap(cubeTarget.texture);
+  street.setEnvMap(cubeTarget.texture);
   const proxyGround = new Mesh(
     new PlaneGeometry(600, 600),
     new MeshBasicMaterial({ color: 0x020203, fog: false }),
@@ -198,17 +168,26 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
   proxyGround.visible = false;
   scene.add(proxyGround);
 
-  // Post: bloom in HDR, tone map, then a light grade.
+  // Materials compile differently for an off-screen target, which is where
+  // the scene is always drawn, so that is what the warm-up targets.
+  const warmTarget = new WebGLRenderTarget(1, 1);
+  const precompile = (root: Object3D) => {
+    renderer.setRenderTarget(warmTarget);
+    const done = renderer.compileAsync(root, camera, scene).catch(() => undefined);
+    renderer.setRenderTarget(null);
+    return done;
+  };
+
+  // Post: the lens, bloom in HDR, then tone map and grade.
   const composer = new EffectComposer(
     renderer,
-    new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: low ? 0 : 4 }),
+    new WebGLRenderTarget(1, 1, { type: HalfFloatType }),
   );
-  composer.addPass(new RenderPass(scene, camera));
-  composer.addPass(new ShaderPass(ClampShader));
+  const cine = new CinePass(scene, camera, { samples: low ? 0 : 4, lens: !low });
+  composer.addPass(cine);
   const bloom = new UnrealBloomPass(new Vector2(1, 1), 0.42, 0.62, 1.2);
   composer.addPass(bloom);
-  composer.addPass(new OutputPass());
-  const grade = new ShaderPass(GradeShader);
+  const grade = new ShaderPass(FinalShader);
   composer.addPass(grade);
 
   const size = new Vector2();
@@ -233,17 +212,33 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
   let w = -1; // snaps to the first reported value
   const pointer = new Vector2();
   const pointerSmooth = new Vector2();
-  const sample: CameraSample = { offset: new Vector3(), look: new Vector3(), fov: 40 };
+  const sample: CameraSample = {
+    offset: new Vector3(),
+    look: new Vector3(),
+    fov: 40,
+    focus: 0,
+    aperture: 0,
+  };
+  const sunDir = new Vector3();
+  const sunPoint = new Vector3();
+  const forward = new Vector3();
   const carPos = new Vector3(CAR_X, 0, 0);
   const lookAt = new Vector3();
   const right = new Vector3();
   let prevDist = 0;
   let speed = 0;
+  let accel = 0;
+  let pitch = 0;
+  let pitchVel = 0;
+  let hazard = 0;
   let time = 0;
   let last = 0;
   let frame = 0;
   let raf = 0;
   let ready = false;
+  let compiled = false;
+  /** Dev only: a free camera around the car, set from the console. */
+  let orbit: { ang: number; rad: number; y: number; lookY: number; fov: number } | null = null;
 
   // Adaptive quality: step down if the frame rate cannot hold.
   let slowMs = 0;
@@ -256,6 +251,8 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
       size.set(0, 0);
       resize();
     } else if (step === 2) {
+      cine.lens = false;
+    } else if (step === 3) {
       ground.setReflection(false);
     }
   };
@@ -266,7 +263,7 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
     time += dt;
     frame += 1;
 
-    if (frame > 90 && step < 2 && !low) {
+    if (frame > 90 && step < 3 && !low) {
       slowMs += dt * 1000;
       measured += 1;
       if (measured >= 75) {
@@ -280,11 +277,23 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
     const p = splitProgress(w);
     const night = nightAt(p.u);
     const dist = carDistance(p.u);
+    const prevSpeed = speed;
     speed += ((dist - prevDist) / Math.max(dt, 0.001) - speed) * 0.2;
+    accel += ((speed - prevSpeed) / Math.max(dt, 0.001) - accel) * 0.15;
     car.roll(dist - prevDist);
     prevDist = dist;
     carPos.z = -dist;
     car.group.position.copy(carPos);
+    // The body squats under power and dips on the brakes, on a soft spring.
+    const lean = Math.min(0.018, Math.max(-0.014, -accel * 0.0006));
+    pitchVel += ((lean - pitch) * 60 - pitchVel * 9) * dt;
+    pitch += pitchVel * dt;
+    car.setPose(pitch, -Math.abs(pitch) * 0.6);
+    // Waiting at the kerb with the hazards on.
+    const waiting = p.stop === 0 ? 1 - Math.min(1, p.u * 5) : 0;
+    const blink = time % 1.2 < 0.6 ? waiting : 0;
+    hazard += (blink - hazard) * (1 - Math.exp(-dt * 16));
+    car.setHazard(hazard);
 
     shared.uTime.value = time;
     shared.uNight.value = night;
@@ -296,6 +305,12 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
 
     // Camera.
     sampleShot(p, sample);
+    if (orbit) {
+      const a = (orbit.ang * Math.PI) / 180;
+      sample.offset.set(Math.sin(a) * orbit.rad, orbit.y, -Math.cos(a) * orbit.rad);
+      sample.look.set(0, orbit.lookY, 0);
+      sample.fov = orbit.fov;
+    }
     // On a portrait screen there is no room to hold the car off to one side.
     if (camera.aspect < 1) sample.look.x *= 0.35;
     pointerSmooth.lerp(pointer, 1 - Math.exp(-dt * 2.5));
@@ -307,13 +322,26 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
     camera.position.addScaledVector(right, -(pointerSmooth.x * 0.45 + sway) * (0.4 + reach));
     camera.position.y = Math.max(0.3, camera.position.y + pointerSmooth.y * 0.18 * (0.4 + reach));
     const narrow = camera.aspect < 1 ? 1.32 : camera.aspect < 1.4 ? 1.12 : 1;
-    const fov = Math.min(75, sample.fov * narrow);
+    const rush = orbit ? 0 : smooth(Math.min(1, Math.abs(speed) / 70));
+    const fov = Math.min(78, sample.fov * narrow + 5 * rush);
     if (Math.abs(camera.fov - fov) > 0.01) {
       camera.fov = fov;
       camera.updateProjectionMatrix();
     }
     camera.lookAt(lookAt);
+    camera.updateMatrixWorld();
     sky.position.copy(camera.position);
+
+    // Lens.
+    cine.car.copy(carPos);
+    cine.focus = sample.focus > 0 ? sample.focus : camera.position.distanceTo(car.group.position);
+    cine.aperture = orbit ? 0 : sample.aperture;
+    sunDir.set(0.06, 0.035 - night * 0.12, 1).normalize();
+    sunPoint.copy(camera.position).addScaledVector(sunDir, 1000).project(camera);
+    cine.sun.set(sunPoint.x * 0.5 + 0.5, sunPoint.y * 0.5 + 0.5);
+    const toSun = camera.getWorldDirection(forward).dot(sunDir);
+    cine.rays = (1 - night) * (1 - night) * smooth(Math.min(1, Math.max(0, (toSun - 0.3) / 0.5)));
+    grade.uniforms.uFringe.value = 0.012 * rush;
 
     // Atmosphere.
     const high = smooth(Math.min(1, Math.max(0, (camera.position.y - 30) / 220)));
@@ -325,6 +353,24 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
     sun.position.set(carPos.x + 3, 6, carPos.z + 60);
     sun.target.position.copy(carPos);
     hemi.intensity = 0.4 - 0.2 * night;
+    moon.intensity = 0.7 * night;
+    moon.position.set(carPos.x - 26, 34, carPos.z - 44);
+    moon.target.position.copy(carPos);
+    const lampOn = Math.min(1, Math.max(0, (night - 0.1) / 0.32));
+    const nearest = Math.round((carPos.z - 20) / 40) * 40 + 20;
+    const next = carPos.z < nearest ? nearest - 40 : nearest + 40;
+    lampLights.forEach((light, i) => {
+      const z = i < 2 ? nearest : next;
+      const side = i % 2 ? 1 : -1;
+      // Mirrors the gaps in createLamps.
+      const standing =
+        z <= WEST_Z - 20 &&
+        z >= PIER_END_Z + 20 &&
+        !(z < -1210 && z > -1310) &&
+        !(side > 0 && z < -1490);
+      light.position.set(side * 6.2, 7.9, z);
+      light.intensity = standing ? LAMP_POWER * lampOn : 0;
+    });
     ground.setBeam(0.35 + 0.65 * night);
     // Looking straight into the headlights would white the frame out.
     const facing = Math.max(0, -sample.offset.z / Math.max(1, sample.offset.length()));
@@ -332,21 +378,45 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
     car.setBrake(speed < 1.5 ? 1 : 0);
     const rainAmount = smooth(Math.min(1, Math.max(0, (night - 0.55) / 0.45))) * (1 - high);
     rain.setAmount(rainAmount);
-    street.update(time, night, shared.uDispatch.value);
+    shared.uRain.value = rainAmount;
+    // The show over the lake starts as the car leaves the theatre.
+    fireworks.setAmount(smooth(Math.min(1, Math.max(0, (p.u - 4.25) / 0.6))));
+    street.update({
+      time,
+      night,
+      dispatch: shared.uDispatch.value,
+      carZ: carPos.z,
+      camera,
+    });
     stops?.update(time, night);
 
-    // Car reflections.
-    const every = low || step >= 2 ? 24 : 3;
-    if (frame % every === 1 || frame < 3) {
+    // Car reflections: the next face or two of the cube map.
+    const moving = Math.abs(speed) > 0.5;
+    const faces = frame < 4 ? 6 : low || step >= 3 ? (frame % 4 === 0 ? 1 : 0) : moving ? 2 : 1;
+    if (faces > 0) {
       cubeCamera.position.set(carPos.x, 1.0, carPos.z);
+      cubeCamera.updateMatrixWorld();
       car.group.visible = false;
+      street.setEnvPass(true);
       ground.mesh.visible = false;
       rain.mesh.visible = false;
       proxyGround.position.set(carPos.x, 0, carPos.z);
       proxyGround.visible = true;
-      cubeCamera.update(renderer, scene);
+      for (let i = 0; i < faces; i++) {
+        const last = cubeFace === 5;
+        // Mip levels and the blurred copy the materials read are rebuilt
+        // once per lap, after the sixth face.
+        cubeTarget.texture.mipmapsAutoUpdate = last;
+        renderer.setRenderTarget(cubeTarget, cubeFace);
+        renderer.render(scene, cubeFaces[cubeFace]);
+        if (last) cubeTarget.texture.needsPMREMUpdate = true;
+        cubeFace = (cubeFace + 1) % 6;
+      }
+      cubeTarget.texture.mipmapsAutoUpdate = true;
+      renderer.setRenderTarget(null);
       proxyGround.visible = false;
       ground.mesh.visible = true;
+      street.setEnvPass(false);
       car.group.visible = true;
       rain.mesh.visible = rainAmount > 0.01;
     }
@@ -365,7 +435,7 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
   };
 
   const start = () => {
-    if (raf || disposed) return;
+    if (raf || disposed || !compiled) return;
     last = 0;
     raf = requestAnimationFrame(tick);
   };
@@ -382,18 +452,49 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
       composer,
       shared,
       bloom,
+      cine,
+      lampLights,
+      moon,
+      state: () => ({ w, target, step, pixelRatio, speed, compiled, frame }),
+      /** Drive from one timeline position to another and hold the last frame. */
+      drive(from: number, to: number, frames = 30) {
+        stop();
+        let now = performance.now();
+        last = 0;
+        for (let i = 0; i <= frames; i++) {
+          target = w = from + ((to - from) * i) / frames;
+          renderFrame(now);
+          now += 1000 / 60;
+        }
+      },
+      resume: () => start(),
+      /** Look at the car from anywhere: degrees round it, metres out, metres up. */
+      orbit(ang: number | null, rad = 8, y = 1.4, lookY = 0.8, fov = 36) {
+        orbit = ang === null ? null : { ang, rad, y, lookY, fov };
+      },
       /** Jump straight to a timeline position and draw it, without easing. */
       snap(value: number) {
         target = value;
         w = -1;
         last = 0;
-        for (let i = 0; i < 4; i++) renderFrame(performance.now());
+        for (let i = 0; i < 5; i++) {
+          // The jump is a cut, not a drive: no speed, no blur.
+          speed = accel = pitch = pitchVel = 0;
+          cine.cut();
+          renderFrame(performance.now());
+        }
       },
     };
   }
   const onVisibility = () => (document.hidden ? stop() : start());
   document.addEventListener("visibilitychange", onVisibility);
-  start();
+  // The first frame waits for the shaders, which compile off the main thread
+  // where the browser allows it. The page stays responsive meanwhile.
+  const patience = new Promise((resolve) => window.setTimeout(resolve, 5000));
+  void Promise.race([precompile(scene), patience]).then(() => {
+    compiled = true;
+    start();
+  });
 
   return {
     setProgress(value) {
@@ -409,7 +510,9 @@ export function createRide(canvas: HTMLCanvasElement, opts: RideOptions): Ride {
       observer.disconnect();
       disposeTree(scene);
       cubeTarget.dispose();
+      warmTarget.dispose();
       ground.mesh.dispose();
+      cine.dispose();
       composer.dispose();
       renderer.dispose();
     },

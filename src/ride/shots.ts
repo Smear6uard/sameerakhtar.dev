@@ -14,6 +14,10 @@ interface Shot {
   /** Look target, car-local [r, y, f]. */
   look: [number, number, number];
   fov: number;
+  /** Metres to the plane of focus; 0 keeps the car sharp. */
+  focus: number;
+  /** How far the background is thrown out of focus, 0 to 1. */
+  aperture: number;
   /** Slow move while the car rests here: change at the end of the hold. */
   dAng: number;
   dRad: number;
@@ -27,11 +31,13 @@ interface Shot {
 const SHOTS: Shot[] = [
   // Pick-up: low, ahead of the car on the kerb side, looking back into the sunset.
   {
-    ang: 22,
-    rad: 8.9,
-    y: 0.62,
-    look: [2.3, 1.45, -1.0],
+    ang: 27,
+    rad: 9.4,
+    y: 0.66,
+    look: [1.75, 1.4, -1.0],
     fov: 34,
+    focus: 0,
+    aperture: 0.8,
     dAng: 7,
     dRad: -0.9,
     dY: 0.06,
@@ -46,6 +52,8 @@ const SHOTS: Shot[] = [
     y: 1.15,
     look: [8, 14, 60],
     fov: 40,
+    focus: 0,
+    aperture: 0.1,
     dAng: -3,
     dRad: -1.4,
     dY: 0.2,
@@ -60,6 +68,8 @@ const SHOTS: Shot[] = [
     y: 330,
     look: [3, 0, 28],
     fov: 30,
+    focus: 0,
+    aperture: 0,
     dAng: 0,
     dRad: 0,
     dY: -36,
@@ -74,6 +84,8 @@ const SHOTS: Shot[] = [
     y: 1.25,
     look: [-12, 2.7, 1.0],
     fov: 44,
+    focus: 15,
+    aperture: 0.12,
     dAng: -9,
     dRad: 0.3,
     dY: 0,
@@ -88,6 +100,8 @@ const SHOTS: Shot[] = [
     y: 1.1,
     look: [5.5, 6.0, -3.6],
     fov: 52,
+    focus: 0,
+    aperture: 0.4,
     dAng: -5,
     dRad: -0.5,
     dY: 0.1,
@@ -102,6 +116,8 @@ const SHOTS: Shot[] = [
     y: 4.6,
     look: [5.5, 6.6, 40],
     fov: 48,
+    focus: 0,
+    aperture: 0.05,
     dAng: 0,
     dRad: -2.2,
     dY: 0.5,
@@ -111,14 +127,16 @@ const SHOTS: Shot[] = [
   },
   // Drop-off: from the end of the pier, the city behind the car.
   {
-    ang: -349.6,
-    rad: 30.5,
-    y: 1.6,
-    look: [0, 9.5, -40],
+    ang: -345,
+    rad: 15.5,
+    y: 1.05,
+    look: [-4.2, 5.6, -40],
     fov: 44,
-    dAng: 2,
-    dRad: -3,
-    dY: 0.2,
+    focus: 0,
+    aperture: 0.36,
+    dAng: 3,
+    dRad: -1.5,
+    dY: 0.1,
     lift: 0,
     squeeze: 0,
     turnFrom: 0,
@@ -131,6 +149,9 @@ export interface CameraSample {
   /** Look target relative to the car, world axes. */
   look: Vector3;
   fov: number;
+  /** Metres to the plane of focus; 0 means the car. */
+  focus: number;
+  aperture: number;
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -162,6 +183,8 @@ export function sampleShot(p: Progress, out: CameraSample): CameraSample {
   if (p.hold || p.stop >= LAST_STOP) {
     const h = held(p.stop, p.t * 2 - 1);
     place(out, h.ang, h.rad, h.y, a.look, a.fov);
+    out.focus = a.focus;
+    out.aperture = a.aperture;
     return out;
   }
   const b = SHOTS[p.stop + 1];
@@ -178,5 +201,11 @@ export function sampleShot(p: Progress, out: CameraSample): CameraSample {
     [lerp(a.look[0], b.look[0], e), lerp(a.look[1], b.look[1], e), lerp(a.look[2], b.look[2], e)],
     lerp(a.fov, b.fov, e),
   );
+  // Focus pulls between two distances; "the car" is resolved by the engine.
+  out.focus = a.focus && b.focus ? lerp(a.focus, b.focus, e) : e < 0.5 ? a.focus : b.focus;
+  out.aperture =
+    a.focus === b.focus || (a.focus && b.focus)
+      ? lerp(a.aperture, b.aperture, e)
+      : Math.abs(e - 0.5) * 2 * (e < 0.5 ? a.aperture : b.aperture);
   return out;
 }
